@@ -8,7 +8,7 @@ export let CONFIG: ChainConfig = new ChainConfig(
   new InitParams(
     GraphBigInt.fromI32(0),
     GraphBigInt.fromI32(0),
-    GraphBigInt.fromI32(0)
+    GraphBigInt.fromI32(0),
   ),
 );
 

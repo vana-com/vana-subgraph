@@ -176,11 +176,8 @@ Environments are denoted by subgraph tags (`prod`, `stag`, ...).
 
 - User
 - Transaction
-- UserPosition
 - Dlp
 - Epoch
-- Stake
-- Unstake
 
 ### 1. Query for User Entity
 
@@ -190,10 +187,6 @@ Fetch the first 10 users, their transactions, and positions.
 {
   users(first: 10) {
     id
-    stakes {
-      id
-      amount
-    }
     transactions {
       id
       hash
@@ -218,32 +211,10 @@ Fetch the first 10 transactions with details such as the hash, block, timestamp,
 }
 ```
 
-### 3. Query for UserPosition Entity
 
-Fetch the first 10 user positions, including the associated Dlp, User, and the amount of tokens staked.
+### 3. Query for Dlp Entity
 
-```graphql
-{
-  userPositions(first: 10) {
-    id
-    user {
-      id
-    }
-    dlp {
-      id
-      address
-      minStakeAmount
-      amountStakedActive
-      amountStakedDelegated
-    }
-    amount
-  }
-}
-```
-
-### 4. Query for Dlp Entity
-
-Fetch the first 10 Dlp entities, their owner, creator, and other relevant details like the minimum stake amount and total amount staked.
+Fetch the first 10 Dlp entities, their owner, creator, and other relevant details.
 
 ```graphql
 {
@@ -252,14 +223,13 @@ Fetch the first 10 Dlp entities, their owner, creator, and other relevant detail
     address
     owner
     creator
-    minStakeAmount
-    amountStakedActive
-    amountStakedDelegated
+    tokenAddress
+    lpTokenId
   }
 }
 ```
 
-### 5. Query for Epoch Entity
+### 4. Query for Epoch Entity
 
 Fetch the first 10 epochs, including their size, reward, and related Dlp.
 
@@ -269,68 +239,8 @@ Fetch the first 10 epochs, including their size, reward, and related Dlp.
     id
     epochSize
     epochReward
-  }
-}
-```
-
-### 6. Query for Stake Entity
-
-Fetch the first 10 stake events, including the associated user, Dlp, amount staked, and transaction details.
-
-```graphql
-{
-  stakes(first: 10) {
-    id
-    user {
-      id
-    }
-    dlp {
-      id
-      address
-    }
-    amount
-    transaction {
-      id
-      hash
-    }
-  }
-}
-```
-
-### 7. Query for Unstake Entity
-
-Fetch the first 10 unstake events, including the associated user, Dlp, amount unstaked, and transaction details.
-
-```graphql
-{
-  unstakes(first: 10) {
-    id
-    user {
-      id
-    }
-    dlp {
-      id
-      address
-    }
-    amount
-    transaction {
-      id
-      hash
-    }
-  }
-}
-```
-
-### 8. Query for stake totals
-
-Fetch the total amount staked and number of unique stakers at block 95281
-
-```graphql
-{
-  totals(block: { number: 95281 }, id: "global") {
-    activeStakedAmount
-    delegatedStakedAmount
-    uniqueStakers
+    startDate
+    endDate
   }
 }
 ```

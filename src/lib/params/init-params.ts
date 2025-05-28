@@ -8,7 +8,7 @@ export class InitParams {
   constructor(
     daySize: GraphBigInt,
     epochSize: GraphBigInt,
-    epochRewardAmount: GraphBigInt
+    epochRewardAmount: GraphBigInt,
   ) {
     this.DAY_SIZE = daySize;
     this.EPOCH_SIZE = epochSize;

@@ -8,7 +8,10 @@ import {
 } from "../../../../generated/VanaEpochImplementationV5/VanaEpochImplementationV5";
 import { Epoch, EpochReference } from "../../../../generated/schema";
 import { getOrCreateCurrentParams } from "../../entity/params";
-import {EPOCH_REFERENCE_ID_CURRENT, saveCurrentEpochReference} from "../../entity/epoch";
+import {
+  EPOCH_REFERENCE_ID_CURRENT,
+  saveCurrentEpochReference,
+} from "../../entity/epoch";
 
 export function handleEpochCreatedV5(event: EpochCreated): void {
   log.info("handleEpochCreatedV5: {}", [event.transaction.hash.toHexString()]);
@@ -25,12 +28,11 @@ export function handleEpochCreatedV5(event: EpochCreated): void {
   epoch.logIndex = event.logIndex;
   epoch.save();
 
-
   const currentEpochRef = saveCurrentEpochReference(epoch.id);
   if (!currentEpochRef) {
     log.error(
-        "Failed to update current epoch reference to epoch '{}': no current epoch reference found",
-        [epoch.id],
+      "Failed to update current epoch reference to epoch '{}': no current epoch reference found",
+      [epoch.id],
     );
     return;
   }

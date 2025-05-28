@@ -8,8 +8,8 @@ export function getOrCreateUserTotalsForUser(userId: string): UserTotals {
 }
 
 export function getOrCreateUserTotalsForDlp(
-    userId: string,
-    dlpId: string,
+  userId: string,
+  dlpId: string,
 ): UserTotals {
   const userTotalsId = getUserTotalsIdDlp(userId, dlpId);
   return getOrCreateUserTotals(userTotalsId);
