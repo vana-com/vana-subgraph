@@ -10,17 +10,12 @@ export function dlpDefaults(id: string, userId: string, totalsId: string): Dlp {
   dlp.createdTxHash = Bytes.fromHexString(
     "0x64d2db2dbfd04f79352be0ec93977a56f6399784210454b37faccf0d418cfa8b",
   );
-  dlp.minStakeAmount = GraphBigInt.zero();
-  dlp.activeStakedAmount = GraphBigInt.zero();
-  dlp.delegatedStakedAmount = GraphBigInt.zero();
   dlp.status = GraphBigInt.zero(); // None
   dlp.name = "";
   dlp.iconUrl = "";
   dlp.website = "";
   dlp.metadata = "";
-  dlp.stakersPercentage = GraphBigInt.zero();
   dlp.performanceRating = GraphBigInt.zero();
-  dlp.totalStakesScore = GraphBigInt.zero();
   dlp.owner = Address.fromString(userId);
   dlp.treasury = Address.fromString(userId);
   dlp.totals = totalsId;

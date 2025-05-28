@@ -53,7 +53,6 @@ describe("handleEpochCreatedV5", () => {
     assert.fieldEquals("Epoch", "1", "endBlock", endBlock.toString());
     assert.fieldEquals("Epoch", "1", "reward", rewardAmount.toString());
     assert.fieldEquals("Epoch", "1", "isFinalized", "false");
-    assert.fieldEquals("Epoch", "1", "rewardDistributed", "false");
     assert.fieldEquals("Epoch", "1", "dlpIds", "[]"); // Verify empty dlpIds array on creation
 
     // Check that current epoch reference was updated

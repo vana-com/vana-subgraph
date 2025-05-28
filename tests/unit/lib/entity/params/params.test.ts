@@ -25,24 +25,6 @@ describe("getOrCreateParams", () => {
     assert.fieldEquals(
       "Params",
       "epoch-1",
-      "eligibilityThreshold",
-      CONFIG.INIT_PARAMS.ELIGIBILITY_THRESHOLD.toString(),
-    );
-    assert.fieldEquals(
-      "Params",
-      "epoch-1",
-      "subEligibilityThreshold",
-      CONFIG.INIT_PARAMS.SUB_ELIGIBILITY_THRESHOLD.toString(),
-    );
-    assert.fieldEquals(
-      "Params",
-      "epoch-1",
-      "stakeWithdrawalDelay",
-      CONFIG.INIT_PARAMS.STAKE_WITHDRAWAL_DELAY.toString(),
-    );
-    assert.fieldEquals(
-      "Params",
-      "epoch-1",
       "daySize",
       CONFIG.INIT_PARAMS.DAY_SIZE.toString(),
     );
@@ -57,54 +39,6 @@ describe("getOrCreateParams", () => {
       "epoch-1",
       "epochRewardAmount",
       CONFIG.INIT_PARAMS.EPOCH_REWARD_AMOUNT.toString(),
-    );
-    assert.fieldEquals(
-      "Params",
-      "epoch-1",
-      "eligibleDlpsLimit",
-      CONFIG.INIT_PARAMS.ELIGIBLE_DLPS_LIMIT.toString(),
-    );
-    assert.fieldEquals(
-      "Params",
-      "epoch-1",
-      "minDlpStakersPercentage",
-      CONFIG.INIT_PARAMS.MIN_DLP_STAKERS_PERCENTAGE.toString(),
-    );
-    assert.fieldEquals(
-      "Params",
-      "epoch-1",
-      "maxDlpStakersPercentage",
-      CONFIG.INIT_PARAMS.MAX_DLP_STAKERS_PERCENTAGE.toString(),
-    );
-    assert.fieldEquals(
-      "Params",
-      "epoch-1",
-      "minStakeAmount",
-      CONFIG.INIT_PARAMS.MIN_STAKE_AMOUNT.toString(),
-    );
-    assert.fieldEquals(
-      "Params",
-      "epoch-1",
-      "rewardClaimDelay",
-      CONFIG.INIT_PARAMS.REWARD_CLAIM_DELAY.toString(),
-    );
-    assert.fieldEquals(
-      "Params",
-      "epoch-1",
-      "minDlpRegistrationStake",
-      CONFIG.INIT_PARAMS.MIN_DLP_REGISTRATION_STAKE.toString(),
-    );
-    assert.fieldEquals(
-      "Params",
-      "epoch-1",
-      "stakeRatingPercentage",
-      CONFIG.INIT_PARAMS.STAKE_RATING_PERCENTAGE.toString(),
-    );
-    assert.fieldEquals(
-      "Params",
-      "epoch-1",
-      "performanceRatingPercentage",
-      CONFIG.INIT_PARAMS.PERFORMANCE_RATING_PERCENTAGE.toString(),
     );
   });
 
@@ -126,24 +60,6 @@ describe("getOrCreateCurrentParams", () => {
     assert.fieldEquals(
       "Params",
       PARAMS_ID_CURRENT,
-      "eligibilityThreshold",
-      CONFIG.INIT_PARAMS.ELIGIBILITY_THRESHOLD.toString(),
-    );
-    assert.fieldEquals(
-      "Params",
-      PARAMS_ID_CURRENT,
-      "subEligibilityThreshold",
-      CONFIG.INIT_PARAMS.SUB_ELIGIBILITY_THRESHOLD.toString(),
-    );
-    assert.fieldEquals(
-      "Params",
-      PARAMS_ID_CURRENT,
-      "stakeWithdrawalDelay",
-      CONFIG.INIT_PARAMS.STAKE_WITHDRAWAL_DELAY.toString(),
-    );
-    assert.fieldEquals(
-      "Params",
-      PARAMS_ID_CURRENT,
       "daySize",
       CONFIG.INIT_PARAMS.DAY_SIZE.toString(),
     );
@@ -158,54 +74,6 @@ describe("getOrCreateCurrentParams", () => {
       PARAMS_ID_CURRENT,
       "epochRewardAmount",
       CONFIG.INIT_PARAMS.EPOCH_REWARD_AMOUNT.toString(),
-    );
-    assert.fieldEquals(
-      "Params",
-      PARAMS_ID_CURRENT,
-      "eligibleDlpsLimit",
-      CONFIG.INIT_PARAMS.ELIGIBLE_DLPS_LIMIT.toString(),
-    );
-    assert.fieldEquals(
-      "Params",
-      PARAMS_ID_CURRENT,
-      "minDlpStakersPercentage",
-      CONFIG.INIT_PARAMS.MIN_DLP_STAKERS_PERCENTAGE.toString(),
-    );
-    assert.fieldEquals(
-      "Params",
-      PARAMS_ID_CURRENT,
-      "maxDlpStakersPercentage",
-      CONFIG.INIT_PARAMS.MAX_DLP_STAKERS_PERCENTAGE.toString(),
-    );
-    assert.fieldEquals(
-      "Params",
-      PARAMS_ID_CURRENT,
-      "minStakeAmount",
-      CONFIG.INIT_PARAMS.MIN_STAKE_AMOUNT.toString(),
-    );
-    assert.fieldEquals(
-      "Params",
-      PARAMS_ID_CURRENT,
-      "rewardClaimDelay",
-      CONFIG.INIT_PARAMS.REWARD_CLAIM_DELAY.toString(),
-    );
-    assert.fieldEquals(
-      "Params",
-      PARAMS_ID_CURRENT,
-      "minDlpRegistrationStake",
-      CONFIG.INIT_PARAMS.MIN_DLP_REGISTRATION_STAKE.toString(),
-    );
-    assert.fieldEquals(
-      "Params",
-      PARAMS_ID_CURRENT,
-      "stakeRatingPercentage",
-      CONFIG.INIT_PARAMS.STAKE_RATING_PERCENTAGE.toString(),
-    );
-    assert.fieldEquals(
-      "Params",
-      PARAMS_ID_CURRENT,
-      "performanceRatingPercentage",
-      CONFIG.INIT_PARAMS.PERFORMANCE_RATING_PERCENTAGE.toString(),
     );
   });
 
