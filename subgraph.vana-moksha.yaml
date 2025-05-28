@@ -1,0 +1,196 @@
+specVersion: 0.0.9
+description: Subgraph for DLPRoot, DataRegistry, VanaEpoch, DLPPerformance
+repository: "https://github.com/vana-com/subgraph"
+
+schema:
+  file: ./schema.graphql
+
+#features:
+#  - grafting
+#graft:
+#  base:
+#  block:
+
+dataSources:
+  # v1
+  - kind: ethereum/contract
+    name: DataRegistryImplementationV1
+    network: vana-moksha
+    source:
+      address: "0x8C8788f98385F6ba1adD4234e551ABba0f82Cb7C"
+      abi: DataRegistryImplementationV1
+      startBlock: 655081
+      endBlock: 1019085
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - EpochReference
+        - FileOwner
+        - DataRegistryProof
+      abis:
+        - name: DataRegistryImplementationV1
+          file: ./abis/v1/DataRegistryImplementation.json
+      eventHandlers:
+        - event: FileAdded(indexed uint256,indexed address,string)
+          handler: handleFileAddedV1
+        - event: ProofAdded(indexed uint256,indexed uint256)
+          handler: handleDataRegistryProofAddedV1
+      file: ./src/mapping.ts
+
+  #v2
+  - kind: ethereum/contract
+    name: DataRegistryImplementationV2
+    network: vana-moksha
+    source:
+      address: "0x8C8788f98385F6ba1adD4234e551ABba0f82Cb7C"
+      abi: DataRegistryImplementationV2
+      startBlock: 1019086
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - EpochReference
+        - FileOwner
+        - DataRegistryProof
+      abis:
+        - name: DataRegistryImplementationV2
+          file: ./abis/v2/DataRegistryImplementation.json
+      eventHandlers:
+        - event: FileAdded(indexed uint256,indexed address,string)
+          handler: handleFileAddedV2
+        - event: ProofAdded(indexed uint256,indexed uint256,indexed uint256,uint256)
+          handler: handleDataRegistryProofAddedV2
+      file: ./src/mapping.ts
+
+  - kind: ethereum/contract
+    name: QueryEngineImplementation
+    network: vana-moksha
+    source:
+      address: "0xd25Eb66EA2452cf3238A2eC6C1FD1B7F5B320490"
+      abi: QueryEngineImplementation
+      startBlock: 2208601
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - PaymentReceived
+      abis:
+        - name: QueryEngineImplementation
+          file: ./abis/v4/QueryEngineImplementation.json
+      eventHandlers:
+        - event: PaymentReceived(indexed address,uint256,uint256,uint256)
+          handler: handlePaymentReceived
+      file: ./src/mapping.ts
+
+  - kind: ethereum/contract
+    name: DataRefinerRegistryImplementation
+    network: vana-moksha
+    source:
+      address: "0x93c3EF89369fDcf08Be159D9DeF0F18AB6Be008c"
+      abi: DataRefinerRegistryImplementation
+      startBlock: 2207166
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Refiner
+      abis:
+        - name: DataRefinerRegistryImplementation
+          file: ./abis/v4/DataRefinerRegistryImplementation.json
+      eventHandlers:
+        - event: RefinerAdded(indexed uint256,indexed uint256,string,string,string)
+          handler: handleRefinerAdded
+      file: ./src/mapping.ts
+
+  - kind: ethereum/contract
+    name: DLPRegistryImplementationV5
+    network: vana-moksha
+    source:
+      address: "0x4D59880a924526d1dD33260552Ff4328b1E18a43"
+      abi: DLPRegistryImplementationV5
+      startBlock: 2444992
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Dlp
+        - DlpList
+        - Params
+      abis:
+        - name: DLPRegistryImplementationV5
+          file: ./abis/v5/DLPRegistryImplementation.json
+      eventHandlers:
+        - event: DlpRegistered(indexed uint256,indexed address,address,address,string,string,string,string)
+          handler: handleDlpRegisteredV5
+        - event: DlpUpdated(indexed uint256,indexed address,address,address,string,string,string,string)
+          handler: handleDlpUpdatedV5
+        - event: DlpStatusUpdated(indexed uint256,uint8)
+          handler: handleDlpStatusUpdatedV5
+        - event: DlpVerificationUpdated(indexed uint256,bool)
+          handler: handleDlpVerificationUpdatedV5
+        - event: DlpTokenUpdated(indexed uint256,address)
+          handler: handleDlpTokenUpdatedV5
+        - event: DlpRegistrationDepositAmountUpdated(uint256)
+          handler: handleDlpRegistrationDepositAmountUpdatedV5
+      file: ./src/mapping.ts
+
+#v5
+  - kind: ethereum/contract
+    name: VanaEpochImplementationV5
+    network: vana-moksha
+    source:
+      address: "0x2063cFF0609D59bCCc196E20Eb58A8696a6b15A0"
+      abi: VanaEpochImplementationV5
+      startBlock: 2445062
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Epoch
+        - EpochReference
+        - Params
+      abis:
+        - name: VanaEpochImplementationV5
+          file: ./abis/v5/VanaEpochImplementation.json
+      eventHandlers:
+        - event: EpochCreated(uint256,uint256,uint256,uint256)
+          handler: handleEpochCreatedV5
+        - event: EpochDlpRewardAdded(uint256,uint256,uint256)
+          handler: handleEpochDlpRewardAddedV5
+        - event: EpochFinalized(uint256)
+          handler: handleEpochFinalizedV5
+        - event: EpochSizeUpdated(uint256)
+          handler: handleEpochSizeUpdatedV5
+        - event: EpochRewardAmountUpdated(uint256)
+          handler: handleEpochRewardAmountUpdatedV5
+      file: ./src/mapping.ts
+
+  - kind: ethereum/contract
+    name: DLPPerformanceImplementationV5
+    network: vana-moksha
+    source:
+      address: "0x847715C7DB37cF286611182Be0bD333cbfa29cc1"
+      abi: DLPPerformanceImplementationV5
+      startBlock: 2445086
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Epoch
+        - Dlp
+        - DlpPerformance
+      abis:
+        - name: DLPPerformanceImplementationV5
+          file: ./abis/v5/DLPPerformanceImplementation.json
+      eventHandlers:
+        - event: EpochDlpPerformancesSaved(indexed uint256,indexed uint256,uint256,uint256,uint256,uint256)
+          handler: handleEpochDlpPerformancesSavedV5
+      file: ./src/mapping.ts

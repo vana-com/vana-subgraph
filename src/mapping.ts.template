@@ -1,0 +1,65 @@
+import { BigInt as GraphBigInt } from "@graphprotocol/graph-ts";
+import { ChainConfig } from "./lib/config/chain-config";
+import { initGlobalChainConfig } from "./lib/config/global-chain-config";
+import { InitParams } from "./lib/params/init-params";
+
+initGlobalChainConfig(
+  new ChainConfig(
+    "{{ network }}",
+    new InitParams(
+      GraphBigInt.fromString("{{ initParams.daySize }}"),
+      GraphBigInt.fromString("{{ initParams.epochSize }}"),
+      GraphBigInt.fromString("{{ initParams.epochRewardAmount }}"),
+    ),
+  ),
+);
+
+export class EpochRange {
+  startBlock: i32;
+  endBlock: i32;
+
+  constructor(startBlock: i32, endBlock: i32) {
+    this.startBlock = startBlock;
+    this.endBlock = endBlock;
+  }
+}
+
+export const epochRanges: EpochRange[] = [
+    {{#epochRanges}}
+      new EpochRange({{ startBlock }}, {{ endBlock }}),
+    {{/epochRanges}}
+];
+
+// V1
+{{#includes.v1.dataRegistry}}
+export * from "./lib/contract/v1/data-registry";
+{{/includes.v1.dataRegistry}}
+
+// V2
+{{#includes.v2.dataRegistry}}
+export * from "./lib/contract/v2/data-registry";
+{{/includes.v2.dataRegistry}}
+
+// V3
+{{#includes.v3.dataRegistry}}
+export * from "./lib/contract/v3/data-registry";
+{{/includes.v3.dataRegistry}}
+
+// V4
+{{#includes.v4.queryEngine}}
+export * from "./lib/contract/v4/query-engine";
+{{/includes.v4.queryEngine}}
+{{#includes.v4.dataRefinerRegistry}}
+export * from "./lib/contract/v4/data-refiner-registry";
+{{/includes.v4.dataRefinerRegistry}}
+
+// V5
+{{#includes.v5.dlpRegistry}}
+export * from "./lib/contract/v5/dlp-registry";
+{{/includes.v5.dlpRegistry}}
+{{#includes.v5.vanaEpoch}}
+export * from "./lib/contract/v5/vana-epoch";
+{{/includes.v5.vanaEpoch}}
+{{#includes.v5.dlpPerformance}}
+export * from "./lib/contract/v5/dlp-performance";
+{{/includes.v5.dlpPerformance}}

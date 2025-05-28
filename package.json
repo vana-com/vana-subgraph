@@ -1,0 +1,53 @@
+{
+  "name": "vana-subgraph-new",
+  "license": "UNLICENSED",
+  "scripts": {
+    "codegen": "npx graph codegen",
+    "build": "npx graph build",
+    "prepare:moksha": "cp ./subgraph.moksha.yaml ./subgraph.yaml && mustache config/moksha.json src/mapping.ts.template > src/mapping.ts",
+    "deploy:moksha": "node ./scripts/deploy.js moksha",
+    "delete:moksha": "node ./scripts/delete.js moksha",
+    "tag:moksha": "node ./scripts/tag.js moksha",
+    "untag:moksha": "node ./scripts/untag.js moksha",
+    "prepare:vana": "cp ./subgraph.vana.yaml ./subgraph.yaml && mustache config/vana.json src/mapping.ts.template > src/mapping.ts",
+    "deploy:vana": "node ./scripts/deploy.js vana",
+    "delete:vana": "node ./scripts/delete.js vana",
+    "tag:vana": "node ./scripts/tag.js vana",
+    "untag:vana": "node ./scripts/untag.js vana",
+    "prepare:thegraph-moksha": "cp ./subgraph.vana-moksha.yaml ./subgraph.yaml && mustache config/moksha.json src/mapping.ts.template > src/mapping.ts",
+    "deploy:thegraph-moksha": "node ./scripts/deploy-thegraph.js moksha",
+    "prepare:thegraph-vana": "cp ./subgraph.vana.yaml ./subgraph.yaml && mustache config/vana.json src/mapping.ts.template > src/mapping.ts",
+    "deploy:thegraph-vana": "node ./scripts/deploy-thegraph.js vana",
+    "test": "npx graph test -d",
+    "test:moksha": "yarn prepare:moksha && yarn test",
+    "test:vana": "yarn prepare:vana && yarn test",
+    "test:ci": "npx graph test",
+    "test:e2e": "jest --config jest.e2e.config.js --rootDir tests/e2e",
+    "lint": "biome check",
+    "format": "biome check --write",
+    "format:unsafe": "biome check --write --unsafe",
+    "create-local": "npx graph create --node http://localhost:8020/ moksha",
+    "remove-local": "npx graph remove --node http://localhost:8020/ moksha",
+    "deploy-local": "npx graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 moksha"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.95.0",
+    "@graphprotocol/graph-ts": "^0.37.0",
+    "yarn.lock": "^0.0.1-security"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/typescript": "^4.0.6",
+    "@graphql-codegen/typescript-operations": "^4.2.0",
+    "@types/jest": "^29.5.12",
+    "dotenv": "^16.4.5",
+    "graphql-request": "^6.1.0",
+    "jest": "^29.7.0",
+    "matchstick-as": "^0.6.0",
+    "mustache": "^4.0.1",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.7.3"
+  },
+  "packageManager": "yarn@1.22.22"
+}

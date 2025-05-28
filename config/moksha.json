@@ -1,0 +1,40 @@
+{
+  "network": "moksha",
+  "includes": {
+    "v1": {
+      "dataRegistry": true
+    },
+    "v2": {
+      "dataRegistry": true
+    },
+    "v3": {
+      "dataRegistry": true
+    },
+    "v4": {
+      "queryEngine": true,
+      "dataRefinerRegistry": true
+    },
+    "v5": {
+      "dlpRegistry": true,
+      "vanaEpoch": true,
+      "dlpPerformance": true,
+      "queryEngine": true,
+      "dataRefinerRegistry": true
+    }
+  },
+  "initParams": {
+    "daySize": "600",
+    "epochSize": "91",
+    "epochRewardAmount": "10000000000000000000"
+  },
+  "epochRanges": [
+    {"startBlock": 0, "endBlock": 2554537},
+    {"startBlock": 2554538, "endBlock": 2609137},
+    {"startBlock": 2609138, "endBlock": 2663737},
+    {"startBlock": 2663738, "endBlock": 2718337},
+    {"startBlock": 2718338, "endBlock": 2772937},
+    {"startBlock": 2772938, "endBlock": 2827537},
+    {"startBlock": 2827538, "endBlock": 2882137}
+  ]
+}
+

@@ -1,0 +1,104 @@
+name: "Test"
+
+on:
+  pull_request:
+    branches: [ "**" ]
+  workflow_dispatch:
+
+jobs:
+  build-moksha:
+    name: Build Moksha
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 23
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Prepare subgraph manifest
+        run: yarn prepare:moksha
+      - name: Generate types
+        run: yarn codegen
+      - name: Build subgraph
+        run: yarn build
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: subgraph-build-moksha
+          path: |
+            build/
+            generated/
+            subgraph.yaml
+            src/mapping.ts
+  build-vana:
+    name: Build Vana
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 23
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Prepare subgraph manifest
+        run: yarn prepare:vana
+      - name: Generate types
+        run: yarn codegen
+      - name: Build subgraph
+        run: yarn build
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: subgraph-build-vana
+          path: |
+            build/
+            generated/
+            subgraph.yaml
+            src/mapping.ts
+  lint:
+    name: Run Lint
+    needs: build-moksha
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 23
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: subgraph-build-moksha
+      - name: Run Lint
+        run: yarn lint
+  test:
+    name: Run Matchstick Tests
+    needs: build-moksha
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 23
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: subgraph-build-moksha
+      - name: Run matchstick tests
+        run: yarn test:ci

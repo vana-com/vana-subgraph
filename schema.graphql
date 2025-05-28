@@ -1,0 +1,132 @@
+type User @entity {
+  id: ID!
+  fileContributions: [DataRegistryProof!] @derivedFrom(field: "user")
+}
+
+type UserTotals @entity {
+  id: ID!
+
+  fileContributionsCount: BigInt!
+}
+
+type Dlp @entity {
+  id: ID!
+  creator: Bytes!
+  owner: Bytes!
+  address: Bytes!
+  treasury: Bytes!
+  createdAt: BigInt!
+  createdTxHash: Bytes!
+  createdAtBlock: BigInt!
+  performanceRating: BigInt!
+  status: BigInt!
+  name: String!
+  iconUrl: String!
+  website: String!
+  metadata: String!
+  token: Bytes
+  refiners: [Refiner!]! @derivedFrom(field: "dlp")
+  isVerified: Boolean
+  performances: [DlpPerformance!]! @derivedFrom(field: "dlp")
+  isRewardEligible: Boolean
+  rewardEligibleAt: BigInt
+  rewardEligibleAtBlock: BigInt
+  totals: Totals!
+}
+
+type EpochReference @entity {
+  id: ID!
+  epoch: Epoch!
+}
+
+type Epoch @entity {
+  id: ID!
+  startBlock: BigInt!
+  endBlock: BigInt!
+  reward: BigInt!
+  createdAt: BigInt!
+  createdTxHash: Bytes!
+  createdAtBlock: BigInt!
+  logIndex: BigInt!
+  isFinalized: Boolean
+  dlpIds: [BigInt!]!
+  performances: [DlpPerformance!]! @derivedFrom(field: "epoch")
+}
+
+type FileOwner @entity {
+  id: ID!
+  ownerAddress: Bytes!
+}
+
+type DataRegistryProof @entity {
+  id: ID!
+  user: User # Optional for v1
+  dlp: Dlp # Optional for v1
+  epoch: Epoch!
+  fileId: BigInt!
+  proofIndex: BigInt!
+  createdAt: BigInt!
+  createdTxHash: Bytes!
+  createdAtBlock: BigInt!
+  attestor: Bytes # Optional field depending on data availability
+}
+
+type Totals @entity {
+  id: ID!
+
+  totalFileContributions: BigInt!
+  uniqueFileContributors: BigInt!
+}
+
+type DlpList @entity {
+  id: ID!
+  dlpIds: [String!]!
+}
+
+type Params @entity {
+  id: ID!
+  daySize: BigInt!
+  epochSize: BigInt!
+  epochRewardAmount: BigInt!
+}
+
+type DlpReward @entity {
+  id: ID!
+  dlpId: BigInt
+  epochId: BigInt
+  amount: BigInt
+}
+
+type Refiner @entity {
+  id: ID!
+  dlp: Dlp!
+  owner: Bytes!
+  name: String!
+  schemaDefinitionUrl: String!
+  refinementInstructionUrl: String!
+  payments: [PaymentReceived!]! @derivedFrom(field: "refiner")
+}
+
+type PaymentReceived @entity {
+  id: ID!
+  token: Bytes!
+  amount: BigInt!
+  jobId: BigInt!
+  refiner: Refiner!
+  receivedAt: BigInt!
+  receivedAtBlock: BigInt!
+  receivedTxHash: Bytes!
+}
+
+type DlpPerformance @entity {
+  id: ID!
+  dlp: Dlp!
+  epoch: Epoch!
+  totalScore: BigInt!
+  tradingVolume: BigInt!
+  uniqueContributors: BigInt!
+  dataAccessFees: BigInt!
+  createdAt: BigInt!
+  createdTxHash: Bytes!
+  createdAtBlock: BigInt!
+}

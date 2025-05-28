@@ -1,0 +1,7 @@
+{
+    "extends": "assemblyscript/std/assembly",
+    "compilerOptions": {
+        "esModuleInterop": true
+    },
+    "exclude": ["tests/e2e/**/*"]
+}

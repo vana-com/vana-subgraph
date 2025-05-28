@@ -1,0 +1,39 @@
+{
+  "network": "vana",
+  "includes": {
+    "v1": {
+      "dataRegistry": true
+    },
+    "v2": {
+      "dataRegistry": true
+    },
+    "v3": {
+      "dataRegistry": true
+    },
+    "v4": {
+      "queryEngine": true,
+      "dataRefinerRegistry": true
+    },
+    "v5": {
+      "dlpRegistry": true,
+      "vanaEpoch": true,
+      "dlpPerformance": true,
+      "queryEngine": true,
+      "dataRefinerRegistry": true
+    }
+  },
+  "initParams": {
+    "daySize": "14400",
+    "epochSize": "91",
+    "epochRewardAmount": "400000000000000000000000"
+  },
+  "epochRanges": [
+    {"startBlock": 0, "endBlock": 986239},
+    {"startBlock": 986240, "endBlock": 1288639},
+    {"startBlock": 1288640, "endBlock": 1591039},
+    {"startBlock": 1591040, "endBlock": 1893439},
+    {"startBlock": 1893440, "endBlock": 2195839},
+    {"startBlock": 2195840, "endBlock": 2498239},
+    {"startBlock": 2498240, "endBlock": 3808640}
+  ]
+}
