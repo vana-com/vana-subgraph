@@ -12,7 +12,7 @@ import { Dlp } from "../../../../generated/schema";
 import { getTotalsIdDlp } from "../../entity/totals/constants";
 import { getOrCreateDlpList } from "../../../../src/lib/entity/dlp-list";
 import { getOrCreateTotals } from "../../entity/totals";
-import { getOrCreateUser } from "../shared";
+import {getOrCreateDlp, getOrCreateUser} from "../shared";
 
 // Mirrored from DLPRegistry.IDLPRegistry.DlpStatus
 enum dlpStatus {
@@ -33,8 +33,8 @@ export function handleDlpRegisteredV5(event: DlpRegistered): void {
   getOrCreateUser(event.transaction.from.toHex());
   getOrCreateUser(event.params.ownerAddress.toHex());
 
-  // Create new Dlp entity
-  const dlp = new Dlp(dlpId);
+  const dlp = getOrCreateDlp(event.params.dlpId.toString());
+
   dlp.creator = event.transaction.from;
   dlp.owner = event.params.ownerAddress;
   dlp.address = event.params.dlpAddress;
@@ -53,11 +53,6 @@ export function handleDlpRegisteredV5(event: DlpRegistered): void {
 
   // Keep staking fields for backward compatibility but set to zero
   dlp.performanceRating = BigInt.zero();
-
-  // Set totals relation
-  const totalsId = getTotalsIdDlp(dlpId);
-  const totals = getOrCreateTotals(totalsId);
-  dlp.totals = totals.id;
 
   dlp.save();
 
@@ -162,30 +157,26 @@ export function handleDlpTokenUpdatedV5(event: DlpTokenUpdated): void {
     event.transaction.hash.toHexString(),
   ]);
 
-  const dlpId = event.params.dlpId.toString();
-  const dlp = Dlp.load(dlpId);
+  // Ensure the Dlp entity exists
+  const dlp = getOrCreateDlp(event.params.dlpId.toString());
 
-  if (dlp != null) {
-    dlp.token = event.params.tokenAddress;
-    dlp.save();
+  dlp.token = event.params.tokenAddress;
+  dlp.save();
 
-    // Update status based on verification and token status
-    let isEligible = false;
-    if (dlp.isVerified) {
-      if (!(dlp.token === null)) {
-        isEligible = true;
-      }
+  // Update status based on verification and token status
+  let isEligible = false;
+  if (dlp.isVerified) {
+    if (!(dlp.token === null)) {
+      isEligible = true;
     }
-
-    if (isEligible) {
-      dlp.status = BigInt.fromI32(dlpStatus.ELIGIBLE);
-    } else {
-      dlp.status = BigInt.fromI32(dlpStatus.REGISTERED);
-    }
-    dlp.save();
-  } else {
-    log.error("DLP not found during token update: {}", [dlpId]);
   }
+
+  if (isEligible) {
+    dlp.status = BigInt.fromI32(dlpStatus.ELIGIBLE);
+  } else {
+    dlp.status = BigInt.fromI32(dlpStatus.REGISTERED);
+  }
+  dlp.save();
 }
 
 export function handleDlpRegistrationDepositAmountUpdatedV5(

@@ -2,8 +2,6 @@ import { BigInt as GraphBigInt, log } from "@graphprotocol/graph-ts";
 
 import {
   DataRegistryProof,
-  Dlp,
-  EpochReference,
   FileOwner,
 } from "../../../../generated/schema";
 
@@ -11,7 +9,6 @@ import {
   FileAdded as FileAddedEvent,
   ProofAdded as FileProofAdded,
 } from "../../../../generated/DataRegistryImplementationV2/DataRegistryImplementationV2";
-import { EPOCH_REFERENCE_ID_CURRENT } from "../../entity/epoch";
 import {
   getOrCreateUserTotals,
   getUserTotalsId,
@@ -23,6 +20,7 @@ import {
   TOTALS_ID_GLOBAL,
 } from "../../entity/totals";
 import { getEpochForBlock } from "../../entity/epoch";
+import {getOrCreateDlp} from "../shared";
 
 export function handleFileAddedV2(event: FileAddedEvent): void {
   log.info("Handling DataRegistry FileAdded with transaction hash: {}", [
@@ -46,14 +44,8 @@ export function handleDataRegistryProofAddedV2(event: FileProofAdded): void {
     return;
   }
 
-  // Load DLP
-  const dlp = Dlp.load(event.params.dlpId.toString());
-  if (!dlp) {
-    log.error("DLP not found for data registry proof  V2: {}", [
-      event.params.dlpId.toString(),
-    ]);
-    return;
-  }
+  // Ensure the Dlp entity exists
+  const dlp = getOrCreateDlp(event.params.dlpId.toString());
 
   // Create a new DataRegistryProof entity
   const proof = new DataRegistryProof(event.transaction.hash.toHex());

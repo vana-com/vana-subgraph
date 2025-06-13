@@ -22,7 +22,7 @@ import {
   getTotalsIdDlp,
   TOTALS_ID_GLOBAL,
 } from "../../entity/totals";
-import { getOrCreateUser } from "../shared";
+import {getOrCreateDlp, getOrCreateUser} from "../shared";
 import { getEpochForBlock } from "../../entity/epoch";
 
 export function handleFileAddedV3(event: FileAddedEvent): void {
@@ -47,13 +47,8 @@ export function handleDataRegistryProofAddedV3(event: FileProofAdded): void {
     return;
   }
 
-  const dlpId = event.params.dlpId.toString();
-  // Load DLP
-  const dlp = Dlp.load(dlpId);
-  if (!dlp) {
-    log.error("DLP not found for data registry proof V3: {}", [dlpId]);
-    return;
-  }
+  // Ensure the Dlp entity exists
+  const dlp = getOrCreateDlp(event.params.dlpId.toString());
 
   // Create a new DataRegistryProof entity
   const proof = new DataRegistryProof(event.transaction.hash.toHex());
@@ -67,7 +62,7 @@ export function handleDataRegistryProofAddedV3(event: FileProofAdded): void {
 
   // Store proof based on the event data
   proof.user = userId;
-  proof.dlp = dlpId;
+  proof.dlp = dlp.id;
   proof.epoch = epochId;
   proof.fileId = fileId;
   proof.proofIndex = event.params.proofIndex;
