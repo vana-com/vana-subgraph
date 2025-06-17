@@ -1,15 +1,17 @@
 specVersion: 0.0.9
 description: Subgraph for DLPRoot, DataRegistry, VanaEpoch, DLPPerformance
-repository: "https://github.com/vana-com/subgraph-new"
+repository: "https://github.com/vana-com/vana-subgraph"
 
 schema:
   file: ./schema.graphql
 
+# Stub for grafting on existing subgraphs
+#
 #features:
 #  - grafting
 #graft:
 #  base:
-#  block: #TODO: Add block
+#  block:
 
 dataSources:
   # v1
