@@ -4,6 +4,7 @@
   "scripts": {
     "codegen": "npx graph codegen",
     "build": "npx graph build",
+    "prepare:moksha:thegraph": "cp ./subgraph.vana-moksha.yaml ./subgraph.yaml && mustache config/moksha.json src/mapping.ts.template > src/mapping.ts",
     "prepare:moksha": "cp ./subgraph.moksha.yaml ./subgraph.yaml && mustache config/moksha.json src/mapping.ts.template > src/mapping.ts",
     "deploy:moksha": "node ./scripts/deploy.js moksha",
     "delete:moksha": "node ./scripts/delete.js moksha",

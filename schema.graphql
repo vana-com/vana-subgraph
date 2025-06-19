@@ -1,15 +1,15 @@
-type User @entity {
+type User @entity(immutable: false) {
   id: ID!
   fileContributions: [DataRegistryProof!] @derivedFrom(field: "user")
 }
 
-type UserTotals @entity {
+type UserTotals @entity(immutable: false) {
   id: ID!
 
   fileContributionsCount: BigInt!
 }
 
-type Dlp @entity {
+type Dlp @entity(immutable: false) {
   id: ID!
   creator: Bytes
   owner: Bytes
@@ -34,12 +34,12 @@ type Dlp @entity {
   totals: Totals
 }
 
-type EpochReference @entity {
+type EpochReference @entity(immutable: true) {
   id: ID!
   epoch: Epoch!
 }
 
-type Epoch @entity {
+type Epoch @entity(immutable: false) {
   id: ID!
   startBlock: BigInt!
   endBlock: BigInt!
@@ -53,12 +53,12 @@ type Epoch @entity {
   performances: [DlpPerformance!]! @derivedFrom(field: "epoch")
 }
 
-type FileOwner @entity {
+type FileOwner @entity(immutable: true) {
   id: ID!
   ownerAddress: Bytes!
 }
 
-type DataRegistryProof @entity {
+type DataRegistryProof @entity(immutable: true) {
   id: ID!
   user: User # Optional for v1
   dlp: Dlp # Optional for v1
@@ -71,33 +71,33 @@ type DataRegistryProof @entity {
   attestor: Bytes # Optional field depending on data availability
 }
 
-type Totals @entity {
+type Totals @entity(immutable: false) {
   id: ID!
 
   totalFileContributions: BigInt!
   uniqueFileContributors: BigInt!
 }
 
-type DlpList @entity {
+type DlpList @entity(immutable: false) {
   id: ID!
   dlpIds: [String!]!
 }
 
-type Params @entity {
+type Params @entity(immutable: false) {
   id: ID!
   daySize: BigInt!
   epochSize: BigInt!
   epochRewardAmount: BigInt!
 }
 
-type DlpReward @entity {
+type DlpReward @entity(immutable: true) {
   id: ID!
   dlpId: BigInt
   epochId: BigInt
   amount: BigInt
 }
 
-type Refiner @entity {
+type Refiner @entity(immutable: false) {
   id: ID!
   dlp: Dlp!
   owner: Bytes!
@@ -107,7 +107,7 @@ type Refiner @entity {
   payments: [PaymentReceived!]! @derivedFrom(field: "refiner")
 }
 
-type PaymentReceived @entity {
+type PaymentReceived @entity(immutable: true) {
   id: ID!
   token: Bytes!
   amount: BigInt!
@@ -118,7 +118,7 @@ type PaymentReceived @entity {
   receivedTxHash: Bytes!
 }
 
-type DlpPerformance @entity {
+type DlpPerformance @entity(immutable: true) {
   id: ID!
   dlp: Dlp!
   epoch: Epoch!
