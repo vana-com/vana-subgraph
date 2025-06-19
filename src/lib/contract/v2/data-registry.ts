@@ -16,7 +16,7 @@ import {
 } from "../../entity/usertotals";
 import {
   getOrCreateTotals,
-  getTotalsIdDlp,
+  getTotalsIdDlp, getTotalsIdEpochDlp,
   TOTALS_ID_GLOBAL,
 } from "../../entity/totals";
 import { getEpochForBlock } from "../../entity/epoch";
@@ -112,13 +112,25 @@ export function handleDataRegistryProofAddedV2(event: FileProofAdded): void {
   // Update dlp file contribution totals
   const dlpTotalsId = getTotalsIdDlp(event.params.dlpId.toString());
   const dlpTotals = getOrCreateTotals(dlpTotalsId);
+
+  const epochDlpTotalsId = getTotalsIdEpochDlp(epochId, event.params.dlpId.toString());
+  const epochDlpTotals = getOrCreateTotals(epochDlpTotalsId);
+
   dlpTotals.totalFileContributions = dlpTotals.totalFileContributions.plus(
     GraphBigInt.fromI32(1),
+  );
+  epochDlpTotals.totalFileContributions = epochDlpTotals.totalFileContributions.plus(
+      GraphBigInt.fromI32(1),
   );
   if (dlpUserTotals.fileContributionsCount.toI32() === 1) {
     dlpTotals.uniqueFileContributors = dlpTotals.uniqueFileContributors.plus(
       GraphBigInt.fromI32(1),
     );
+
+    epochDlpTotals.uniqueFileContributors = epochDlpTotals.uniqueFileContributors.plus(
+        GraphBigInt.fromI32(1),
+    );
   }
   dlpTotals.save();
+  epochDlpTotals.save();
 }

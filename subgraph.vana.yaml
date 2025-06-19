@@ -23,7 +23,7 @@ dataSources:
       endBlock: 1283120
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - EpochReference
@@ -49,7 +49,7 @@ dataSources:
       endBlock: 2109974
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - EpochReference
@@ -73,7 +73,7 @@ dataSources:
       startBlock: 2109975
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - EpochReference
@@ -98,7 +98,7 @@ dataSources:
       startBlock: 2558883
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - PaymentReceived
@@ -119,7 +119,7 @@ dataSources:
       startBlock: 2556371
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - Refiner
@@ -141,7 +141,7 @@ dataSources:
       startBlock: 3157613
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - Dlp
@@ -176,7 +176,7 @@ dataSources:
       startBlock: 3157613
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - Epoch
@@ -207,7 +207,7 @@ dataSources:
       startBlock: 3157613
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - Epoch
@@ -220,3 +220,67 @@ dataSources:
         - event: EpochDlpPerformancesSaved(indexed uint256,indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleEpochDlpPerformancesSavedV5
       file: ./src/mapping.ts
+
+  - kind: ethereum/contract
+    name: Factory
+    network: vana
+    source:
+      abi: Factory
+      address: "0xc2a0d530e57B1275fbce908031DA636f95EA1E38"
+      startBlock: 763744
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/uniswap/v3/mappings/factory.ts
+      entities:
+        - Pool
+        - Token
+      abis:
+        - name: Factory
+          file: ./abis/uniswap/factory.json
+        - name: ERC20
+          file: ./abis/uniswap/ERC20.json
+        - name: ERC20SymbolBytes
+          file: ./abis/uniswap/ERC20SymbolBytes.json
+        - name: ERC20NameBytes
+          file: ./abis/uniswap/ERC20NameBytes.json
+        - name: Pool
+          file: ./abis/uniswap/pool.json
+      eventHandlers:
+        - event: PoolCreated(indexed address,indexed address,indexed uint24,int24,address)
+          handler: handlePoolCreated
+templates:
+  - kind: ethereum/contract
+    name: Pool
+    network: vana
+    source:
+      abi: Pool
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/uniswap/v3/mappings/core.ts
+      entities:
+        - Pool
+        - Token
+      abis:
+        - name: Pool
+          file: ./abis/uniswap/pool.json
+        - name: Factory
+          file: ./abis/uniswap/factory.json
+        - name: ERC20
+          file: ./abis/uniswap/ERC20.json
+      eventHandlers:
+        - event: Initialize(uint160,int24)
+          handler: handleInitialize
+        - event: Swap(indexed address,indexed address,int256,int256,uint160,uint128,int24)
+          handler: handleSwap
+        - event: Mint(address,indexed address,indexed int24,indexed
+            int24,uint128,uint256,uint256)
+          handler: handleMint
+        - event: Burn(indexed address,indexed int24,indexed int24,uint128,uint256,uint256)
+          handler: handleBurn
+        - event: Collect(indexed address,address,indexed int24,indexed
+            int24,uint128,uint128)
+          handler: handleCollect
