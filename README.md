@@ -13,20 +13,11 @@ If deploying to Goldsky (default)
 goldsky login
 ```
 
-If deploying to thegraph.com using the Deploy key which can be found in the graph studio page.
-```ssh
-graph auth 'Deploy Key'
-```
-
 Available networks:
 
-[vana-new](https://vanascan.io) (Goldsky and TheGraph)
+[vana](https://vanascan.io) (Goldsky and TheGraph)
 
-[moksha-new](https://moksha.vanascan.io) (Goldsky)
-
-[vana-moksha-new](https://moksha.vanascan.io) (TheGraph)
-
-
+[moksha](https://moksha.vanascan.io) (Goldsky)
 
 **Deploy**
 

@@ -1,5 +1,5 @@
 specVersion: 0.0.9
-description: Subgraph for DLPRoot, DataRegistry, VanaEpoch, DLPPerformance, UniswapV3
+description: Subgraph for DLPRoot, DataRegistry, VanaEpoch, DLPPerformance
 repository: "https://github.com/vana-com/vana-subgraph"
 
 schema:
