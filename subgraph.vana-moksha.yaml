@@ -223,7 +223,7 @@ dataSources:
 
   - kind: ethereum/contract
     name: Factory
-    network: vana
+    network: vana-moksha
     source:
       address: "0x7067Eb594d6dc6a5AD33c3fcFCa7183F369bC2e8"
       abi: Factory
@@ -254,7 +254,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: Pool
-    network: vana
+    network: vana-moksha
     source:
       abi: Pool
     mapping:
