@@ -34,7 +34,7 @@ type Dlp @entity(immutable: false) {
   totals: Totals
 }
 
-type EpochReference @entity(immutable: true) {
+type EpochReference @entity(immutable: false) {
   id: ID!
   epoch: Epoch!
 }
@@ -53,12 +53,12 @@ type Epoch @entity(immutable: false) {
   performances: [DlpPerformance!]! @derivedFrom(field: "epoch")
 }
 
-type FileOwner @entity(immutable: true) {
+type FileOwner @entity(immutable: false) {
   id: ID!
   ownerAddress: Bytes!
 }
 
-type DataRegistryProof @entity(immutable: true) {
+type DataRegistryProof @entity(immutable: false) {
   id: ID!
   user: User # Optional for v1
   dlp: Dlp # Optional for v1
@@ -90,7 +90,7 @@ type Params @entity(immutable: false) {
   epochRewardAmount: BigInt!
 }
 
-type DlpReward @entity(immutable: true) {
+type DlpReward @entity(immutable: false) {
   id: ID!
   dlpId: BigInt
   epochId: BigInt
@@ -107,7 +107,7 @@ type Refiner @entity(immutable: false) {
   payments: [PaymentReceived!]! @derivedFrom(field: "refiner")
 }
 
-type PaymentReceived @entity(immutable: true) {
+type PaymentReceived @entity(immutable: false) {
   id: ID!
   token: Bytes!
   amount: BigInt!
