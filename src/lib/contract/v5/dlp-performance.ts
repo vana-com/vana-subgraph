@@ -30,8 +30,11 @@ export function handleEpochDlpPerformancesSavedV5(
   // Create unique performance ID
   const performanceId = `${epochId}-${dlpId}`;
 
-  // Create or update the performance entity
-  const dlpPerformance = new DlpPerformance(performanceId);
+  // Load existing or create new performance entity
+  let dlpPerformance = DlpPerformance.load(performanceId);
+  if (dlpPerformance == null) {
+    dlpPerformance = new DlpPerformance(performanceId);
+  }
   dlpPerformance.dlp = dlp.id;
   dlpPerformance.epoch = epoch.id;
   dlpPerformance.totalScore = event.params.performanceRating;

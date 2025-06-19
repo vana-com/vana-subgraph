@@ -118,7 +118,7 @@ type PaymentReceived @entity(immutable: true) {
   receivedTxHash: Bytes!
 }
 
-type DlpPerformance @entity(immutable: true) {
+type DlpPerformance @entity(immutable: false) {
   id: ID!
   dlp: Dlp!
   epoch: Epoch!
