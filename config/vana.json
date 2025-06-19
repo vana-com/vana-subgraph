@@ -20,6 +20,9 @@
       "dlpPerformance": true,
       "queryEngine": true,
       "dataRefinerRegistry": true
+    },
+    "uniswap": {
+      "v3": true
     }
   },
   "initParams": {

@@ -1,15 +1,17 @@
 specVersion: 0.0.9
-description: Subgraph for DLPRoot, DataRegistry, VanaEpoch, DLPPerformance
-repository: "https://github.com/vana-com/subgraph-new"
+description: Subgraph for DLPRoot, DataRegistry, VanaEpoch, DLPPerformance, UniswapV3
+repository: "https://github.com/vana-com/vana-subgraph"
 
 schema:
   file: ./schema.graphql
 
+# Stub for grafting on existing subgraphs
+#
 #features:
 #  - grafting
 #graft:
 #  base:
-#  block: #TODO: Add block
+#  block:
 
 dataSources:
   # v1
@@ -23,7 +25,7 @@ dataSources:
       endBlock: 1283120
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - EpochReference
@@ -49,7 +51,7 @@ dataSources:
       endBlock: 2109974
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - EpochReference
@@ -73,7 +75,7 @@ dataSources:
       startBlock: 2109975
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - EpochReference
@@ -88,7 +90,7 @@ dataSources:
           handler: handleDataRegistryProofAddedV3
       file: ./src/mapping.ts
 
-# v4
+  # v4
   - kind: ethereum/contract
     name: QueryEngineImplementation
     network: vana
@@ -98,7 +100,7 @@ dataSources:
       startBlock: 2558883
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - PaymentReceived
@@ -119,7 +121,7 @@ dataSources:
       startBlock: 2556371
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - Refiner
@@ -131,7 +133,7 @@ dataSources:
           handler: handleRefinerAdded
       file: ./src/mapping.ts
 
-#v5
+  #v5
   - kind: ethereum/contract
     name: DLPRegistryImplementationV5
     network: vana
@@ -141,7 +143,7 @@ dataSources:
       startBlock: 3157613
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - Dlp
@@ -176,7 +178,7 @@ dataSources:
       startBlock: 3157613
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - Epoch
@@ -207,7 +209,7 @@ dataSources:
       startBlock: 3157613
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - Epoch
@@ -225,14 +227,13 @@ dataSources:
     name: Factory
     network: vana
     source:
-      abi: Factory
       address: "0xc2a0d530e57B1275fbce908031DA636f95EA1E38"
+      abi: Factory
       startBlock: 763744
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
-      file: ./src/uniswap/v3/mappings/factory.ts
       entities:
         - Pool
         - Token
@@ -250,6 +251,8 @@ dataSources:
       eventHandlers:
         - event: PoolCreated(indexed address,indexed address,indexed uint24,int24,address)
           handler: handlePoolCreated
+      file: ./src/mapping.ts
+
 templates:
   - kind: ethereum/contract
     name: Pool
@@ -258,9 +261,8 @@ templates:
       abi: Pool
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
-      file: ./src/uniswap/v3/mappings/core.ts
       entities:
         - Pool
         - Token
@@ -284,3 +286,4 @@ templates:
         - event: Collect(indexed address,address,indexed int24,indexed
             int24,uint128,uint128)
           handler: handleCollect
+      file: ./src/mapping.ts
