@@ -26,11 +26,8 @@ type Dlp @entity(immutable: false) {
   metadata: String
   token: Bytes
   refiners: [Refiner!]! @derivedFrom(field: "dlp")
-  isVerified: Boolean
   performances: [DlpPerformance!]! @derivedFrom(field: "dlp")
-  isRewardEligible: Boolean
-  rewardEligibleAt: BigInt
-  rewardEligibleAtBlock: BigInt
+  verificationBlockNumber: BigInt
   totals: Totals
 }
 
@@ -76,6 +73,8 @@ type Totals @entity(immutable: false) {
 
   totalFileContributions: BigInt!
   uniqueFileContributors: BigInt!
+
+  dataAccessFees: BigDecimal!
 }
 
 type DlpList @entity(immutable: false) {

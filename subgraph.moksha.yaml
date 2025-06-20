@@ -159,12 +159,10 @@ dataSources:
           handler: handleDlpUpdatedV5
         - event: DlpStatusUpdated(indexed uint256,uint8)
           handler: handleDlpStatusUpdatedV5
-        - event: DlpVerificationUpdated(indexed uint256,bool)
-          handler: handleDlpVerificationUpdatedV5
+        - event: DlpVerificationBlockUpdated(indexed uint256,uint256)
+          handler: handleDlpVerificationBlockUpdatedV5
         - event: DlpTokenUpdated(indexed uint256,address)
           handler: handleDlpTokenUpdatedV5
-        - event: DlpRegistrationDepositAmountUpdated(uint256)
-          handler: handleDlpRegistrationDepositAmountUpdatedV5
       file: ./src/mapping.ts
 
   - kind: ethereum/contract

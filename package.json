@@ -27,7 +27,7 @@
     "remove-local": "npx graph remove --node http://localhost:8020/ moksha",
     "deploy-local": "npx graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 moksha",
     "manual-copy-moksha": "cp -r config/uniswap/moksha/chain.ts src/uniswap/common/chain.ts",
-    "manual-copy-vana": "cp -r config/uniswap/vana/chain.ts src/uniswap/common/chain.tsf"
+    "manual-copy-vana": "cp -r config/uniswap/vana/chain.ts src/uniswap/common/chain.ts"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.95.0",

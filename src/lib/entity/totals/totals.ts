@@ -1,4 +1,5 @@
 import { BigInt as GraphBigInt } from "@graphprotocol/graph-ts";
+import { BigDecimal as GraphBigDecimal } from "@graphprotocol/graph-ts";
 
 import { Totals } from "../../../../generated/schema";
 import { getTotalsIdDlp, TOTALS_ID_GLOBAL } from "./constants";
@@ -19,6 +20,7 @@ export function getOrCreateTotals(id: string): Totals {
     totals = new Totals(id);
     totals.totalFileContributions = GraphBigInt.zero();
     totals.uniqueFileContributors = GraphBigInt.zero();
+    totals.dataAccessFees = GraphBigDecimal.zero();
     totals.save();
   }
   return totals;

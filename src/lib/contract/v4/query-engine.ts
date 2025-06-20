@@ -1,6 +1,9 @@
 import { log } from "@graphprotocol/graph-ts";
 import { PaymentReceived, Refiner } from "../../../../generated/schema";
 import { PaymentReceived as PaymentReceivedEvent } from "../../../../generated/QueryEngineImplementation/QueryEngineImplementation";
+import {getOrCreateTotals, getOrCreateTotalsGlobal, getTotalsIdDlp, TOTALS_ID_GLOBAL} from "../../entity/totals";
+import {BigInt as GraphBigInt} from "@graphprotocol/graph-ts/common/numbers";
+import {getTokenAmountInVana} from "../shared";
 
 export function handlePaymentReceived(event: PaymentReceivedEvent): void {
   // Create unique ID from transaction hash and log index
@@ -29,4 +32,22 @@ export function handlePaymentReceived(event: PaymentReceivedEvent): void {
 
   // Save the entity
   payment.save();
+
+  const amountInVana = getTokenAmountInVana(event.params.token, event.params.amount);
+
+  //save totals
+  // Update global unique file contribution totals
+  const totals = getOrCreateTotalsGlobal();
+  totals.dataAccessFees = totals.dataAccessFees.plus(
+      amountInVana,
+  );
+  totals.save();
+
+  // Update dlp file contribution totals
+  const dlpTotalsId = getTotalsIdDlp(refiner.dlp);
+  const dlpTotals = getOrCreateTotals(dlpTotalsId);
+  dlpTotals.dataAccessFees = dlpTotals.dataAccessFees.plus(
+      amountInVana,
+  );
+  dlpTotals.save();
 }
