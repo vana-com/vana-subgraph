@@ -4,7 +4,6 @@ import {
   DataRegistryProof,
   FileOwner,
   Epoch,
-  DlpPerformance,
   DlpEpochUserContribution,
 } from "../../../../generated/schema";
 
@@ -19,6 +18,7 @@ import {
 } from "../../entity/usertotals";
 import {
   getOrCreateTotals,
+  getOrCreateTotalsForDlpEpoch,
   getTotalsIdDlp,
   TOTALS_ID_GLOBAL,
 } from "../../entity/totals";
@@ -148,28 +148,25 @@ export function handleDataRegistryProofAddedV2(event: FileProofAdded): void {
       event.block.number
     );
 
+    // Update epoch-specific totals for this DLP
+    const epochTotals = getOrCreateTotalsForDlpEpoch(
+      event.params.dlpId.toString(),
+      epochId
+    );
+    
+    // Always increment total file contributions
+    epochTotals.totalFileContributions = epochTotals.totalFileContributions.plus(
+      GraphBigInt.fromI32(1)
+    );
+    
+    // Only increment unique contributors on first eligible contribution
     if (!hasContributedInEpoch) {
-      // Update DlpPerformance unique contributors count
-      const performanceId = `${epochId}-${event.params.dlpId.toString()}`;
-      let dlpPerformance = DlpPerformance.load(performanceId);
-      if (!dlpPerformance) {
-        dlpPerformance = new DlpPerformance(performanceId);
-        dlpPerformance.dlp = dlp.id;
-        dlpPerformance.epoch = epochId;
-        dlpPerformance.totalScore = GraphBigInt.zero();
-        dlpPerformance.tradingVolume = GraphBigInt.zero();
-        dlpPerformance.uniqueContributors = GraphBigInt.zero();
-        dlpPerformance.dataAccessFees = GraphBigInt.zero();
-        dlpPerformance.createdAt = event.block.timestamp;
-        dlpPerformance.createdTxHash = event.transaction.hash;
-        dlpPerformance.createdAtBlock = event.block.number;
-      }
-      
-      dlpPerformance.uniqueContributors = dlpPerformance.uniqueContributors.plus(
+      epochTotals.uniqueFileContributors = epochTotals.uniqueFileContributors.plus(
         GraphBigInt.fromI32(1)
       );
-      dlpPerformance.save();
     }
+    
+    epochTotals.save();
   }
 }
 

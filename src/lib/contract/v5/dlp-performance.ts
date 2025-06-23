@@ -39,12 +39,7 @@ export function handleEpochDlpPerformancesSavedV5(
   dlpPerformance.epoch = epoch.id;
   dlpPerformance.totalScore = event.params.performanceRating;
   dlpPerformance.tradingVolume = event.params.tradingVolume;
-  // Preserve our incremental count if it's higher than the contract value
-  const contractUniqueContributors = event.params.uniqueContributors;
-  const currentUniqueContributors = dlpPerformance.uniqueContributors;
-  dlpPerformance.uniqueContributors = currentUniqueContributors.gt(contractUniqueContributors) 
-    ? currentUniqueContributors 
-    : contractUniqueContributors;
+  dlpPerformance.uniqueContributors = event.params.uniqueContributors;
   dlpPerformance.dataAccessFees = event.params.dataAccessFees;
   dlpPerformance.createdAt = event.block.timestamp;
   dlpPerformance.createdTxHash = event.transaction.hash;
