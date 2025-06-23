@@ -148,25 +148,27 @@ export function handleDataRegistryProofAddedV2(event: FileProofAdded): void {
       event.block.number
     );
 
-    // Update epoch-specific totals for this DLP
-    const epochTotals = getOrCreateTotalsForDlpEpoch(
-      event.params.dlpId.toString(),
-      epochId
-    );
-    
-    // Always increment total file contributions
-    epochTotals.totalFileContributions = epochTotals.totalFileContributions.plus(
-      GraphBigInt.fromI32(1)
-    );
-    
-    // Only increment unique contributors on first eligible contribution
-    if (!hasContributedInEpoch) {
-      epochTotals.uniqueFileContributors = epochTotals.uniqueFileContributors.plus(
+    // Only update epoch-specific totals if contribution is after eligibility start
+    if (event.block.number.ge(eligibilityStartBlock)) {
+      const epochTotals = getOrCreateTotalsForDlpEpoch(
+        event.params.dlpId.toString(),
+        epochId
+      );
+      
+      // Increment total file contributions for eligible contributions
+      epochTotals.totalFileContributions = epochTotals.totalFileContributions.plus(
         GraphBigInt.fromI32(1)
       );
+      
+      // Only increment unique contributors on first eligible contribution
+      if (!hasContributedInEpoch) {
+        epochTotals.uniqueFileContributors = epochTotals.uniqueFileContributors.plus(
+          GraphBigInt.fromI32(1)
+        );
+      }
+      
+      epochTotals.save();
     }
-    
-    epochTotals.save();
   }
 }
 
