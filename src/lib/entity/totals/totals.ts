@@ -2,20 +2,15 @@ import { BigInt as GraphBigInt } from "@graphprotocol/graph-ts";
 import { BigDecimal as GraphBigDecimal } from "@graphprotocol/graph-ts";
 
 import { Totals } from "../../../../generated/schema";
-import { getTotalsIdDlp, getTotalsIdDlpEpoch, TOTALS_ID_GLOBAL } from "./constants";
+import { getTotalsDlpEpochPerformanceId, TOTALS_ID_GLOBAL } from "./constants";
 
 export function getOrCreateTotalsGlobal(): Totals {
   const totalsId = TOTALS_ID_GLOBAL;
   return getOrCreateTotals(totalsId);
 }
 
-export function getOrCreateTotalsForDlp(dlpId: string): Totals {
-  const totalsId = getTotalsIdDlp(dlpId);
-  return getOrCreateTotals(totalsId);
-}
-
-export function getOrCreateTotalsForDlpEpoch(dlpId: string, epochId: string): Totals {
-  const totalsId = getTotalsIdDlpEpoch(dlpId, epochId);
+export function getOrCreateTotalsForDlpEpochPerformance(dlpId: string, epochId: string): Totals {
+  const totalsId = getTotalsDlpEpochPerformanceId(dlpId, epochId);
   return getOrCreateTotals(totalsId);
 }
 

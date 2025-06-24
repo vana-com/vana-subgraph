@@ -1,7 +1,7 @@
 import { log } from "@graphprotocol/graph-ts";
 import { PaymentReceived, Refiner } from "../../../../generated/schema";
 import { PaymentReceived as PaymentReceivedEvent } from "../../../../generated/QueryEngineImplementation/QueryEngineImplementation";
-import {getOrCreateTotals, getOrCreateTotalsGlobal, getTotalsIdDlp, TOTALS_ID_GLOBAL} from "../../entity/totals";
+import {getOrCreateTotals, getOrCreateTotalsGlobal, getTotalsDlpId, TOTALS_ID_GLOBAL} from "../../entity/totals";
 import {BigInt as GraphBigInt} from "@graphprotocol/graph-ts/common/numbers";
 import {getTokenAmountInVana} from "../shared";
 
@@ -44,7 +44,7 @@ export function handlePaymentReceived(event: PaymentReceivedEvent): void {
   totals.save();
 
   // Update dlp file contribution totals
-  const dlpTotalsId = getTotalsIdDlp(refiner.dlp);
+  const dlpTotalsId = getTotalsDlpId(refiner.dlp);
   const dlpTotals = getOrCreateTotals(dlpTotalsId);
   dlpTotals.dataAccessFees = dlpTotals.dataAccessFees.plus(
       amountInVana,

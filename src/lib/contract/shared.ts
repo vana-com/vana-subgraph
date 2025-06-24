@@ -1,5 +1,5 @@
 import {Dlp, Token, User} from "../../../generated/schema";
-import {getOrCreateTotals, getTotalsIdDlp} from "../entity/totals";
+import {getOrCreateTotals, getTotalsDlpId} from "../entity/totals";
 import {Address, BigDecimal, BigInt, Bytes} from "@graphprotocol/graph-ts";
 import {REFERENCE_TOKEN} from "../../uniswap/common/chain";
 
@@ -17,7 +17,7 @@ export function getOrCreateDlp(dlpId: string): Dlp {
   if (dlp == null) {
     dlp = new Dlp(dlpId);
 
-    const dlpTotalsId = getTotalsIdDlp(dlpId);
+    const dlpTotalsId = getTotalsDlpId(dlpId);
     getOrCreateTotals(dlpTotalsId);
 
     // Link totals to Dlp
