@@ -130,6 +130,14 @@ type DlpPerformance @entity(immutable: false) {
   createdAtBlock: BigInt!
 }
 
+type DlpEpochUserContribution @entity(immutable: false) {
+  id: ID!
+  user: Bytes!
+  dlp: Bytes!
+  epoch: Bytes!
+  firstContributionBlock: BigInt!
+}
+
 type Factory @entity {
   # factory address
   id: ID!

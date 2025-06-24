@@ -1,8 +1,10 @@
-import { BigInt as GraphBigInt, log } from "@graphprotocol/graph-ts";
+import { BigInt as GraphBigInt, log, Bytes } from "@graphprotocol/graph-ts";
 
 import {
   DataRegistryProof,
   FileOwner,
+  Epoch,
+  DlpEpochUserContribution,
 } from "../../../../generated/schema";
 
 import {
@@ -16,6 +18,7 @@ import {
 } from "../../entity/usertotals";
 import {
   getOrCreateTotals,
+  getOrCreateTotalsForDlpEpoch,
   getTotalsIdDlp,
   TOTALS_ID_GLOBAL,
 } from "../../entity/totals";
@@ -123,4 +126,88 @@ export function handleDataRegistryProofAddedV2(event: FileProofAdded): void {
     );
   }
   dlpTotals.save();
+
+  // Track unique contributors for this DLP in the current epoch
+  const epoch = Epoch.load(epochId);
+  if (epoch) {
+    // Determine the eligibility start block (later of epoch start or DLP verification)
+    let dlpVerificationBlock = GraphBigInt.zero();
+    if (dlp.verificationBlockNumber) {
+      dlpVerificationBlock = dlp.verificationBlockNumber as GraphBigInt;
+    }
+    const eligibilityStartBlock: GraphBigInt = epoch.startBlock.gt(dlpVerificationBlock) 
+      ? epoch.startBlock 
+      : dlpVerificationBlock;
+
+    // Check if this is the user's first contribution to this DLP in this epoch after eligibility
+    const hasContributedInEpoch = checkUserContributedInEpoch(
+      userId,
+      event.params.dlpId.toString(),
+      epochId,
+      eligibilityStartBlock,
+      event.block.number
+    );
+
+    // Only update epoch-specific totals if contribution is after eligibility start
+    if (event.block.number.ge(eligibilityStartBlock)) {
+      const epochTotals = getOrCreateTotalsForDlpEpoch(
+        event.params.dlpId.toString(),
+        epochId
+      );
+      
+      // Increment total file contributions for eligible contributions
+      epochTotals.totalFileContributions = epochTotals.totalFileContributions.plus(
+        GraphBigInt.fromI32(1)
+      );
+      
+      // Only increment unique contributors on first eligible contribution
+      if (!hasContributedInEpoch) {
+        epochTotals.uniqueFileContributors = epochTotals.uniqueFileContributors.plus(
+          GraphBigInt.fromI32(1)
+        );
+      }
+      
+      epochTotals.save();
+    }
+  }
+}
+
+function checkUserContributedInEpoch(
+  userId: string,
+  dlpId: string,
+  epochId: string,
+  eligibilityStartBlock: GraphBigInt,
+  currentBlock: GraphBigInt
+): boolean {
+  // Only count contributions at or after the eligibility start block
+  if (currentBlock.lt(eligibilityStartBlock)) {
+    return true; // Contribution is before eligibility, don't count as unique
+  }
+
+  // Use tracking entity to check if user has contributed to this DLP in this epoch after eligibility
+  const trackingId = `${userId}-${dlpId}-${epochId}`;
+  
+  // Check if tracking entity exists
+  let userEpochContribution = DlpEpochUserContribution.load(trackingId);
+  if (!userEpochContribution) {
+    // This is the first eligible contribution - create tracking entity
+    userEpochContribution = new DlpEpochUserContribution(trackingId);
+    userEpochContribution.user = Bytes.fromHexString(userId);
+    userEpochContribution.dlp = Bytes.fromUTF8(dlpId);
+    userEpochContribution.epoch = Bytes.fromUTF8(epochId);
+    userEpochContribution.firstContributionBlock = currentBlock;
+    userEpochContribution.save();
+    
+    return false; // First eligible contribution in this epoch
+  }
+  
+  // Check if the existing contribution was before eligibility start
+  if (userEpochContribution.firstContributionBlock.lt(eligibilityStartBlock)) {
+    // Previous contribution was before eligibility, update with current contribution
+    userEpochContribution.firstContributionBlock = currentBlock;
+    userEpochContribution.save();
+    return false; // First eligible contribution in this epoch
+  }
+  
+  return true; // User has already made an eligible contribution in this epoch
 }
