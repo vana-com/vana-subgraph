@@ -127,6 +127,8 @@ function updateDlpEpochUser(
     dlpId: string,
 ): void {
   const dlpEpochUser = getOrCreateDlpEpochUser(dlpId, epochId, userId);
+
+  const lastContributionBlock = dlpEpochUser.lastContributionBlock;
   dlpEpochUser.lastContributionBlock = event.block.number;
   dlpEpochUser.fileContributionsCount = dlpEpochUser.fileContributionsCount.plus(
       GraphBigInt.fromI32(1),
@@ -157,7 +159,7 @@ function updateDlpEpochUser(
       GraphBigInt.fromI32(1),
   );
 
-  if (dlpEpochUser.fileContributionsCount.toI32() === 1) {
+  if (lastContributionBlock.lt(eligibilityStartBlock)) {
     dlpEpochTotals.uniqueFileContributors = dlpEpochTotals.uniqueFileContributors.plus(
         GraphBigInt.fromI32(1),
     );
