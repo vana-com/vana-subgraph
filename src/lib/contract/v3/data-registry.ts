@@ -23,6 +23,7 @@ import {
 import {getOrCreateDlp, getOrCreateUser} from "../shared";
 import { getEpochForBlock } from "../../entity/epoch";
 import {getOrCreateDlpEpochUser} from "../../entity/dlpEpochUser";
+import {dlps} from "../../../mapping";
 
 export function handleFileAddedV3(event: FileAddedEvent): void {
   log.info("Handling DataRegistry FileAdded with transaction hash: {}", [
