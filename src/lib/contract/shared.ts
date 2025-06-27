@@ -27,19 +27,6 @@ export function getOrCreateDlp(dlpId: string): Dlp {
   return dlp;
 }
 
-
-export function getTokenDerivedETH(
-  tokenAddress: Bytes,
-): BigDecimal {
-  const token = Token.load(tokenAddress);
-
-  if (!token) {
-    throw new Error(`Token not found: ${tokenAddress.toHex()}`);
-  }
-
-  return token.derivedETH;
-}
-
 export function getTokenAmountInVana(
   tokenAddress: Bytes,
   amount: BigInt,
@@ -48,16 +35,27 @@ export function getTokenAmountInVana(
     tokenAddress = Address.fromString(REFERENCE_TOKEN);
   }
 
-  const token = Token.load(tokenAddress);
+  //temporary fix until we have uniswap integrated
+  if (tokenAddress == Address.fromString(REFERENCE_TOKEN) ) {
+    const decimals = 18 as u8;
 
-  if (!token) {
-    throw new Error(`Token not found: ${tokenAddress.toHex()}`);
+    let precision = BigInt.fromI32(10).pow(decimals);
+
+    return amount.toBigDecimal().div(precision.toBigDecimal());
+  } else {
+    return BigDecimal.fromString("0");
   }
 
-  const decimals = Number.parseInt(token.decimals.toString()) as u8;
-
-  let precision = BigInt.fromI32(10).pow(decimals);
-  const decimalAmount = amount.toBigDecimal().div(precision.toBigDecimal());
-
-  return decimalAmount.times(token.derivedETH);
+  // const token = Token.load(tokenAddress);
+  //
+  // if (!token) {
+  //   throw new Error(`Token not found: ${tokenAddress.toHex()}`);
+  // }
+  //
+  // const decimals = Number.parseInt(token.decimals.toString()) as u8;
+  //
+  // let precision = BigInt.fromI32(10).pow(decimals);
+  // const decimalAmount = amount.toBigDecimal().div(precision.toBigDecimal());
+  //
+  // return decimalAmount.times(token.derivedETH);
 }

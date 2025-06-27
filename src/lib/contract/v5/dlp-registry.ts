@@ -45,8 +45,6 @@ export function handleDlpRegisteredV5(event: DlpRegistered): void {
   dlp.createdAtBlock = event.block.number;
   dlp.status = BigInt.fromI32(dlpStatus.REGISTERED);
 
-  // New field in v5
-  dlp.verificationBlockNumber = BigInt.zero();
 
   // Keep staking fields for backward compatibility but set to zero
   dlp.performanceRating = BigInt.zero();

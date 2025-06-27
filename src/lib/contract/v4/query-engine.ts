@@ -1,8 +1,7 @@
 import { log } from "@graphprotocol/graph-ts";
 import { PaymentReceived, Refiner } from "../../../../generated/schema";
 import { PaymentReceived as PaymentReceivedEvent } from "../../../../generated/QueryEngineImplementation/QueryEngineImplementation";
-import {getOrCreateTotals, getOrCreateTotalsGlobal, getTotalsDlpId, TOTALS_ID_GLOBAL} from "../../entity/totals";
-import {BigInt as GraphBigInt} from "@graphprotocol/graph-ts/common/numbers";
+import { getOrCreateTotals, getOrCreateTotalsGlobal, getTotalsDlpId } from "../../entity/totals";
 import {getTokenAmountInVana} from "../shared";
 
 export function handlePaymentReceived(event: PaymentReceivedEvent): void {

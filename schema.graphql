@@ -130,13 +130,8 @@ type DlpPerformance @entity(immutable: false) {
   createdAtBlock: BigInt!
 }
 
-type DlpEpochUser @entity(immutable: false) {
+type PerformanceDlpEpochUser @entity(immutable: false) {
   id: ID!
-  dlp: Dlp!
-  epoch: Epoch!
-  user: User!
-  fileContributionsCount: BigInt!
-  lastContributionBlock: BigInt!
 }
 
 type Factory @entity {

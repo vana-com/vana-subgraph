@@ -3,7 +3,7 @@ import {BigInt as GraphBigInt, Bytes, log} from "@graphprotocol/graph-ts";
 import {
   DataRegistryProof,
   Epoch,
-  FileOwner,
+  FileOwner, PerformanceDlpEpochUser,
 } from "../../../../generated/schema";
 
 import {
@@ -22,7 +22,7 @@ import {
 } from "../../entity/totals";
 import {getOrCreateDlp, getOrCreateUser} from "../shared";
 import { getEpochForBlock } from "../../entity/epoch";
-import {getOrCreateDlpEpochUser} from "../../entity/dlpEpochUser";
+import {getDlpEpochUserId, getOrCreateDlpEpochUser} from "../../entity/dlpEpochUser";
 import {dlps} from "../../../mapping";
 
 export function handleFileAddedV3(event: FileAddedEvent): void {
@@ -127,15 +127,6 @@ function updateDlpEpochUser(
     userId: string,
     dlpId: string,
 ): void {
-  const dlpEpochUser = getOrCreateDlpEpochUser(dlpId, epochId, userId);
-
-  const lastContributionBlock = dlpEpochUser.lastContributionBlock;
-  dlpEpochUser.lastContributionBlock = event.block.number;
-  dlpEpochUser.fileContributionsCount = dlpEpochUser.fileContributionsCount.plus(
-      GraphBigInt.fromI32(1),
-  );
-  dlpEpochUser.save();
-
   const epoch = Epoch.load(epochId);
   const dlp = getOrCreateDlp(dlpId);
   if (!epoch) {
@@ -153,14 +144,28 @@ function updateDlpEpochUser(
       ? epoch.startBlock
       : verificationBlock;
 
-  if (!event.block.number.ge(eligibilityStartBlock)) return;
+  if (!event.block.number.ge(eligibilityStartBlock)) {
+    return;
+  }
+
+
+  const id = getDlpEpochUserId(dlpId, epochId, userId);
+  let dlpEpochUser = PerformanceDlpEpochUser.load(id);
+
+  let firstContributionInEpoch = false;
+  if (dlpEpochUser == null) {
+    firstContributionInEpoch = true;
+
+    dlpEpochUser = new PerformanceDlpEpochUser(id);
+    dlpEpochUser.save();
+  }
 
   const dlpEpochTotals = getOrCreateTotalsForDlpEpochPerformance(dlpId, epochId);
   dlpEpochTotals.totalFileContributions = dlpEpochTotals.totalFileContributions.plus(
       GraphBigInt.fromI32(1),
   );
 
-  if (lastContributionBlock.lt(eligibilityStartBlock)) {
+  if (firstContributionInEpoch) {
     dlpEpochTotals.uniqueFileContributors = dlpEpochTotals.uniqueFileContributors.plus(
         GraphBigInt.fromI32(1),
     );
