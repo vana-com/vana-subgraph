@@ -35,27 +35,27 @@ export function getTokenAmountInVana(
     tokenAddress = Address.fromString(REFERENCE_TOKEN);
   }
 
-  //temporary fix until we have uniswap integrated
-  if (tokenAddress == Address.fromString(REFERENCE_TOKEN) ) {
-    const decimals = 18 as u8;
+  // //temporary fix until we have uniswap integrated
+  // if (tokenAddress == Address.fromString(REFERENCE_TOKEN) ) {
+  //   const decimals = 18 as u8;
+  //
+  //   let precision = BigInt.fromI32(10).pow(decimals);
+  //
+  //   return amount.toBigDecimal().div(precision.toBigDecimal());
+  // } else {
+  //   return BigDecimal.fromString("0");
+  // }
 
-    let precision = BigInt.fromI32(10).pow(decimals);
+  const token = Token.load(tokenAddress);
 
-    return amount.toBigDecimal().div(precision.toBigDecimal());
-  } else {
-    return BigDecimal.fromString("0");
+  if (!token) {
+    throw new Error(`Token not found: ${tokenAddress.toHex()}`);
   }
 
-  // const token = Token.load(tokenAddress);
-  //
-  // if (!token) {
-  //   throw new Error(`Token not found: ${tokenAddress.toHex()}`);
-  // }
-  //
-  // const decimals = Number.parseInt(token.decimals.toString()) as u8;
-  //
-  // let precision = BigInt.fromI32(10).pow(decimals);
-  // const decimalAmount = amount.toBigDecimal().div(precision.toBigDecimal());
-  //
-  // return decimalAmount.times(token.derivedETH);
+  const decimals = Number.parseInt(token.decimals.toString()) as u8;
+
+  let precision = BigInt.fromI32(10).pow(decimals);
+  const decimalAmount = amount.toBigDecimal().div(precision.toBigDecimal());
+
+  return decimalAmount.times(token.derivedETH);
 }
