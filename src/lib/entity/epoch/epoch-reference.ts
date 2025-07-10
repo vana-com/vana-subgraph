@@ -1,4 +1,4 @@
-import { BigInt, log } from "@graphprotocol/graph-ts";
+import { BigInt as GraphBigInt, log } from "@graphprotocol/graph-ts";
 import { Epoch, EpochReference } from "../../../../generated/schema";
 import { EPOCH_REFERENCE_ID_CURRENT } from "./constants";
 import { epochRanges } from "../../../mapping";
@@ -24,7 +24,7 @@ export function saveCurrentEpochReference(newEpochId: string): EpochReference {
   return currentEpoch;
 }
 
-export function getEpochForBlock(blockNumber: BigInt): string {
+export function getEpochForBlock(blockNumber: GraphBigInt): string {
   const currentEpochRef = getCurrentEpochReference();
   if (!currentEpochRef || !currentEpochRef.epoch) {
     return getEpochFromRanges(blockNumber);
@@ -35,15 +35,15 @@ export function getEpochForBlock(blockNumber: BigInt): string {
     return getEpochFromRanges(blockNumber);
   }
 
-  if (currentEpoch.endBlock.le(BigInt.zero())) {
+  if (currentEpoch.endBlock.le(GraphBigInt.zero())) {
     return currentEpoch.id;
   }
 
   // If the current epoch is in the past, we need to use the next epoch
   if (blockNumber.gt(currentEpoch.endBlock)) {
     // Get the next epoch by incrementing the current epoch ID
-    const nextEpochId = BigInt.fromString(currentEpoch.id)
-      .plus(BigInt.fromI32(1))
+    const nextEpochId = GraphBigInt.fromString(currentEpoch.id)
+      .plus(GraphBigInt.fromI32(1))
       .toString();
     const nextEpoch = Epoch.load(nextEpochId);
     if (nextEpoch) {
@@ -56,7 +56,8 @@ export function getEpochForBlock(blockNumber: BigInt): string {
   return currentEpoch.id;
 }
 
-function getEpochFromRanges(blockNumber: BigInt): string {
+function getEpochFromRanges(blockNumber: GraphBigInt): string {
+  // @ts-ignore
   const blockNumberInt = Number.parseInt(blockNumber.toString());
 
   for (let i = 0; i < epochRanges.length; i++) {

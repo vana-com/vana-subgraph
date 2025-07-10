@@ -1,4 +1,9 @@
-import { log, store, BigInt, Bytes } from "@graphprotocol/graph-ts";
+import {
+  log,
+  store,
+  BigInt as GraphBigInt,
+  Bytes,
+} from "@graphprotocol/graph-ts";
 import {
   PermissionAdded,
   ServerTrusted,
@@ -36,7 +41,7 @@ export function handlePermissionAdded(event: PermissionAdded): void {
       "Could not get permission data for id {}. Nonce and signature will be zero.",
       [permissionId.toString()],
     );
-    permission.nonce = BigInt.zero();
+    permission.nonce = GraphBigInt.zero();
     // FIX: Use an empty Bytes array for an empty signature.
     permission.signature = new Bytes(0);
   }
@@ -52,7 +57,7 @@ export function handleServerTrusted(event: ServerTrusted): void {
 
   const user = getOrCreateUser(event.params.user.toHex());
   const serverId = event.params.serverId;
-  const compositeId = user.id + "-" + serverId.toHex();
+  const compositeId = `${user.id}-${serverId.toHex()}`;
 
   let trustedServer = TrustedServer.load(compositeId);
   if (trustedServer == null) {
@@ -74,7 +79,7 @@ export function handleServerUntrusted(event: ServerUntrusted): void {
 
   const userId = event.params.user.toHex();
   const serverId = event.params.serverId.toHex();
-  const compositeId = userId + "-" + serverId;
+  const compositeId = `${userId}-${serverId}`;
 
   const trustedServer = TrustedServer.load(compositeId);
   if (trustedServer != null) {

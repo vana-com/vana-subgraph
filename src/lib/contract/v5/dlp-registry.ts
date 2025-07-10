@@ -1,4 +1,4 @@
-import { BigInt, log } from "@graphprotocol/graph-ts";
+import { BigInt as GraphBigInt, log } from "@graphprotocol/graph-ts";
 import {
   DlpRegistered,
   DlpUpdated,
@@ -9,9 +9,7 @@ import {
 } from "../../../../generated/DLPRegistryImplementationV5/DLPRegistryImplementationV5";
 
 import { Dlp } from "../../../../generated/schema";
-import { getTotalsIdDlp } from "../../entity/totals/constants";
 import { getOrCreateDlpList } from "../../../../src/lib/entity/dlp-list";
-import { getOrCreateTotals } from "../../entity/totals";
 import { getOrCreateDlp, getOrCreateUser } from "../shared";
 
 // Mirrored from DLPRegistry.IDLPRegistry.DlpStatus
@@ -46,13 +44,13 @@ export function handleDlpRegisteredV5(event: DlpRegistered): void {
   dlp.createdAt = event.block.timestamp;
   dlp.createdTxHash = event.transaction.hash;
   dlp.createdAtBlock = event.block.number;
-  dlp.status = BigInt.fromI32(dlpStatus.REGISTERED);
+  dlp.status = GraphBigInt.fromI32(dlpStatus.REGISTERED);
 
   // New field in v5
   dlp.isVerified = false;
 
   // Keep staking fields for backward compatibility but set to zero
-  dlp.performanceRating = BigInt.zero();
+  dlp.performanceRating = GraphBigInt.zero();
 
   dlp.save();
 
@@ -102,7 +100,7 @@ export function handleDlpStatusUpdatedV5(event: DlpStatusUpdated): void {
 
   if (dlp != null) {
     const newStatus = event.params.newStatus;
-    dlp.status = BigInt.fromI32(newStatus);
+    dlp.status = GraphBigInt.fromI32(newStatus);
 
     // Track eligibility transitions
     if (newStatus === dlpStatus.ELIGIBLE) {
@@ -142,9 +140,9 @@ export function handleDlpVerificationUpdatedV5(
     }
 
     if (isEligible) {
-      dlp.status = BigInt.fromI32(dlpStatus.ELIGIBLE);
+      dlp.status = GraphBigInt.fromI32(dlpStatus.ELIGIBLE);
     } else {
-      dlp.status = BigInt.fromI32(dlpStatus.REGISTERED);
+      dlp.status = GraphBigInt.fromI32(dlpStatus.REGISTERED);
     }
     dlp.save();
   } else {
@@ -172,9 +170,9 @@ export function handleDlpTokenUpdatedV5(event: DlpTokenUpdated): void {
   }
 
   if (isEligible) {
-    dlp.status = BigInt.fromI32(dlpStatus.ELIGIBLE);
+    dlp.status = GraphBigInt.fromI32(dlpStatus.ELIGIBLE);
   } else {
-    dlp.status = BigInt.fromI32(dlpStatus.REGISTERED);
+    dlp.status = GraphBigInt.fromI32(dlpStatus.REGISTERED);
   }
   dlp.save();
 }
@@ -185,5 +183,4 @@ export function handleDlpRegistrationDepositAmountUpdatedV5(
   log.info("handleDlpRegistrationDepositAmountUpdatedV5: {}", [
     event.transaction.hash.toHexString(),
   ]);
-  // No state changes needed for deposit amount updates
 }
