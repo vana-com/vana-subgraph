@@ -12,7 +12,7 @@ import { Dlp } from "../../../../generated/schema";
 import { getTotalsIdDlp } from "../../entity/totals/constants";
 import { getOrCreateDlpList } from "../../../../src/lib/entity/dlp-list";
 import { getOrCreateTotals } from "../../entity/totals";
-import {getOrCreateDlp, getOrCreateUser} from "../shared";
+import { getOrCreateDlp, getOrCreateUser } from "../shared";
 
 // Mirrored from DLPRegistry.IDLPRegistry.DlpStatus
 enum dlpStatus {

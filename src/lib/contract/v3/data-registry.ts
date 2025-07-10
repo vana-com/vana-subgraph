@@ -21,7 +21,7 @@ import {
   getTotalsIdDlp,
   TOTALS_ID_GLOBAL,
 } from "../../entity/totals";
-import {getOrCreateDlp, getOrCreateUser} from "../shared";
+import { getOrCreateDlp, getOrCreateUser } from "../shared";
 
 export function handleFileAddedV3(event: FileAddedEvent): void {
   log.info("Handling DataRegistry FileAdded with transaction hash: {}", [

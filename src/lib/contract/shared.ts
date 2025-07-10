@@ -1,5 +1,5 @@
-import {Dlp, User} from "../../../generated/schema";
-import {getOrCreateTotals, getTotalsIdDlp} from "../entity/totals";
+import { Dlp, User } from "../../../generated/schema";
+import { getOrCreateTotals, getTotalsIdDlp } from "../entity/totals";
 
 export function getOrCreateUser(userId: string): User {
   let user = User.load(userId);

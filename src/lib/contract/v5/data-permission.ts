@@ -32,7 +32,10 @@ export function handlePermissionAdded(event: PermissionAdded): void {
     permission.nonce = permissionData.value.nonce;
     permission.signature = permissionData.value.signature;
   } else {
-    log.warning("Could not get permission data for id {}. Nonce and signature will be zero.", [permissionId.toString()]);
+    log.warning(
+      "Could not get permission data for id {}. Nonce and signature will be zero.",
+      [permissionId.toString()],
+    );
     permission.nonce = BigInt.zero();
     // FIX: Use an empty Bytes array for an empty signature.
     permission.signature = new Bytes(0);
@@ -77,6 +80,8 @@ export function handleServerUntrusted(event: ServerUntrusted): void {
   if (trustedServer != null) {
     store.remove("TrustedServer", compositeId);
   } else {
-    log.warning("Attempted to untrust a server that was not found: {}", [compositeId]);
+    log.warning("Attempted to untrust a server that was not found: {}", [
+      compositeId,
+    ]);
   }
 }

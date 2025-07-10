@@ -21,7 +21,7 @@ import {
   TOTALS_ID_GLOBAL,
 } from "../../entity/totals";
 import { getEpochForBlock } from "../../entity/epoch";
-import {getOrCreateDlp, getOrCreateUser} from "../shared";
+import { getOrCreateDlp, getOrCreateUser } from "../shared";
 
 export function handleFileAddedV2(event: FileAddedEvent): void {
   log.info("Handling DataRegistry FileAdded with transaction hash: {}", [
