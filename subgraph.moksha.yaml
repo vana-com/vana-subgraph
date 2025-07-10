@@ -239,9 +239,6 @@ dataSources:
       abis:
         - name: DataPermissionImplementation
           file: ./abis/v5/DataPermissionImplementation.json
-      callHandlers:
-        - function: permissions(uint256)
-          handler: handleGetPermission
       eventHandlers:
         - event: PermissionAdded(indexed uint256,indexed address,string)
           handler: handlePermissionAdded
