@@ -2,7 +2,7 @@ import { BigInt as GraphBigInt, log } from "@graphprotocol/graph-ts";
 
 import {
   DataRegistryProof,
-  EpochReference,
+  File,
   FileOwner,
 } from "../../../../generated/schema";
 
@@ -10,18 +10,34 @@ import {
   FileAdded as FileAddedEvent,
   ProofAdded as FileProofAdded,
 } from "../../../../generated/DataRegistryImplementationV1/DataRegistryImplementationV1";
-import { EPOCH_REFERENCE_ID_CURRENT } from "../../entity/epoch";
+import { getEpochForBlock } from "../../entity/epoch"; // FIX: Added getEpochForBlock and EPOCH_REFERENCE_ID_CURRENT here
 import {
   getOrCreateUserTotals,
   getUserTotalsId,
 } from "../../entity/usertotals";
 import { getOrCreateTotals, TOTALS_ID_GLOBAL } from "../../entity/totals";
-import { getEpochForBlock } from "../../entity/epoch";
+import { getOrCreateUser } from "../shared";
 
 export function handleFileAddedV1(event: FileAddedEvent): void {
   log.info("Handling DataRegistry FileAdded with transaction hash: {}", [
     event.transaction.hash.toHex(),
   ]);
+
+  // Create user entity if it doesn't exist
+  const user = getOrCreateUser(event.params.ownerAddress.toHex());
+
+  // Create new File entity
+  const file = new File(event.params.fileId.toString());
+  file.owner = user.id;
+  file.url = event.params.url;
+  file.addedAtBlock = event.block.number;
+  file.addedAtTimestamp = event.block.timestamp;
+  file.transactionHash = event.transaction.hash;
+
+  // V1 of the contract does not support schemaId, so we set it to 0
+  file.schemaId = GraphBigInt.fromI32(0);
+
+  file.save();
 
   const ownership = new FileOwner(event.params.fileId.toString());
   ownership.ownerAddress = event.params.ownerAddress;
