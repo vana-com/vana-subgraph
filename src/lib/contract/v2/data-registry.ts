@@ -4,6 +4,7 @@ import {
   DataRegistryProof,
   File,
   FileOwner,
+  Dlp,
 } from "../../../../generated/schema";
 
 import {
@@ -21,7 +22,7 @@ import {
   TOTALS_ID_GLOBAL,
 } from "../../entity/totals";
 import { getEpochForBlock } from "../../entity/epoch";
-import { getOrCreateDlp, getOrCreateUser } from "../shared";
+import { getOrCreateUser } from "../shared";
 
 export function handleFileAddedV2(event: FileAddedEvent): void {
   log.info("Handling DataRegistry FileAdded with transaction hash: {}", [
@@ -56,13 +57,18 @@ export function handleDataRegistryProofAddedV2(event: FileProofAdded): void {
 
   // Get epoch for the current block
   const epochId = getEpochForBlock(event.block.number);
-  if (!epochId) {
+  // FIX: Check for "-1" explicitly, as it is a truthy string
+  if (epochId == "-1") {
     log.error("No epoch found for block {}", [event.block.number.toString()]);
     return;
   }
 
-  // Ensure the Dlp entity exists
-  const dlp = getOrCreateDlp(event.params.dlpId.toString());
+  // FIX: Load DLP instead of creating it to handle non-existent DLP case gracefully
+  const dlp = Dlp.load(event.params.dlpId.toString());
+  if (dlp == null) {
+    log.error("DLP not found for proof: {}", [event.params.dlpId.toString()]);
+    return;
+  }
 
   // Create a new DataRegistryProof entity
   const proof = new DataRegistryProof(event.transaction.hash.toHex());

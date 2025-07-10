@@ -2,6 +2,7 @@ import { BigInt as GraphBigInt, log } from "@graphprotocol/graph-ts";
 
 import {
   DataRegistryProof,
+  Dlp,
   File,
   FileOwner,
 } from "../../../../generated/schema";
@@ -10,7 +11,6 @@ import {
   FileAdded as FileAddedEvent,
   ProofAdded as FileProofAdded,
 } from "../../../../generated/DataRegistryImplementationV3/DataRegistryImplementationV3";
-import { getEpochForBlock } from "../../entity/epoch";
 import {
   getOrCreateUserTotals,
   getUserTotalsId,
@@ -21,7 +21,8 @@ import {
   getTotalsIdDlp,
   TOTALS_ID_GLOBAL,
 } from "../../entity/totals";
-import { getOrCreateDlp, getOrCreateUser } from "../shared";
+import { getOrCreateUser } from "../shared";
+import { getEpochForBlock } from "../../entity/epoch";
 
 export function handleFileAddedV3(event: FileAddedEvent): void {
   log.info("Handling DataRegistry FileAdded with transaction hash: {}", [
@@ -56,13 +57,18 @@ export function handleDataRegistryProofAddedV3(event: FileProofAdded): void {
 
   // Get epoch for the current block
   const epochId = getEpochForBlock(event.block.number);
-  if (!epochId) {
+  // Check for "-1" explicitly, as it is a truthy string
+  if (epochId == "-1") {
     log.error("No epoch found for block {}", [event.block.number.toString()]);
     return;
   }
 
-  // Ensure the Dlp entity exists
-  const dlp = getOrCreateDlp(event.params.dlpId.toString());
+  // Load DLP instead of creating it to handle non-existent DLP case gracefully
+  const dlp = Dlp.load(event.params.dlpId.toString());
+  if (dlp == null) {
+    log.error("DLP not found for proof: {}", [event.params.dlpId.toString()]);
+    return;
+  }
 
   // Create a new DataRegistryProof entity
   const proof = new DataRegistryProof(event.transaction.hash.toHex());

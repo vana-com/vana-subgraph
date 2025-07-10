@@ -155,8 +155,15 @@ export function handleDlpTokenUpdatedV5(event: DlpTokenUpdated): void {
     event.transaction.hash.toHexString(),
   ]);
 
-  // Ensure the Dlp entity exists
-  const dlp = getOrCreateDlp(event.params.dlpId.toString());
+  // Load DLP instead of creating it to handle non-existent DLP case gracefully
+  const dlp = Dlp.load(event.params.dlpId.toString());
+
+  if (dlp == null) {
+    log.error("DLP not found for token update: {}", [
+      event.params.dlpId.toString(),
+    ]);
+    return;
+  }
 
   dlp.token = event.params.tokenAddress;
   dlp.save();
