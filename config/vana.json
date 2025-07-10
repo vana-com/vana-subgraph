@@ -19,7 +19,8 @@
       "vanaEpoch": true,
       "dlpPerformance": true,
       "queryEngine": true,
-      "dataRefinerRegistry": true
+      "dataRefinerRegistry": true,
+      "dataPermission": true
     }
   },
   "initParams": {
