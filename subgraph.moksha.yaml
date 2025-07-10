@@ -163,6 +163,8 @@ dataSources:
           handler: handleDlpVerificationUpdatedV5
         - event: DlpTokenUpdated(indexed uint256,address)
           handler: handleDlpTokenUpdatedV5
+        - event: DlpSubEligibilityThresholdUpdated(uint256)
+          handler: handleDlpSubEligibilityThresholdUpdatedV5
         - event: DlpRegistrationDepositAmountUpdated(uint256)
           handler: handleDlpRegistrationDepositAmountUpdatedV5
       file: ./src/mapping.ts
