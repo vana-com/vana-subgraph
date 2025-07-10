@@ -63,3 +63,6 @@ export * from "./lib/contract/v5/vana-epoch";
 {{#includes.v5.dlpPerformance}}
 export * from "./lib/contract/v5/dlp-performance";
 {{/includes.v5.dlpPerformance}}
+{{#includes.v5.dataPermission}}
+export * from "./lib/contract/v5/data-permission";
+{{/includes.v5.dataPermission}}
