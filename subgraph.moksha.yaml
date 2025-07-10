@@ -250,7 +250,7 @@ dataSources:
 
   - kind: ethereum/contract
     name: DataRegistryImplementationV5
-    network: mainnet
+    network: moksha
     source:
       address: "0x8C8788f98385F6ba1adD4234e551ABba0f82Cb7C"
       abi: DataRegistryImplementationV5
