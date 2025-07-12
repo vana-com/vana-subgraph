@@ -4,7 +4,7 @@ type User @entity(immutable: false) {
   "All files owned by this user"
   files: [File!]! @derivedFrom(field: "owner")
   "All permissions granted by this user"
-  permissions: [Permission!]! @derivedFrom(field: "user")
+  permissions: [Permission!]! @derivedFrom(field: "grantor")
   "All servers trusted by this user"
   trustedServers: [TrustedServer!]! @derivedFrom(field: "user")
 }
@@ -158,13 +158,17 @@ type Permission @entity(immutable: false) {
   "The unique ID of the permission, equivalent to the on-chain permissionId."
   id: ID!
   "The user who granted the permission."
-  user: User!
+  grantor: User!
   "The content identifier (e.g., IPFS URL) for the grant details."
   grant: String!
   "The nonce used for this permission grant."
   nonce: BigInt!
   "The signature provided by the user."
   signature: Bytes!
+  "Whether the permission is currently active or has been revoked."
+  isActive: Boolean!
+  "File IDs associated with this permission."
+  fileIds: [BigInt!]!
   "The block number when the permission was granted."
   addedAtBlock: BigInt!
   "The timestamp when the permission was granted."

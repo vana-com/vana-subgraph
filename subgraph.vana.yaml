@@ -227,9 +227,9 @@ dataSources:
     name: DataPermissionImplementation
     network: vana
     source:
-      address: "0x3acB2023DF2617EFb61422BA0c8C6E97916961e0"
+      address: "0x31fb1D48f6B2265A4cAD516BC39E96a18fb7c8de"
       abi: DataPermissionImplementation
-      startBlock: 3425120
+      startBlock: 3965727
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -242,8 +242,10 @@ dataSources:
         - name: DataPermissionImplementation
           file: ./abis/v5/DataPermissionImplementation.json
       eventHandlers:
-        - event: PermissionAdded(indexed uint256,indexed address,string)
+        - event: PermissionAdded(indexed uint256,indexed address,string,uint256[])
           handler: handlePermissionAdded
+        - event: PermissionRevoked(indexed uint256)
+          handler: handlePermissionRevoked
         - event: ServerTrusted(indexed address,indexed address,string)
           handler: handleServerTrusted
         - event: ServerUntrusted(indexed address,indexed address)
