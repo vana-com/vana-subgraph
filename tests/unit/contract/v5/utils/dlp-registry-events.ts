@@ -8,7 +8,6 @@ import {
   DlpRegistered,
   DlpUpdated,
   DlpStatusUpdated,
-  DlpSubEligibilityThresholdUpdated,
   DlpVerificationUpdated,
   DlpTokenUpdated,
 } from "../../../../../generated/DLPRegistryImplementationV5/DLPRegistryImplementationV5";
@@ -103,23 +102,6 @@ export function createDlpStatusUpdatedEvent(
     new ethereum.EventParam(
       "newStatus",
       ethereum.Value.fromUnsignedBigInt(GraphBigInt.fromI32(<i32>newStatus)),
-    ),
-  ];
-
-  return event;
-}
-
-export function createDlpEligibilityThresholdUpdatedEvent(
-  newDlpSubEligibilityThreshold: number,
-): DlpSubEligibilityThresholdUpdated {
-  const event = changetype<DlpSubEligibilityThresholdUpdated>(newMockEvent());
-
-  event.parameters = [
-    new ethereum.EventParam(
-      "newDlpSubEligibilityThreshold",
-      ethereum.Value.fromUnsignedBigInt(
-        GraphBigInt.fromI32(<i32>newDlpSubEligibilityThreshold),
-      ),
     ),
   ];
 

@@ -62,7 +62,7 @@ typings/
 
 # matchstick output
 tests/unit/.docker
-tests/unit/.bin 
+tests/unit/.bin
 tests/unit/.latest.json
 
 subgraph.yaml
@@ -72,3 +72,5 @@ build
 generated
 
 src/mapping.ts
+
+src/uniswap/common/chain.ts

@@ -1,5 +1,7 @@
-import {Dlp, User} from "../../../generated/schema";
-import {getOrCreateTotals, getTotalsIdDlp} from "../entity/totals";
+import {Dlp, Token, User} from "../../../generated/schema";
+import {getOrCreateTotals, getTotalsDlpId} from "../entity/totals";
+import {Address, BigDecimal, BigInt, Bytes} from "@graphprotocol/graph-ts";
+import {REFERENCE_TOKEN} from "../../uniswap/common/chain";
 
 export function getOrCreateUser(userId: string): User {
   let user = User.load(userId);
@@ -15,7 +17,7 @@ export function getOrCreateDlp(dlpId: string): Dlp {
   if (dlp == null) {
     dlp = new Dlp(dlpId);
 
-    const dlpTotalsId = getTotalsIdDlp(dlpId);
+    const dlpTotalsId = getTotalsDlpId(dlpId);
     getOrCreateTotals(dlpTotalsId);
 
     // Link totals to Dlp
@@ -23,4 +25,37 @@ export function getOrCreateDlp(dlpId: string): Dlp {
     dlp.save();
   }
   return dlp;
+}
+
+export function getTokenAmountInVana(
+  tokenAddress: Bytes,
+  amount: BigInt,
+): BigDecimal {
+  if (tokenAddress == Address.zero()) {
+    tokenAddress = Address.fromString(REFERENCE_TOKEN);
+  }
+
+  // //temporary fix until we have uniswap integrated
+  // if (tokenAddress == Address.fromString(REFERENCE_TOKEN) ) {
+  //   const decimals = 18 as u8;
+  //
+  //   let precision = BigInt.fromI32(10).pow(decimals);
+  //
+  //   return amount.toBigDecimal().div(precision.toBigDecimal());
+  // } else {
+  //   return BigDecimal.fromString("0");
+  // }
+
+  const token = Token.load(tokenAddress);
+
+  if (!token) {
+    throw new Error(`Token not found: ${tokenAddress.toHex()}`);
+  }
+
+  const decimals = Number.parseInt(token.decimals.toString()) as u8;
+
+  let precision = BigInt.fromI32(10).pow(decimals);
+  const decimalAmount = amount.toBigDecimal().div(precision.toBigDecimal());
+
+  return decimalAmount.times(token.derivedETH);
 }

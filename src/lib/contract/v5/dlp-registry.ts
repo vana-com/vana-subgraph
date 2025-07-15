@@ -3,15 +3,12 @@ import {
   DlpRegistered,
   DlpUpdated,
   DlpStatusUpdated,
-  DlpVerificationUpdated,
+  DlpVerificationBlockUpdated,
   DlpTokenUpdated,
-  DlpRegistrationDepositAmountUpdated,
 } from "../../../../generated/DLPRegistryImplementationV5/DLPRegistryImplementationV5";
 
 import { Dlp } from "../../../../generated/schema";
-import { getTotalsIdDlp } from "../../entity/totals/constants";
 import { getOrCreateDlpList } from "../../../../src/lib/entity/dlp-list";
-import { getOrCreateTotals } from "../../entity/totals";
 import {getOrCreateDlp, getOrCreateUser} from "../shared";
 
 // Mirrored from DLPRegistry.IDLPRegistry.DlpStatus
@@ -48,8 +45,6 @@ export function handleDlpRegisteredV5(event: DlpRegistered): void {
   dlp.createdAtBlock = event.block.number;
   dlp.status = BigInt.fromI32(dlpStatus.REGISTERED);
 
-  // New field in v5
-  dlp.isVerified = false;
 
   // Keep staking fields for backward compatibility but set to zero
   dlp.performanceRating = BigInt.zero();
@@ -104,25 +99,16 @@ export function handleDlpStatusUpdatedV5(event: DlpStatusUpdated): void {
     const newStatus = event.params.newStatus;
     dlp.status = BigInt.fromI32(newStatus);
 
-    // Track eligibility transitions
-    if (newStatus === dlpStatus.ELIGIBLE) {
-      dlp.isRewardEligible = true;
-      dlp.rewardEligibleAt = event.block.timestamp;
-      dlp.rewardEligibleAtBlock = event.block.number;
-    } else {
-      dlp.isRewardEligible = false;
-    }
-
     dlp.save();
   } else {
     log.error("DLP not found during status update: {}", [dlpId]);
   }
 }
 
-export function handleDlpVerificationUpdatedV5(
-  event: DlpVerificationUpdated,
+export function handleDlpVerificationBlockUpdatedV5(
+  event: DlpVerificationBlockUpdated,
 ): void {
-  log.info("Handling DlpVerificationUpdated with transaction hash: {}", [
+  log.info("Handling DlpVerificationBlockUpdated with transaction hash: {}", [
     event.transaction.hash.toHexString(),
   ]);
 
@@ -130,22 +116,7 @@ export function handleDlpVerificationUpdatedV5(
   const dlp = Dlp.load(dlpId);
 
   if (dlp != null) {
-    dlp.isVerified = event.params.verified;
-    dlp.save();
-
-    // Update status based on verification and token status
-    let isEligible = false;
-    if (dlp.isVerified) {
-      if (!(dlp.token === null)) {
-        isEligible = true;
-      }
-    }
-
-    if (isEligible) {
-      dlp.status = BigInt.fromI32(dlpStatus.ELIGIBLE);
-    } else {
-      dlp.status = BigInt.fromI32(dlpStatus.REGISTERED);
-    }
+    dlp.verificationBlockNumber = event.params.verificationBlockNumber;
     dlp.save();
   } else {
     log.error("DLP not found during verification update: {}", [dlpId]);
@@ -162,28 +133,4 @@ export function handleDlpTokenUpdatedV5(event: DlpTokenUpdated): void {
 
   dlp.token = event.params.tokenAddress;
   dlp.save();
-
-  // Update status based on verification and token status
-  let isEligible = false;
-  if (dlp.isVerified) {
-    if (!(dlp.token === null)) {
-      isEligible = true;
-    }
-  }
-
-  if (isEligible) {
-    dlp.status = BigInt.fromI32(dlpStatus.ELIGIBLE);
-  } else {
-    dlp.status = BigInt.fromI32(dlpStatus.REGISTERED);
-  }
-  dlp.save();
-}
-
-export function handleDlpRegistrationDepositAmountUpdatedV5(
-  event: DlpRegistrationDepositAmountUpdated,
-): void {
-  log.info("handleDlpRegistrationDepositAmountUpdatedV5: {}", [
-    event.transaction.hash.toHexString(),
-  ]);
-  // No state changes needed for deposit amount updates
 }

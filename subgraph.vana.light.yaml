@@ -1,3 +1,4 @@
+#use this file to deploy the light version of the subgraph (without unswap)
 specVersion: 0.0.9
 description: Subgraph for DLPRoot, DataRegistry, VanaEpoch, DLPPerformance
 repository: "https://github.com/vana-com/vana-subgraph"
@@ -16,12 +17,12 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Bootstrap
-    network: moksha
+    network: vana
     source:
       address: "0x0000000000000000000000000000000000000000" # dummy
       abi: Bootstrap
-      startBlock: 655081
-      endBlock: 655081
+      startBlock: 2558883
+      endBlock: 2558883
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -35,66 +36,65 @@ dataSources:
       blockHandlers:
         - handler: handleBootstrap
       file: ./src/lib/entity/bootstrap/bootstrap.ts
-  # v1
-  - kind: ethereum/contract
-    name: DataRegistryImplementationV1
-    network: moksha
-    source:
-      address: "0x8C8788f98385F6ba1adD4234e551ABba0f82Cb7C"
-      abi: DataRegistryImplementationV1
-      startBlock: 655081
-      endBlock: 1019085
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.6
-      language: wasm/assemblyscript
-      entities:
-        - EpochReference
-        - DataRegistryProof
-      abis:
-        - name: DataRegistryImplementationV1
-          file: ./abis/v1/DataRegistryImplementation.json
-      eventHandlers:
-        - event: FileAdded(indexed uint256,indexed address,string)
-          handler: handleFileAddedV1
-        - event: ProofAdded(indexed uint256,indexed uint256)
-          handler: handleDataRegistryProofAddedV1
-      file: ./src/mapping.ts
-
-  # v2
-  - kind: ethereum/contract
-    name: DataRegistryImplementationV2
-    network: moksha
-    source:
-      address: "0x8C8788f98385F6ba1adD4234e551ABba0f82Cb7C"
-      abi: DataRegistryImplementationV2
-      startBlock: 1019086
-      endBlock: 1239930
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.6
-      language: wasm/assemblyscript
-      entities:
-        - EpochReference
-        - DataRegistryProof
-      abis:
-        - name: DataRegistryImplementationV2
-          file: ./abis/v2/DataRegistryImplementation.json
-      eventHandlers:
-        - event: FileAdded(indexed uint256,indexed address,string)
-          handler: handleFileAddedV2
-        - event: ProofAdded(indexed uint256,indexed uint256,indexed uint256,uint256)
-          handler: handleDataRegistryProofAddedV2
-      file: ./src/mapping.ts
-
-# v3
+#  # v1
+#  - kind: ethereum/contract
+#    name: DataRegistryImplementationV1
+#    network: vana
+#    source:
+#      address: "0x8C8788f98385F6ba1adD4234e551ABba0f82Cb7C"
+#      abi: DataRegistryImplementationV1
+#      startBlock: 700000
+#      endBlock: 1283120
+#    mapping:
+#      kind: ethereum/events
+#      apiVersion: 0.0.6
+#      language: wasm/assemblyscript
+#      entities:
+#        - EpochReference
+#        - DataRegistryProof
+#      abis:
+#        - name: DataRegistryImplementationV1
+#          file: ./abis/v1/DataRegistryImplementation.json
+#      eventHandlers:
+#        - event: FileAdded(indexed uint256,indexed address,string)
+#          handler: handleFileAddedV1
+#        - event: ProofAdded(indexed uint256,indexed uint256)
+#          handler: handleDataRegistryProofAddedV1
+#      file: ./src/mapping.ts
+#
+#  #v2
+#  - kind: ethereum/contract
+#    name: DataRegistryImplementationV2
+#    network: vana
+#    source:
+#      address: "0x8C8788f98385F6ba1adD4234e551ABba0f82Cb7C"
+#      abi: DataRegistryImplementationV2
+#      startBlock: 1283121
+#      endBlock: 2109974
+#    mapping:
+#      kind: ethereum/events
+#      apiVersion: 0.0.6
+#      language: wasm/assemblyscript
+#      entities:
+#        - EpochReference
+#        - DataRegistryProof
+#      abis:
+#        - name: DataRegistryImplementationV2
+#          file: ./abis/v2/DataRegistryImplementation.json
+#      eventHandlers:
+#        - event: FileAdded(indexed uint256,indexed address,string)
+#          handler: handleFileAddedV2
+#        - event: ProofAdded(indexed uint256,indexed uint256,indexed uint256,uint256)
+#          handler: handleDataRegistryProofAddedV2
+#      file: ./src/mapping.ts
+  #v3
   - kind: ethereum/contract
     name: DataRegistryImplementationV3
-    network: moksha
+    network: vana
     source:
       address: "0x8C8788f98385F6ba1adD4234e551ABba0f82Cb7C"
       abi: DataRegistryImplementationV3
-      startBlock: 1239931
+      startBlock: 2558883
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -112,14 +112,14 @@ dataSources:
           handler: handleDataRegistryProofAddedV3
       file: ./src/mapping.ts
 
-#v5
+  # v4
   - kind: ethereum/contract
     name: QueryEngineImplementation
-    network: moksha
+    network: vana
     source:
       address: "0xd25Eb66EA2452cf3238A2eC6C1FD1B7F5B320490"
       abi: QueryEngineImplementation
-      startBlock: 2208601
+      startBlock: 2558883
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -136,11 +136,11 @@ dataSources:
 
   - kind: ethereum/contract
     name: DataRefinerRegistryImplementation
-    network: moksha
+    network: vana
     source:
       address: "0x93c3EF89369fDcf08Be159D9DeF0F18AB6Be008c"
       abi: DataRefinerRegistryImplementation
-      startBlock: 2207166
+      startBlock: 2556371
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -155,13 +155,14 @@ dataSources:
           handler: handleRefinerAdded
       file: ./src/mapping.ts
 
+  #v5
   - kind: ethereum/contract
     name: DLPRegistryImplementationV5
-    network: moksha
+    network: vana
     source:
       address: "0x4D59880a924526d1dD33260552Ff4328b1E18a43"
       abi: DLPRegistryImplementationV5
-      startBlock: 2444992
+      startBlock: 3157613
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -188,11 +189,11 @@ dataSources:
 
   - kind: ethereum/contract
     name: VanaEpochImplementationV5
-    network: moksha
+    network: vana
     source:
       address: "0x2063cFF0609D59bCCc196E20Eb58A8696a6b15A0"
       abi: VanaEpochImplementationV5
-      startBlock: 2445062
+      startBlock: 3157613
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -219,11 +220,11 @@ dataSources:
 
   - kind: ethereum/contract
     name: DLPPerformanceImplementationV5
-    network: moksha
+    network: vana
     source:
       address: "0x847715C7DB37cF286611182Be0bD333cbfa29cc1"
       abi: DLPPerformanceImplementationV5
-      startBlock: 2445086
+      startBlock: 3157613
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -240,67 +241,67 @@ dataSources:
           handler: handleEpochDlpPerformancesSavedV5
       file: ./src/mapping.ts
 
-  - kind: ethereum/contract
-    name: Factory
-    network: moksha
-    source:
-      address: "0x7067Eb594d6dc6a5AD33c3fcFCa7183F369bC2e8"
-      abi: Factory
-      startBlock: 596576
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.6
-      language: wasm/assemblyscript
-      entities:
-        - Pool
-        - Token
-      abis:
-        - name: Factory
-          file: ./abis/uniswap/factory.json
-        - name: ERC20
-          file: ./abis/uniswap/ERC20.json
-        - name: ERC20SymbolBytes
-          file: ./abis/uniswap/ERC20SymbolBytes.json
-        - name: ERC20NameBytes
-          file: ./abis/uniswap/ERC20NameBytes.json
-        - name: Pool
-          file: ./abis/uniswap/pool.json
-      eventHandlers:
-        - event: PoolCreated(indexed address,indexed address,indexed uint24,int24,address)
-          handler: handlePoolCreated
-      file: ./src/mapping.ts
-
-templates:
-  - kind: ethereum/contract
-    name: Pool
-    network: moksha
-    source:
-      abi: Pool
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.6
-      language: wasm/assemblyscript
-      entities:
-        - Pool
-        - Token
-      abis:
-        - name: Pool
-          file: ./abis/uniswap/pool.json
-        - name: Factory
-          file: ./abis/uniswap/factory.json
-        - name: ERC20
-          file: ./abis/uniswap/ERC20.json
-      eventHandlers:
-        - event: Initialize(uint160,int24)
-          handler: handleInitialize
-        - event: Swap(indexed address,indexed address,int256,int256,uint160,uint128,int24)
-          handler: handleSwap
-        - event: Mint(address,indexed address,indexed int24,indexed
-            int24,uint128,uint256,uint256)
-          handler: handleMint
-        - event: Burn(indexed address,indexed int24,indexed int24,uint128,uint256,uint256)
-          handler: handleBurn
-        - event: Collect(indexed address,address,indexed int24,indexed
-            int24,uint128,uint128)
-          handler: handleCollect
-      file: ./src/mapping.ts
+#  - kind: ethereum/contract
+#    name: Factory
+#    network: vana
+#    source:
+#      address: "0xc2a0d530e57B1275fbce908031DA636f95EA1E38"
+#      abi: Factory
+#      startBlock: 763744
+#    mapping:
+#      kind: ethereum/events
+#      apiVersion: 0.0.6
+#      language: wasm/assemblyscript
+#      entities:
+#        - Pool
+#        - Token
+#      abis:
+#        - name: Factory
+#          file: ./abis/uniswap/factory.json
+#        - name: ERC20
+#          file: ./abis/uniswap/ERC20.json
+#        - name: ERC20SymbolBytes
+#          file: ./abis/uniswap/ERC20SymbolBytes.json
+#        - name: ERC20NameBytes
+#          file: ./abis/uniswap/ERC20NameBytes.json
+#        - name: Pool
+#          file: ./abis/uniswap/pool.json
+#      eventHandlers:
+#        - event: PoolCreated(indexed address,indexed address,indexed uint24,int24,address)
+#          handler: handlePoolCreated
+#      file: ./src/mapping.ts
+#
+#templates:
+#  - kind: ethereum/contract
+#    name: Pool
+#    network: vana
+#    source:
+#      abi: Pool
+#    mapping:
+#      kind: ethereum/events
+#      apiVersion: 0.0.6
+#      language: wasm/assemblyscript
+#      entities:
+#        - Pool
+#        - Token
+#      abis:
+#        - name: Pool
+#          file: ./abis/uniswap/pool.json
+#        - name: Factory
+#          file: ./abis/uniswap/factory.json
+#        - name: ERC20
+#          file: ./abis/uniswap/ERC20.json
+#      eventHandlers:
+#        - event: Initialize(uint160,int24)
+#          handler: handleInitialize
+#        - event: Swap(indexed address,indexed address,int256,int256,uint160,uint128,int24)
+#          handler: handleSwap
+#        - event: Mint(address,indexed address,indexed int24,indexed
+#            int24,uint128,uint256,uint256)
+#          handler: handleMint
+#        - event: Burn(indexed address,indexed int24,indexed int24,uint128,uint256,uint256)
+#          handler: handleBurn
+#        - event: Collect(indexed address,address,indexed int24,indexed
+#            int24,uint128,uint128)
+#          handler: handleCollect
+#      file: ./src/mapping.ts

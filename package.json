@@ -5,12 +5,12 @@
     "codegen": "npx graph codegen",
     "build": "npx graph build",
     "prepare:moksha:thegraph": "cp ./subgraph.vana-moksha.yaml ./subgraph.yaml && mustache config/moksha.json src/mapping.ts.template > src/mapping.ts",
-    "prepare:moksha": "cp ./subgraph.moksha.yaml ./subgraph.yaml && mustache config/moksha.json src/mapping.ts.template > src/mapping.ts",
+    "prepare:moksha": "cp ./subgraph.moksha.yaml ./subgraph.yaml && yarn manual-copy-moksha && mustache config/moksha.json src/mapping.ts.template > src/mapping.ts",
     "deploy:moksha": "node ./scripts/deploy.js moksha",
     "delete:moksha": "node ./scripts/delete.js moksha",
     "tag:moksha": "node ./scripts/tag.js moksha",
     "untag:moksha": "node ./scripts/untag.js moksha",
-    "prepare:vana": "cp ./subgraph.vana.yaml ./subgraph.yaml && mustache config/vana.json src/mapping.ts.template > src/mapping.ts",
+    "prepare:vana": "cp ./subgraph.vana.yaml ./subgraph.yaml && yarn manual-copy-vana && mustache config/vana.json src/mapping.ts.template > src/mapping.ts",
     "deploy:vana": "node ./scripts/deploy.js vana",
     "delete:vana": "node ./scripts/delete.js vana",
     "tag:vana": "node ./scripts/tag.js vana",
@@ -25,7 +25,9 @@
     "format:unsafe": "biome check --write --unsafe",
     "create-local": "npx graph create --node http://localhost:8020/ moksha",
     "remove-local": "npx graph remove --node http://localhost:8020/ moksha",
-    "deploy-local": "npx graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 moksha"
+    "deploy-local": "npx graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 moksha",
+    "manual-copy-moksha": "cp -r config/uniswap/moksha/chain.ts src/uniswap/common/chain.ts",
+    "manual-copy-vana": "cp -r config/uniswap/vana/chain.ts src/uniswap/common/chain.ts"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.95.0",

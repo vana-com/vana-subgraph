@@ -1,8 +1,9 @@
-import { BigInt as GraphBigInt, log } from "@graphprotocol/graph-ts";
+import { BigInt as GraphBigInt, log, Bytes } from "@graphprotocol/graph-ts";
 
 import {
   DataRegistryProof,
   FileOwner,
+  Epoch,
 } from "../../../../generated/schema";
 
 import {
@@ -16,7 +17,7 @@ import {
 } from "../../entity/usertotals";
 import {
   getOrCreateTotals,
-  getTotalsIdDlp,
+  getTotalsDlpId,
   TOTALS_ID_GLOBAL,
 } from "../../entity/totals";
 import { getEpochForBlock } from "../../entity/epoch";
@@ -110,11 +111,13 @@ export function handleDataRegistryProofAddedV2(event: FileProofAdded): void {
   dlpUserTotals.save();
 
   // Update dlp file contribution totals
-  const dlpTotalsId = getTotalsIdDlp(event.params.dlpId.toString());
+  const dlpTotalsId = getTotalsDlpId(event.params.dlpId.toString());
   const dlpTotals = getOrCreateTotals(dlpTotalsId);
+
   dlpTotals.totalFileContributions = dlpTotals.totalFileContributions.plus(
     GraphBigInt.fromI32(1),
   );
+
   if (dlpUserTotals.fileContributionsCount.toI32() === 1) {
     dlpTotals.uniqueFileContributors = dlpTotals.uniqueFileContributors.plus(
       GraphBigInt.fromI32(1),

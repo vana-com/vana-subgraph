@@ -24,10 +24,26 @@ export class EpochRange {
   }
 }
 
+export class Dlp {
+  id: i32;
+  verificationBlockNumber: i32;
+
+  constructor(id: i32, verificationBlockNumber: i32) {
+    this.id = id;
+    this.verificationBlockNumber = verificationBlockNumber;
+  }
+}
+
 export const epochRanges: EpochRange[] = [
     {{#epochRanges}}
       new EpochRange({{ startBlock }}, {{ endBlock }}),
     {{/epochRanges}}
+];
+
+export const dlps: Dlp[] = [
+  {{#dlps}}
+    new Dlp({{ id }}, {{ verificationBlockNumber }}),
+  {{/dlps}}
 ];
 
 // V1
@@ -63,3 +79,9 @@ export * from "./lib/contract/v5/vana-epoch";
 {{#includes.v5.dlpPerformance}}
 export * from "./lib/contract/v5/dlp-performance";
 {{/includes.v5.dlpPerformance}}
+
+//uniswap
+{{#includes.uniswap.v3}}
+export * from "./uniswap/v3/mappings/factory";
+export * from "./uniswap/v3/mappings/core";
+{{/includes.uniswap.v3}}
