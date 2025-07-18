@@ -246,7 +246,7 @@ dataSources:
     source:
       address: "0x2e95B13EBda0009cb2ea398a843a49608AbFdd3d"
       abi: DataPortabilityGranteesImplementation
-      startBlock: 3608836
+      startBlock: 4052868
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -267,7 +267,7 @@ dataSources:
     source:
       address: "0x0d15681C472082e33Aac426C588d9d0C2264014c"
       abi: DataPortabilityPermissionsImplementation
-      startBlock: 3608836
+      startBlock: 4052868
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -292,7 +292,7 @@ dataSources:
     source:
       address: "0xE16b4b90c53122663479Dcbcd5f00C2ECF1b3a67"
       abi: DataPortabilityServersImplementation
-      startBlock: 3608836
+      startBlock: 4052868
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
