@@ -35,7 +35,7 @@ dataSources:
       blockHandlers:
         - handler: handleBootstrap
       file: ./src/lib/entity/bootstrap/bootstrap.ts
-  # v1
+# v1
   - kind: ethereum/contract
     name: DataRegistryImplementationV1
     network: moksha
@@ -61,7 +61,7 @@ dataSources:
           handler: handleDataRegistryProofAddedV1
       file: ./src/mapping.ts
 
-  # v2
+# v2
   - kind: ethereum/contract
     name: DataRegistryImplementationV2
     network: moksha
@@ -240,13 +240,35 @@ dataSources:
           handler: handleEpochDlpPerformancesSavedV5
       file: ./src/mapping.ts
 
+# v6
   - kind: ethereum/contract
-    name: DataPermissionImplementation
+    name: DataPortabilityGranteesImplementation
     network: moksha
     source:
-      address: "0x31fb1D48f6B2265A4cAD516BC39E96a18fb7c8de"
-      abi: DataPermissionImplementation
-      startBlock: 3517249
+      address: "0x2e95B13EBda0009cb2ea398a843a49608AbFdd3d"
+      abi: DataPortabilityGranteesImplementation
+      startBlock: 3608836
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Grantee
+      abis:
+        - name: DataPortabilityGranteesImplementation
+          file: ./abis/v6/DataPortabilityGranteesImplementation.json
+      eventHandlers:
+        - event: GranteeRegistered(indexed uint256,indexed address,indexed address,string)
+          handler: handleGranteeRegistered
+      file: ./src/mapping.ts
+
+  - kind: ethereum/contract
+    name: DataPortabilityPermissionsImplementation
+    network: moksha
+    source:
+      address: "0x0d15681C472082e33Aac426C588d9d0C2264014c"
+      abi: DataPortabilityPermissionsImplementation
+      startBlock: 3608836
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -254,45 +276,48 @@ dataSources:
       entities:
         - Permission
         - User
-        - Server
+        - Grantee
       abis:
-        - name: DataPermissionImplementation
-          file: ./abis/v5/DataPermissionImplementation.json
+        - name: DataPortabilityPermissionsImplementation
+          file: ./abis/v6/DataPortabilityPermissionsImplementation.json
       eventHandlers:
-        - event: PermissionAdded(indexed uint256,indexed address,string,uint256[])
+        - event: PermissionAdded(indexed uint256,indexed address,indexed uint256,string,uint256[])
           handler: handlePermissionAdded
         - event: PermissionRevoked(indexed uint256)
           handler: handlePermissionRevoked
-        - event: ServerTrusted(indexed address,indexed address,string)
-          handler: handleServerTrusted
-        - event: ServerUntrusted(indexed address,indexed address)
-          handler: handleServerUntrusted
       file: ./src/mapping.ts
 
   - kind: ethereum/contract
-    name: DataRegistryImplementationV5
+    name: DataPortabilityServersImplementation
     network: moksha
     source:
-      address: "0x8C8788f98385F6ba1adD4234e551ABba0f82Cb7C"
-      abi: DataRegistryImplementationV5
-      startBlock: 3425120
+      address: "0xE16b4b90c53122663479Dcbcd5f00C2ECF1b3a67"
+      abi: DataPortabilityServersImplementation
+      startBlock: 3608836
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
-        - EpochReference
-        - DataRegistryProof
+        - Server
+        - UserServer
+        - User
       abis:
-        - name: DataRegistryImplementationV5
-          file: ./abis/v5/DataRegistryImplementation.json
+        - name: DataPortabilityServersImplementation
+          file: ./abis/v6/DataPortabilityServersImplementation.json
       eventHandlers:
-        - event: FileAdded(indexed uint256,indexed address,string)
-          handler: handleFileAddedV3
-        - event: ProofAdded(indexed uint256,indexed address,uint256,indexed uint256,uint256,string)
-          handler: handleDataRegistryProofAddedV3
+        - event: ServerRegistered(indexed uint256,indexed address,indexed address,bytes,string)
+          handler: handleServerRegistered
+        - event: ServerUpdated(indexed uint256,string)
+          handler: handleServerUpdated
+        - event: ServerTrusted(indexed address,indexed uint256)
+          handler: handleServerTrusted
+        - event: ServerUntrusted(indexed address,indexed uint256)
+          handler: handleServerUntrusted
       file: ./src/mapping.ts
 
+
+# unuiswap
   - kind: ethereum/contract
     name: Factory
     network: moksha

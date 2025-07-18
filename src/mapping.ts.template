@@ -83,6 +83,17 @@ export * from "./lib/contract/v5/dlp-performance";
 export * from "./lib/contract/v5/data-permission";
 {{/includes.v5.dataPermission}}
 
+// V6
+{{#includes.v6.dataPortabilityGrantees}}
+export * from "./lib/contract/v6/data-portability-grantees";
+{{/includes.v6.dataPortabilityGrantees}}
+{{#includes.v6.dataPortabilityPermissions}}
+export * from "./lib/contract/v6/data-portability-permissions";
+{{/includes.v6.dataPortabilityPermissions}}
+{{#includes.v6.dataPortabilityServers}}
+export * from "./lib/contract/v6/data-portability-servers";
+{{/includes.v6.dataPortabilityServers}}
+
 //uniswap
 {{#includes.uniswap.v3}}
 export * from "./uniswap/v3/mappings/factory";

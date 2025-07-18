@@ -274,6 +274,81 @@ dataSources:
       file: ./src/mapping.ts
 
   - kind: ethereum/contract
+    name: DataPortabilityGranteesImplementation
+    network: vana-moksha
+    source:
+      address: "0x0000000000000000000000000000000000000000"
+      abi: DataPortabilityGranteesImplementation
+      startBlock: 4000000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Grantee
+      abis:
+        - name: DataPortabilityGranteesImplementation
+          file: ./abis/v6/DataPortabilityGranteesImplementation.json
+      eventHandlers:
+        - event: GranteeRegistered(indexed uint256,indexed address,indexed address,string)
+          handler: handleGranteeRegistered
+      file: ./src/mapping.ts
+
+  - kind: ethereum/contract
+    name: DataPortabilityPermissionsImplementation
+    network: vana-moksha
+    source:
+      address: "0x0000000000000000000000000000000000000000"
+      abi: DataPortabilityPermissionsImplementation
+      startBlock: 4000000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Permission
+        - User
+        - Grantee
+      abis:
+        - name: DataPortabilityPermissionsImplementation
+          file: ./abis/v6/DataPortabilityPermissionsImplementation.json
+      eventHandlers:
+        - event: PermissionAdded(indexed uint256,indexed address,indexed uint256,string,uint256[])
+          handler: handlePermissionAdded
+        - event: PermissionRevoked(indexed uint256)
+          handler: handlePermissionRevoked
+      file: ./src/mapping.ts
+
+  - kind: ethereum/contract
+    name: DataPortabilityServersImplementation
+    network: vana-moksha
+    source:
+      address: "0x0000000000000000000000000000000000000000"
+      abi: DataPortabilityServersImplementation
+      startBlock: 4000000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Server
+        - UserServer
+        - User
+      abis:
+        - name: DataPortabilityServersImplementation
+          file: ./abis/v6/DataPortabilityServersImplementation.json
+      eventHandlers:
+        - event: ServerRegistered(indexed uint256,indexed address,indexed address,bytes,string)
+          handler: handleServerRegistered
+        - event: ServerUpdated(indexed uint256,string)
+          handler: handleServerUpdated
+        - event: ServerTrusted(indexed address,indexed uint256)
+          handler: handleServerTrusted
+        - event: ServerUntrusted(indexed address,indexed uint256)
+          handler: handleServerUntrusted
+      file: ./src/mapping.ts
+
+  - kind: ethereum/contract
     name: DataRegistryImplementationV5
     network: vana-moksha
     source:

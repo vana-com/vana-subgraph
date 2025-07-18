@@ -5,8 +5,8 @@ type User @entity(immutable: false) {
   files: [File!]! @derivedFrom(field: "owner")
   "All permissions granted by this user"
   permissions: [Permission!]! @derivedFrom(field: "grantor")
-  "All servers trusted by this user"
-  servers: [Server!]! @derivedFrom(field: "user")
+  "All server trust relationships for this user"
+  serverTrusts: [UserServer!]! @derivedFrom(field: "user")
 }
 
 type UserTotals @entity(immutable: false) {
@@ -152,11 +152,30 @@ type File @entity(immutable: false) {
   transactionHash: Bytes!
 }
 
+type Grantee @entity(immutable: false) {
+  "The unique ID of the grantee, equivalent to the on-chain granteeId."
+  id: ID!
+  "The address of the grantee."
+  address: Bytes!
+  "The public key of the grantee."
+  publicKey: String!
+  "List of permission IDs associated with this grantee."
+  permissionIds: [BigInt!]!
+  "The block number when the grantee was registered."
+  registeredAtBlock: BigInt!
+  "The timestamp when the grantee was registered."
+  registeredAtTimestamp: BigInt!
+  "The transaction hash of the grantee registration."
+  transactionHash: Bytes!
+}
+
 type Permission @entity(immutable: false) {
   "The unique ID of the permission, equivalent to the on-chain permissionId."
   id: ID!
   "The user who granted the permission."
   grantor: User!
+  "The grantee who received the permission."
+  grantee: Grantee!
   "The content identifier (e.g., IPFS URL) for the grant details."
   grant: String!
   "The nonce used for this permission grant."
@@ -176,18 +195,33 @@ type Permission @entity(immutable: false) {
 }
 
 type Server @entity(immutable: false) {
-  "The unique ID of the Server, equivalent to the on-chain serverId"
+  "The unique ID of the server, using serverId."
+  id: ID!
+  "The URL of the server."
+  url: String!
+  "The block number when the server was registered."
+  registeredAtBlock: BigInt!
+  "The timestamp when the server was registered."
+  registeredAtTimestamp: BigInt!
+  "The transaction hash of the server registration."
+  transactionHash: Bytes!
+}
+
+type UserServer @entity(immutable: false) {
+  "Composite ID: userId-serverId"
   id: ID!
   "The user who trusts the server."
   user: User!
-  "The server's address (ID)."
-  serverAddress: Bytes!
-  "The URL of the server."
-  publicKey: String!
-  "The URL of the server."
-  serverUrl: String!
+  "The server that is trusted."
+  server: Server!
   "Timestamp of when the trust was established."
   trustedAt: BigInt!
+  "Block number when the trust was established."
+  trustedAtBlock: BigInt!
+  "Block number when the trust was revoked (null if still trusted)."
+  untrustedAtBlock: BigInt
+  "The transaction hash of the trust establishment."
+  transactionHash: Bytes!
 }
 
 type Factory @entity {

@@ -20,7 +20,12 @@
       "dlpPerformance": true,
       "queryEngine": true,
       "dataRefinerRegistry": true,
-      "dataPermission": true
+      "dataPermission": false
+    },
+    "v6": {
+      "dataPortabilityGrantees": true,
+      "dataPortabilityPermissions": true,
+      "dataPortabilityServers": true
     },
     "uniswap": {
       "v3": true
