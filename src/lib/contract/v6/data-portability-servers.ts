@@ -26,6 +26,12 @@ export function handleServerRegistered(event: ServerRegistered): void {
     server = new Server(serverId);
   }
 
+  // Get or create the owner user
+  const owner = getOrCreateUser(event.params.owner.toHex());
+  
+  server.owner = owner.id;
+  server.serverAddress = event.params.serverAddress;
+  server.publicKey = event.params.publicKey;
   server.url = event.params.url;
   server.registeredAtBlock = event.block.number;
   server.registeredAtTimestamp = event.block.timestamp;

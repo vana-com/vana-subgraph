@@ -9,7 +9,7 @@ import {
   PermissionRevoked,
   DataPortabilityPermissionsImplementation,
 } from "../../../../generated/DataPortabilityPermissionsImplementation/DataPortabilityPermissionsImplementation";
-import { Permission, Grantee } from "../../../../generated/schema";
+import { Permission, Grantee, PermissionFile, File } from "../../../../generated/schema";
 import { getOrCreateUser } from "../shared";
 
 export function handlePermissionAdded(event: PermissionAdded): void {
@@ -38,8 +38,6 @@ export function handlePermissionAdded(event: PermissionAdded): void {
   permission.addedAtBlock = event.block.number;
   permission.addedAtTimestamp = event.block.timestamp;
   permission.transactionHash = event.transaction.hash;
-  permission.isActive = true;
-  permission.fileIds = event.params.fileIds;
 
   // Get nonce and signature from contract
   const contract = DataPortabilityPermissionsImplementation.bind(event.address);
@@ -48,6 +46,8 @@ export function handlePermissionAdded(event: PermissionAdded): void {
   if (!permissionData.reverted) {
     permission.nonce = permissionData.value.nonce;
     permission.signature = permissionData.value.signature;
+    permission.startBlock = permissionData.value.startBlock;
+    permission.endBlock = permissionData.value.endBlock;
   } else {
     log.warning(
       "Could not get permission data for id {}. Nonce and signature will be zero.",
@@ -55,15 +55,40 @@ export function handlePermissionAdded(event: PermissionAdded): void {
     );
     permission.nonce = GraphBigInt.zero();
     permission.signature = new Bytes(0);
+    permission.startBlock = event.block.number;
+    permission.endBlock = null;
   }
 
   permission.save();
 
-  // Update grantee's permission list
-  const permissionIds = grantee.permissionIds;
-  permissionIds.push(event.params.permissionId);
-  grantee.permissionIds = permissionIds;
-  grantee.save();
+  // Create PermissionFile entities for each fileId
+  const fileIds = event.params.fileIds;
+  for (let i = 0; i < fileIds.length; i++) {
+    const fileId = fileIds[i];
+    const permissionFileId = `${permissionId}-${fileId.toString()}`;
+    
+    let permissionFile = PermissionFile.load(permissionFileId);
+    if (permissionFile == null) {
+      permissionFile = new PermissionFile(permissionFileId);
+      permissionFile.permission = permission.id;
+      
+      // Load or create the file
+      let file = File.load(fileId.toString());
+      if (file == null) {
+        // Create a placeholder file if it doesn't exist
+        file = new File(fileId.toString());
+        file.owner = grantor.id;
+        file.url = "";
+        file.addedAtBlock = event.block.number;
+        file.addedAtTimestamp = event.block.timestamp;
+        file.transactionHash = event.transaction.hash;
+        file.save();
+      }
+      
+      permissionFile.file = file.id;
+      permissionFile.save();
+    }
+  }
 }
 
 export function handlePermissionRevoked(event: PermissionRevoked): void {
@@ -75,20 +100,9 @@ export function handlePermissionRevoked(event: PermissionRevoked): void {
   const permission = Permission.load(permissionId);
 
   if (permission) {
-    permission.isActive = false;
+    // Set endBlock to indicate when the permission was revoked
+    permission.endBlock = event.block.number;
     permission.save();
-
-    // Update grantee's permission list
-    const grantee = Grantee.load(permission.grantee);
-    if (grantee) {
-      const permissionIds = grantee.permissionIds;
-      const index = permissionIds.indexOf(event.params.permissionId);
-      if (index > -1) {
-        permissionIds.splice(index, 1);
-        grantee.permissionIds = permissionIds;
-        grantee.save();
-      }
-    }
   } else {
     log.warning(
       "Received revoke event for a permission not found in subgraph: {}",

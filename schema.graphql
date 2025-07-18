@@ -155,12 +155,14 @@ type File @entity(immutable: false) {
 type Grantee @entity(immutable: false) {
   "The unique ID of the grantee, equivalent to the on-chain granteeId."
   id: ID!
+  "The owner who registered this grantee."
+  owner: User!
   "The address of the grantee."
   address: Bytes!
   "The public key of the grantee."
   publicKey: String!
-  "List of permission IDs associated with this grantee."
-  permissionIds: [BigInt!]!
+  "Permissions associated with this grantee."
+  permissions: [Permission!]! @derivedFrom(field: "grantee")
   "The block number when the grantee was registered."
   registeredAtBlock: BigInt!
   "The timestamp when the grantee was registered."
@@ -182,10 +184,12 @@ type Permission @entity(immutable: false) {
   nonce: BigInt!
   "The signature provided by the user."
   signature: Bytes!
-  "Whether the permission is currently active or has been revoked."
-  isActive: Boolean!
-  "File IDs associated with this permission."
-  fileIds: [BigInt!]!
+  "The block number when the permission starts."
+  startBlock: BigInt!
+  "The block number when the permission ends (null if no end)."
+  endBlock: BigInt
+  "File permissions for this permission."
+  filePermissions: [PermissionFile!]! @derivedFrom(field: "permission")
   "The block number when the permission was granted."
   addedAtBlock: BigInt!
   "The timestamp when the permission was granted."
@@ -194,11 +198,28 @@ type Permission @entity(immutable: false) {
   transactionHash: Bytes!
 }
 
+type PermissionFile @entity(immutable: false) {
+  "Composite ID: permissionId-fileId"
+  id: ID!
+  "The permission."
+  permission: Permission!
+  "The file."
+  file: File!
+}
+
 type Server @entity(immutable: false) {
   "The unique ID of the server, using serverId."
   id: ID!
+  "The owner who registered this server."
+  owner: User!
+  "The server's address."
+  serverAddress: Bytes!
+  "The public key of the server."
+  publicKey: Bytes!
   "The URL of the server."
   url: String!
+  "User trust relationships for this server."
+  userTrusts: [UserServer!]! @derivedFrom(field: "server")
   "The block number when the server was registered."
   registeredAtBlock: BigInt!
   "The timestamp when the server was registered."
