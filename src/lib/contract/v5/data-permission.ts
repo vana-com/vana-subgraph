@@ -11,7 +11,7 @@ import {
   ServerUntrusted,
   DataPermissionImplementation,
 } from "../../../../generated/DataPermissionImplementation/DataPermissionImplementation";
-import { Permission, TrustedServer } from "../../../../generated/schema";
+import { Permission, Server } from "../../../../generated/schema";
 import { getOrCreateUser } from "../shared";
 
 export function handlePermissionAdded(event: PermissionAdded): void {
@@ -65,9 +65,10 @@ export function handlePermissionRevoked(event: PermissionRevoked): void {
     permission.isActive = false;
     permission.save();
   } else {
-    log.warning("Received revoke event for a permission not found in subgraph: {}", [
-      permissionId,
-    ]);
+    log.warning(
+      "Received revoke event for a permission not found in subgraph: {}",
+      [permissionId],
+    );
   }
 }
 
@@ -81,16 +82,16 @@ export function handleServerTrusted(event: ServerTrusted): void {
   const serverId = event.params.serverId;
   const compositeId = `${user.id}-${serverId.toHex()}`;
 
-  let trustedServer = TrustedServer.load(compositeId);
-  if (trustedServer == null) {
-    trustedServer = new TrustedServer(compositeId);
-    trustedServer.user = user.id;
-    trustedServer.serverAddress = serverId;
+  let server = Server.load(compositeId);
+  if (server == null) {
+    server = new Server(compositeId);
+    server.user = user.id;
+    server.serverAddress = serverId;
   }
 
-  trustedServer.serverUrl = event.params.serverUrl;
-  trustedServer.trustedAt = event.block.timestamp;
-  trustedServer.save();
+  server.serverUrl = event.params.serverUrl;
+  server.trustedAt = event.block.timestamp;
+  server.save();
 }
 
 export function handleServerUntrusted(event: ServerUntrusted): void {
@@ -103,9 +104,9 @@ export function handleServerUntrusted(event: ServerUntrusted): void {
   const serverId = event.params.serverId.toHex();
   const compositeId = `${userId}-${serverId}`;
 
-  const trustedServer = TrustedServer.load(compositeId);
-  if (trustedServer != null) {
-    store.remove("TrustedServer", compositeId);
+  const server = Server.load(compositeId);
+  if (server != null) {
+    store.remove("Server", compositeId);
   } else {
     log.warning("Attempted to untrust a server that was not found: {}", [
       compositeId,

@@ -1,57 +1,186 @@
 [
-  { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
-  { "inputs": [], "name": "AccessControlBadConfirmation", "type": "error" },
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "AccessControlBadConfirmation",
+    "type": "error"
+  },
   {
     "inputs": [
-      { "internalType": "address", "name": "account", "type": "address" },
-      { "internalType": "bytes32", "name": "neededRole", "type": "bytes32" }
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "neededRole",
+        "type": "bytes32"
+      }
     ],
     "name": "AccessControlUnauthorizedAccount",
     "type": "error"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "target", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "target",
+        "type": "address"
+      }
     ],
     "name": "AddressEmptyCode",
     "type": "error"
   },
-  { "inputs": [], "name": "DlpAddressCannotBeChanged", "type": "error" },
-  { "inputs": [], "name": "DlpAlreadyVerified", "type": "error" },
-  { "inputs": [], "name": "DlpTokenNotSet", "type": "error" },
+  {
+    "inputs": [],
+    "name": "DlpAddressCannotBeChanged",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "DlpLpTokenIdNotSet",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "DlpTokenNotSet",
+    "type": "error"
+  },
   {
     "inputs": [
-      { "internalType": "address", "name": "implementation", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "implementation",
+        "type": "address"
+      }
     ],
     "name": "ERC1967InvalidImplementation",
     "type": "error"
   },
-  { "inputs": [], "name": "ERC1967NonPayable", "type": "error" },
-  { "inputs": [], "name": "EnforcedPause", "type": "error" },
-  { "inputs": [], "name": "EpochDlpScoreAlreadySaved", "type": "error" },
-  { "inputs": [], "name": "EpochNotEnded", "type": "error" },
-  { "inputs": [], "name": "EpochRewardsAlreadyDistributed", "type": "error" },
-  { "inputs": [], "name": "ExpectedPause", "type": "error" },
-  { "inputs": [], "name": "FailedInnerCall", "type": "error" },
-  { "inputs": [], "name": "InvalidAddress", "type": "error" },
-  { "inputs": [], "name": "InvalidDepositAmount", "type": "error" },
-  { "inputs": [], "name": "InvalidDlpId", "type": "error" },
-  { "inputs": [], "name": "InvalidDlpStatus", "type": "error" },
-  { "inputs": [], "name": "InvalidInitialization", "type": "error" },
-  { "inputs": [], "name": "InvalidName", "type": "error" },
-  { "inputs": [], "name": "InvalidParam", "type": "error" },
-  { "inputs": [], "name": "LastEpochMustBeFinalized", "type": "error" },
-  { "inputs": [], "name": "NotDlpOwner", "type": "error" },
-  { "inputs": [], "name": "NotInitializing", "type": "error" },
-  { "inputs": [], "name": "ReentrancyGuardReentrantCall", "type": "error" },
-  { "inputs": [], "name": "TransferFailed", "type": "error" },
-  { "inputs": [], "name": "UUPSUnauthorizedCallContext", "type": "error" },
+  {
+    "inputs": [],
+    "name": "ERC1967NonPayable",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "EnforcedPause",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ExpectedPause",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "FailedInnerCall",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidAddress",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidDepositAmount",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidDlpStatus",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidDlpVerification",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidInitialization",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidLpTokenId",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidName",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidTokenAddress",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "LastEpochMustBeFinalized",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotDlpOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotInitializing",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ReentrancyGuardReentrantCall",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TransferFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "UUPSUnauthorizedCallContext",
+    "type": "error"
+  },
   {
     "inputs": [
-      { "internalType": "bytes32", "name": "slot", "type": "bytes32" }
+      {
+        "internalType": "bytes32",
+        "name": "slot",
+        "type": "bytes32"
+      }
     ],
     "name": "UUPSUnsupportedProxiableUUID",
     "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "dlpId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "lpTokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "DlpLpTokenIdUpdated",
+    "type": "event"
   },
   {
     "anonymous": false,
@@ -144,19 +273,6 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "newDlpSubEligibilityThreshold",
-        "type": "uint256"
-      }
-    ],
-    "name": "DlpSubEligibilityThresholdUpdated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
         "indexed": true,
         "internalType": "uint256",
         "name": "dlpId",
@@ -225,6 +341,25 @@
       }
     ],
     "name": "DlpUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "dlpId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "verificationBlockNumber",
+        "type": "uint256"
+      }
+    ],
+    "name": "DlpVerificationBlockUpdated",
     "type": "event"
   },
   {
@@ -376,27 +511,49 @@
   {
     "inputs": [],
     "name": "DEFAULT_ADMIN_ROLE",
-    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "MAINTAINER_ROLE",
-    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "UPGRADE_INTERFACE_VERSION",
-    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "dlpId", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "dlpId",
+        "type": "uint256"
+      }
     ],
     "name": "deregisterDlp",
     "outputs": [],
@@ -405,22 +562,38 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "dlpAddress", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "dlpAddress",
+        "type": "address"
+      }
     ],
     "name": "dlpIds",
     "outputs": [
-      { "internalType": "uint256", "name": "dlpId", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "dlpId",
+        "type": "uint256"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "string", "name": "dlpName", "type": "string" }
+      {
+        "internalType": "string",
+        "name": "dlpName",
+        "type": "string"
+      }
     ],
     "name": "dlpNameToId",
     "outputs": [
-      { "internalType": "uint256", "name": "dlpId", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "dlpId",
+        "type": "uint256"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -428,19 +601,33 @@
   {
     "inputs": [],
     "name": "dlpRegistrationDepositAmount",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "dlpId", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "dlpId",
+        "type": "uint256"
+      }
     ],
     "name": "dlps",
     "outputs": [
       {
         "components": [
-          { "internalType": "uint256", "name": "id", "type": "uint256" },
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
           {
             "internalType": "address",
             "name": "dlpAddress",
@@ -461,10 +648,26 @@
             "name": "treasuryAddress",
             "type": "address"
           },
-          { "internalType": "string", "name": "name", "type": "string" },
-          { "internalType": "string", "name": "iconUrl", "type": "string" },
-          { "internalType": "string", "name": "website", "type": "string" },
-          { "internalType": "string", "name": "metadata", "type": "string" },
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "iconUrl",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "website",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "metadata",
+            "type": "string"
+          },
           {
             "internalType": "uint256",
             "name": "registrationBlockNumber",
@@ -480,7 +683,16 @@
             "name": "status",
             "type": "uint8"
           },
-          { "internalType": "bool", "name": "isVerified", "type": "bool" }
+          {
+            "internalType": "uint256",
+            "name": "lpTokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "verificationBlockNumber",
+            "type": "uint256"
+          }
         ],
         "internalType": "struct IDLPRegistry.DlpInfo",
         "name": "",
@@ -492,13 +704,21 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "dlpAddress", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "dlpAddress",
+        "type": "address"
+      }
     ],
     "name": "dlpsByAddress",
     "outputs": [
       {
         "components": [
-          { "internalType": "uint256", "name": "id", "type": "uint256" },
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
           {
             "internalType": "address",
             "name": "dlpAddress",
@@ -519,10 +739,26 @@
             "name": "treasuryAddress",
             "type": "address"
           },
-          { "internalType": "string", "name": "name", "type": "string" },
-          { "internalType": "string", "name": "iconUrl", "type": "string" },
-          { "internalType": "string", "name": "website", "type": "string" },
-          { "internalType": "string", "name": "metadata", "type": "string" },
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "iconUrl",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "website",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "metadata",
+            "type": "string"
+          },
           {
             "internalType": "uint256",
             "name": "registrationBlockNumber",
@@ -538,7 +774,16 @@
             "name": "status",
             "type": "uint8"
           },
-          { "internalType": "bool", "name": "isVerified", "type": "bool" }
+          {
+            "internalType": "uint256",
+            "name": "lpTokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "verificationBlockNumber",
+            "type": "uint256"
+          }
         ],
         "internalType": "struct IDLPRegistry.DlpInfo",
         "name": "",
@@ -550,13 +795,21 @@
   },
   {
     "inputs": [
-      { "internalType": "string", "name": "dlpName", "type": "string" }
+      {
+        "internalType": "string",
+        "name": "dlpName",
+        "type": "string"
+      }
     ],
     "name": "dlpsByName",
     "outputs": [
       {
         "components": [
-          { "internalType": "uint256", "name": "id", "type": "uint256" },
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
           {
             "internalType": "address",
             "name": "dlpAddress",
@@ -577,10 +830,26 @@
             "name": "treasuryAddress",
             "type": "address"
           },
-          { "internalType": "string", "name": "name", "type": "string" },
-          { "internalType": "string", "name": "iconUrl", "type": "string" },
-          { "internalType": "string", "name": "website", "type": "string" },
-          { "internalType": "string", "name": "metadata", "type": "string" },
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "iconUrl",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "website",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "metadata",
+            "type": "string"
+          },
           {
             "internalType": "uint256",
             "name": "registrationBlockNumber",
@@ -596,7 +865,16 @@
             "name": "status",
             "type": "uint8"
           },
-          { "internalType": "bool", "name": "isVerified", "type": "bool" }
+          {
+            "internalType": "uint256",
+            "name": "lpTokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "verificationBlockNumber",
+            "type": "uint256"
+          }
         ],
         "internalType": "struct IDLPRegistry.DlpInfo",
         "name": "",
@@ -609,30 +887,45 @@
   {
     "inputs": [],
     "name": "dlpsCount",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "eligibleDlpsLimit",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "index", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      }
     ],
     "name": "eligibleDlpsListAt",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "eligibleDlpsListCount",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -640,24 +933,46 @@
     "inputs": [],
     "name": "eligibleDlpsListValues",
     "outputs": [
-      { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "bytes32", "name": "role", "type": "bytes32" }
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      }
     ],
     "name": "getRoleAdmin",
-    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "bytes32", "name": "role", "type": "bytes32" },
-      { "internalType": "address", "name": "account", "type": "address" }
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
     ],
     "name": "grantRole",
     "outputs": [],
@@ -666,19 +981,60 @@
   },
   {
     "inputs": [
-      { "internalType": "bytes32", "name": "role", "type": "bytes32" },
-      { "internalType": "address", "name": "account", "type": "address" }
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
     ],
     "name": "hasRole",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "ownerAddress", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "ownerAddress",
+        "type": "address"
+      }
     ],
     "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "dlpRootCoreAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "startDlpId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "endDlpId",
+        "type": "uint256"
+      }
+    ],
+    "name": "migrateDlpData",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -693,14 +1049,26 @@
   {
     "inputs": [],
     "name": "paused",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "proxiableUUID",
-    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -723,10 +1091,26 @@
             "name": "treasuryAddress",
             "type": "address"
           },
-          { "internalType": "string", "name": "name", "type": "string" },
-          { "internalType": "string", "name": "iconUrl", "type": "string" },
-          { "internalType": "string", "name": "website", "type": "string" },
-          { "internalType": "string", "name": "metadata", "type": "string" }
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "iconUrl",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "website",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "metadata",
+            "type": "string"
+          }
         ],
         "internalType": "struct IDLPRegistry.DlpRegistration",
         "name": "registrationInfo",
@@ -740,7 +1124,11 @@
   },
   {
     "inputs": [
-      { "internalType": "bytes32", "name": "role", "type": "bytes32" },
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
       {
         "internalType": "address",
         "name": "callerConfirmation",
@@ -754,8 +1142,16 @@
   },
   {
     "inputs": [
-      { "internalType": "bytes32", "name": "role", "type": "bytes32" },
-      { "internalType": "address", "name": "account", "type": "address" }
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
     ],
     "name": "revokeRole",
     "outputs": [],
@@ -764,10 +1160,20 @@
   },
   {
     "inputs": [
-      { "internalType": "bytes4", "name": "interfaceId", "type": "bytes4" }
+      {
+        "internalType": "bytes4",
+        "name": "interfaceId",
+        "type": "bytes4"
+      }
     ],
     "name": "supportsInterface",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -775,7 +1181,11 @@
     "inputs": [],
     "name": "treasury",
     "outputs": [
-      { "internalType": "contract ITreasury", "name": "", "type": "address" }
+      {
+        "internalType": "contract ITreasury",
+        "name": "",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -789,7 +1199,24 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "dlpId", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "dlpId",
+        "type": "uint256"
+      }
+    ],
+    "name": "unverifyDlp",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "dlpId",
+        "type": "uint256"
+      },
       {
         "components": [
           {
@@ -807,10 +1234,26 @@
             "name": "treasuryAddress",
             "type": "address"
           },
-          { "internalType": "string", "name": "name", "type": "string" },
-          { "internalType": "string", "name": "iconUrl", "type": "string" },
-          { "internalType": "string", "name": "website", "type": "string" },
-          { "internalType": "string", "name": "metadata", "type": "string" }
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "iconUrl",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "website",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "metadata",
+            "type": "string"
+          }
         ],
         "internalType": "struct IDLPRegistry.DlpRegistration",
         "name": "dlpUpdateInfo",
@@ -837,8 +1280,21 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "dlpId", "type": "uint256" },
-      { "internalType": "address", "name": "tokenAddress", "type": "address" }
+      {
+        "internalType": "uint256",
+        "name": "dlpId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "tokenAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "lpTokenId",
+        "type": "uint256"
+      }
     ],
     "name": "updateDlpToken",
     "outputs": [],
@@ -847,10 +1303,46 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "dlpId", "type": "uint256" },
-      { "internalType": "bool", "name": "isVerified", "type": "bool" }
+      {
+        "internalType": "uint256",
+        "name": "dlpId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "tokenAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "lpTokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "verificationBlockNumber",
+        "type": "uint256"
+      }
     ],
-    "name": "updateDlpVerification",
+    "name": "updateDlpTokenAndVerification",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "dlpId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "verificationBlockNumber",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateDlpVerificationBlock",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -888,7 +1380,11 @@
         "name": "newImplementation",
         "type": "address"
       },
-      { "internalType": "bytes", "name": "data", "type": "bytes" }
+      {
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
+      }
     ],
     "name": "upgradeToAndCall",
     "outputs": [],
@@ -899,7 +1395,11 @@
     "inputs": [],
     "name": "vanaEpoch",
     "outputs": [
-      { "internalType": "contract IVanaEpoch", "name": "", "type": "address" }
+      {
+        "internalType": "contract IVanaEpoch",
+        "name": "",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -907,7 +1407,13 @@
   {
     "inputs": [],
     "name": "version",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "pure",
     "type": "function"
   }

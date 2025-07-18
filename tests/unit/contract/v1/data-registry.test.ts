@@ -15,7 +15,7 @@ beforeEach(() => {
 });
 
 describe("handleFileAddedV1", () => {
-  test("creates both a File and a FileOwner entity", () => {
+  test("creates a File entity and associated User", () => {
     // 1. ARRANGE: Set up test data and create the mock event
     const fileId = 1;
     const ownerAddress = "0x1234567890123456789012345678901234567890";
@@ -28,7 +28,7 @@ describe("handleFileAddedV1", () => {
 
     // 3. ASSERT: Check that the store is in the correct state
 
-    // --- Assert the NEW functionality ---
+    // Check that a File entity was created
     assert.entityCount("File", 1);
     assert.fieldEquals("File", fileId.toString(), "id", fileId.toString());
     assert.fieldEquals("File", fileId.toString(), "owner", ownerAddress);
@@ -41,18 +41,8 @@ describe("handleFileAddedV1", () => {
       fileAddedEvent.transaction.hash.toHexString(),
     );
 
-    // Also check that the associated User was created
+    // Check that the associated User was created
     assert.entityCount("User", 1);
     assert.fieldEquals("User", ownerAddress, "id", ownerAddress);
-
-    // --- Assert the ORIGINAL functionality (prevents regression) ---
-    assert.entityCount("FileOwner", 1);
-    assert.fieldEquals("FileOwner", fileId.toString(), "id", fileId.toString());
-    assert.fieldEquals(
-      "FileOwner",
-      fileId.toString(),
-      "ownerAddress",
-      ownerAddress,
-    );
   });
 });

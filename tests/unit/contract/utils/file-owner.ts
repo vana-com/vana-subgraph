@@ -1,17 +1,23 @@
-import { FileOwner } from "../../../../generated/schema";
-import { Address } from "@graphprotocol/graph-ts";
+import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { File } from "../../../../generated/schema";
 
-export function fileOwnerDefaults(id: string, ownerAddress: string): FileOwner {
-  const file = new FileOwner(id);
-  file.ownerAddress = Address.fromString(ownerAddress);
+export function fileDefaults(id: string, ownerAddress: string, url: string): File {
+  const file = new File(id);
+  file.owner = ownerAddress;
+  file.url = url;
+  file.schemaId = BigInt.zero();
+  file.addedAtBlock = BigInt.zero();
+  file.addedAtTimestamp = BigInt.zero();
+  file.transactionHash = Address.zero();
   return file;
 }
 
-export function createNewFileOwner(
+export function createNewFile(
   id: string,
   ownerAddress: string,
-): FileOwner {
-  const file = fileOwnerDefaults(id, ownerAddress);
+  url: string,
+): File {
+  const file = fileDefaults(id, ownerAddress, url);
   file.save();
   return file;
 }

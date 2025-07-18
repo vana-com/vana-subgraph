@@ -21,6 +21,9 @@
       "queryEngine": true,
       "dataRefinerRegistry": true,
       "dataPermission": true
+    },
+    "uniswap": {
+      "v3": true
     }
   },
   "initParams": {
@@ -36,5 +39,38 @@
     {"startBlock": 1893440, "endBlock": 2195839},
     {"startBlock": 2195840, "endBlock": 2498239},
     {"startBlock": 2498240, "endBlock": 3808640}
+  ],
+  "dlps": [
+    { "id": 1, "verificationBlockNumber": 0 },
+    { "id": 2, "verificationBlockNumber": 0 },
+    { "id": 3, "verificationBlockNumber": 0 },
+    { "id": 4, "verificationBlockNumber": 3720671 },
+    { "id": 5, "verificationBlockNumber": 0 },
+    { "id": 6, "verificationBlockNumber": 0 },
+    { "id": 7, "verificationBlockNumber": 0 },
+    { "id": 8, "verificationBlockNumber": 0 },
+    { "id": 9, "verificationBlockNumber": 3633774 },
+    { "id": 10, "verificationBlockNumber": 3500771 },
+    { "id": 11, "verificationBlockNumber": 3711654 },
+    { "id": 12, "verificationBlockNumber": 0 },
+    { "id": 13, "verificationBlockNumber": 3633417 },
+    { "id": 14, "verificationBlockNumber": 0 },
+    { "id": 15, "verificationBlockNumber": 0 },
+    { "id": 16, "verificationBlockNumber": 0 },
+    { "id": 17, "verificationBlockNumber": 3659295 },
+    { "id": 18, "verificationBlockNumber": 0 },
+    { "id": 19, "verificationBlockNumber": 0 },
+    { "id": 20, "verificationBlockNumber": 0 },
+    { "id": 21, "verificationBlockNumber": 0 },
+    { "id": 22, "verificationBlockNumber": 0 },
+    { "id": 23, "verificationBlockNumber": 0 },
+    { "id": 24, "verificationBlockNumber": 0 },
+    { "id": 25, "verificationBlockNumber": 0 },
+    { "id": 26, "verificationBlockNumber": 0 },
+    { "id": 27, "verificationBlockNumber": 0 },
+    { "id": 28, "verificationBlockNumber": 0 },
+    { "id": 29, "verificationBlockNumber": 0 },
+    { "id": 30, "verificationBlockNumber": 0 },
+    { "id": 31, "verificationBlockNumber": 0 }
   ]
 }

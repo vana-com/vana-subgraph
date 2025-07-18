@@ -22,10 +22,10 @@ import {
   createNewUser,
 } from "../utils";
 import { EPOCH_REFERENCE_ID_CURRENT } from "../../../../src/lib/entity/epoch";
-import { createNewFileOwner } from "../utils/file-owner";
+import { createNewFile } from "../utils/file-owner";
 import { createNewUserTotals } from "../utils/user-totals";
 import {
-  getTotalsIdDlp,
+  getTotalsDlpId,
   TOTALS_ID_GLOBAL,
 } from "../../../../src/lib/entity/totals";
 import {
@@ -43,7 +43,7 @@ describe("handleDataRegistryProofAddedV2", () => {
     createNewEpoch("1");
     createNewEpochReference(EPOCH_REFERENCE_ID_CURRENT, "1");
     createNewDlp("1", user.id, "dlp-1");
-    createNewFileOwner("1", "0x334e8bbf9c7822fc3f66b11cb0d8ef84c5a4b5ce");
+    createNewFile("1", "0x334e8bbf9c7822fc3f66b11cb0d8ef84c5a4b5ce", "ipfs://test");
 
     const proofEvent = createProofAddedEvent(
       1, // fileId
@@ -94,7 +94,7 @@ describe("handleDataRegistryProofAddedV2", () => {
     assert.fieldEquals("Totals", totalsId0, "totalFileContributions", "1");
     assert.fieldEquals("Totals", totalsId0, "uniqueFileContributors", "1");
 
-    const totalsId1 = getTotalsIdDlp("1");
+    const totalsId1 = getTotalsDlpId("1");
     assert.fieldEquals("Totals", totalsId1, "totalFileContributions", "1");
     assert.fieldEquals("Totals", totalsId1, "uniqueFileContributors", "1");
 
@@ -127,14 +127,14 @@ describe("handleDataRegistryProofAddedV2", () => {
     createNewEpoch("1");
     createNewEpochReference(EPOCH_REFERENCE_ID_CURRENT, "1");
     createNewDlp("1", user.id, "dlp-1");
-    createNewFileOwner("1", "0x334e8bbf9c7822fc3f66b11cb0d8ef84c5a4b5ce");
+    createNewFile("1", "0x334e8bbf9c7822fc3f66b11cb0d8ef84c5a4b5ce", "ipfs://test");
 
     const globalTotals = createNewTotals(TOTALS_ID_GLOBAL);
     globalTotals.totalFileContributions = GraphBigInt.fromString("5");
     globalTotals.uniqueFileContributors = GraphBigInt.fromString("3");
     globalTotals.save();
 
-    const dlpTotalsId = getTotalsIdDlp("1");
+    const dlpTotalsId = getTotalsDlpId("1");
     const dlpTotals = createNewTotals(dlpTotalsId);
     dlpTotals.totalFileContributions = GraphBigInt.fromString("2");
     dlpTotals.uniqueFileContributors = GraphBigInt.fromString("1");
@@ -204,7 +204,7 @@ describe("handleDataRegistryProofAddedV2", () => {
     assert.fieldEquals("Totals", totalsId0, "totalFileContributions", "6");
     assert.fieldEquals("Totals", totalsId0, "uniqueFileContributors", "3");
 
-    const totalsId1 = getTotalsIdDlp("1");
+    const totalsId1 = getTotalsDlpId("1");
     assert.fieldEquals("Totals", totalsId1, "totalFileContributions", "3");
     assert.fieldEquals("Totals", totalsId1, "uniqueFileContributors", "1");
 
