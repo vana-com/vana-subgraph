@@ -245,7 +245,7 @@ dataSources:
     name: DataPortabilityGranteesImplementation
     network: moksha
     source:
-      address: "0x2e95B13EBda0009cb2ea398a843a49608AbFdd3d"
+      address: "0x8325C0A0948483EdA023A1A2Fd895e62C5131234"
       abi: DataPortabilityGranteesImplementation
       startBlock: 3608836
     mapping:
@@ -266,7 +266,7 @@ dataSources:
     name: DataPortabilityPermissionsImplementation
     network: moksha
     source:
-      address: "0x0d15681C472082e33Aac426C588d9d0C2264014c"
+      address: "0xD54523048AdD05b4d734aFaE7C68324Ebb7373eF"
       abi: DataPortabilityPermissionsImplementation
       startBlock: 3608836
     mapping:
@@ -291,7 +291,7 @@ dataSources:
     name: DataPortabilityServersImplementation
     network: moksha
     source:
-      address: "0xE16b4b90c53122663479Dcbcd5f00C2ECF1b3a67"
+      address: "0x1483B1F634DBA75AeaE60da7f01A679aabd5ee2c"
       abi: DataPortabilityServersImplementation
       startBlock: 3608836
     mapping:
