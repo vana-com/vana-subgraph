@@ -5,11 +5,13 @@ import { Totals } from "../../../../generated/schema";
 import { getTotalsDlpEpochPerformanceId, TOTALS_ID_GLOBAL } from "./constants";
 
 export function getOrCreateTotalsGlobal(): Totals {
-  const totalsId = TOTALS_ID_GLOBAL;
-  return getOrCreateTotals(totalsId);
+  return getOrCreateTotals(TOTALS_ID_GLOBAL);
 }
 
-export function getOrCreateTotalsForDlpEpochPerformance(dlpId: string, epochId: string): Totals {
+export function getOrCreateTotalsForDlpEpochPerformance(
+  dlpId: string,
+  epochId: string,
+): Totals {
   const totalsId = getTotalsDlpEpochPerformanceId(dlpId, epochId);
   return getOrCreateTotals(totalsId);
 }

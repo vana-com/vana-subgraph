@@ -74,3 +74,5 @@ generated
 src/mapping.ts
 
 src/uniswap/common/chain.ts
+
+CLAUDE.md

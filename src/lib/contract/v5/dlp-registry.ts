@@ -1,4 +1,4 @@
-import { BigInt, log } from "@graphprotocol/graph-ts";
+import { BigInt as GraphBigInt, log } from "@graphprotocol/graph-ts";
 import {
   DlpRegistered,
   DlpUpdated,
@@ -9,7 +9,7 @@ import {
 
 import { Dlp } from "../../../../generated/schema";
 import { getOrCreateDlpList } from "../../../../src/lib/entity/dlp-list";
-import {getOrCreateDlp, getOrCreateUser} from "../shared";
+import { getOrCreateDlp, getOrCreateUser } from "../shared";
 
 // Mirrored from DLPRegistry.IDLPRegistry.DlpStatus
 enum dlpStatus {
@@ -43,11 +43,10 @@ export function handleDlpRegisteredV5(event: DlpRegistered): void {
   dlp.createdAt = event.block.timestamp;
   dlp.createdTxHash = event.transaction.hash;
   dlp.createdAtBlock = event.block.number;
-  dlp.status = BigInt.fromI32(dlpStatus.REGISTERED);
-
+  dlp.status = GraphBigInt.fromI32(dlpStatus.REGISTERED);
 
   // Keep staking fields for backward compatibility but set to zero
-  dlp.performanceRating = BigInt.zero();
+  dlp.performanceRating = GraphBigInt.zero();
 
   dlp.save();
 
@@ -97,7 +96,7 @@ export function handleDlpStatusUpdatedV5(event: DlpStatusUpdated): void {
 
   if (dlp != null) {
     const newStatus = event.params.newStatus;
-    dlp.status = BigInt.fromI32(newStatus);
+    dlp.status = GraphBigInt.fromI32(newStatus);
 
     dlp.save();
   } else {
@@ -128,8 +127,15 @@ export function handleDlpTokenUpdatedV5(event: DlpTokenUpdated): void {
     event.transaction.hash.toHexString(),
   ]);
 
-  // Ensure the Dlp entity exists
-  const dlp = getOrCreateDlp(event.params.dlpId.toString());
+  // Load DLP instead of creating it to handle non-existent DLP case gracefully
+  const dlp = Dlp.load(event.params.dlpId.toString());
+
+  if (dlp == null) {
+    log.error("DLP not found for token update: {}", [
+      event.params.dlpId.toString(),
+    ]);
+    return;
+  }
 
   dlp.token = event.params.tokenAddress;
   dlp.save();

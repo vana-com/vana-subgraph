@@ -1,48 +1,48 @@
-import {BigInt as GraphBigInt, Bytes, log} from "@graphprotocol/graph-ts";
+import { BigInt as GraphBigInt, log } from "@graphprotocol/graph-ts";
 
-import {
-  DataRegistryProof,
-  Epoch,
-  FileOwner, PerformanceDlpEpochUser,
-} from "../../../../generated/schema";
+import { Epoch, PerformanceDlpEpochUser } from "../../../../generated/schema";
 
 import {
   FileAdded as FileAddedEvent,
   ProofAdded as FileProofAdded,
 } from "../../../../generated/DataRegistryImplementationV3/DataRegistryImplementationV3";
-import {
-  getOrCreateUserTotals,
-  getUserTotalsId,
-  getUserTotalsIdDlp,
-} from "../../entity/usertotals";
-import {
-  getOrCreateTotals, getOrCreateTotalsForDlpEpochPerformance,
-  getTotalsDlpId,
-  TOTALS_ID_GLOBAL,
-} from "../../entity/totals";
-import {getOrCreateDlp, getOrCreateUser} from "../shared";
+import { getOrCreateTotalsForDlpEpochPerformance } from "../../entity/totals";
 import { getEpochForBlock } from "../../entity/epoch";
-import {getDlpEpochUserId, getOrCreateDlpEpochUser} from "../../entity/dlpEpochUser";
-import {dlps} from "../../../mapping";
+import { getDlpEpochUserId } from "../../entity/dlpEpochUser";
+import {
+  getOrCreateDlp,
+  getOrCreateUser,
+  createFileFromEvent,
+  logDataRegistryEvent,
+  createDataRegistryProof,
+  updateAllTotals,
+  ERROR_NO_EPOCH,
+  DEFAULT_SCHEMA_ID,
+  ONE,
+} from "../shared/index";
 
 export function handleFileAddedV3(event: FileAddedEvent): void {
-  log.info("Handling DataRegistry FileAdded with transaction hash: {}", [
-    event.transaction.hash.toHex(),
-  ]);
+  logDataRegistryEvent("FileAdded", event.transaction.hash.toHex());
 
-  const ownership = new FileOwner(event.params.fileId.toString());
-  ownership.ownerAddress = event.params.ownerAddress;
-  ownership.save();
+  // Create file entity using shared utility
+  // V3 of the contract does not support schemaId, so we use default (0)
+  createFileFromEvent(
+    event.params.fileId.toString(),
+    event.params.ownerAddress.toHex(),
+    event.params.url,
+    event.block,
+    event.transaction,
+    DEFAULT_SCHEMA_ID,
+  );
 }
 
 export function handleDataRegistryProofAddedV3(event: FileProofAdded): void {
-  log.info("Handling DataRegistry ProofAdded with transaction hash: {}", [
-    event.transaction.hash.toHex(),
-  ]);
+  logDataRegistryEvent("ProofAdded", event.transaction.hash.toHex());
 
   const epochId = getEpochForBlock(event.block.number);
-  if (!epochId) {
-    log.error("No epoch found for block {}", [event.block.number.toString()]);
+  // Check for "-1" explicitly, as it is a truthy string
+  if (epochId == "-1") {
+    log.error(ERROR_NO_EPOCH + " {}", [event.block.number.toString()]);
     return;
   }
 
@@ -52,80 +52,35 @@ export function handleDataRegistryProofAddedV3(event: FileProofAdded): void {
   const dlp = getOrCreateDlp(dlpId);
   getOrCreateUser(userId);
 
-  createDataRegistryProof(event, epochId, dlp.id, userId);
-  updateTotals(userId, dlpId);
+  // Create proof using shared utility
+  // V3 has both user and DLP associations in the proof
+  createDataRegistryProof(
+    event.transaction.hash.toHex(),
+    epochId,
+    event.params.fileId,
+    event.params.proofIndex,
+    event.block,
+    event.transaction,
+    userId,
+    dlp.id,
+  );
+
+  // Update totals using shared utility
+  updateAllTotals(userId, dlpId);
+
+  // Update DLP epoch user (V3 specific functionality)
   updateDlpEpochUser(event, epochId, userId, dlpId);
 }
 
-function createDataRegistryProof(
-    event: FileProofAdded,
-    epochId: string,
-    dlpId: string,
-    userId: string,
-): void {
-  const proof = new DataRegistryProof(event.transaction.hash.toHex());
-  proof.user = userId;
-  proof.dlp = dlpId;
-  proof.epoch = epochId;
-  proof.fileId = event.params.fileId;
-  proof.proofIndex = event.params.proofIndex;
-  proof.createdAt = event.block.timestamp;
-  proof.createdAtBlock = event.block.number;
-  proof.createdTxHash = event.transaction.hash;
-  proof.save();
-}
+// Removed: now using shared createDataRegistryProof function
 
-function updateTotals(userId: string, dlpId: string): void {
-  // Update user totals
-  const userTotalsId = getUserTotalsId(userId);
-  const userTotals = getOrCreateUserTotals(userTotalsId);
-  userTotals.fileContributionsCount = userTotals.fileContributionsCount.plus(
-      GraphBigInt.fromI32(1),
-  );
-  userTotals.save();
-
-  // Update global unique file contribution totals
-  const totals = getOrCreateTotals(TOTALS_ID_GLOBAL);
-  totals.totalFileContributions = totals.totalFileContributions.plus(
-      GraphBigInt.fromI32(1),
-  );
-  if (userTotals.fileContributionsCount.toI32() === 1) {
-    totals.uniqueFileContributors = totals.uniqueFileContributors.plus(
-        GraphBigInt.fromI32(1),
-    );
-  }
-  totals.save();
-
-  // Create or load dlp user totals
-  const dlpUserTotalsId = getUserTotalsIdDlp(
-      userId,
-      dlpId,
-  );
-  const dlpUserTotals = getOrCreateUserTotals(dlpUserTotalsId);
-  dlpUserTotals.fileContributionsCount =
-      dlpUserTotals.fileContributionsCount.plus(GraphBigInt.fromI32(1));
-  dlpUserTotals.save();
-
-  // Update dlp file contribution totals
-  const dlpTotalsId = getTotalsDlpId(dlpId);
-  const dlpTotals = getOrCreateTotals(dlpTotalsId);
-  dlpTotals.totalFileContributions = dlpTotals.totalFileContributions.plus(
-      GraphBigInt.fromI32(1),
-  );
-  if (dlpUserTotals.fileContributionsCount.toI32() === 1) {
-    dlpTotals.uniqueFileContributors = dlpTotals.uniqueFileContributors.plus(
-        GraphBigInt.fromI32(1),
-    );
-  }
-  dlpTotals.save();
-
-}
+// Removed: now using shared updateAllTotals function
 
 function updateDlpEpochUser(
-    event: FileProofAdded,
-    epochId: string,
-    userId: string,
-    dlpId: string,
+  event: FileProofAdded,
+  epochId: string,
+  userId: string,
+  dlpId: string,
 ): void {
   const epoch = Epoch.load(epochId);
   const dlp = getOrCreateDlp(dlpId);
@@ -141,13 +96,12 @@ function updateDlpEpochUser(
   const verificationBlock = dlp.verificationBlockNumber!;
 
   const eligibilityStartBlock = epoch.startBlock.gt(verificationBlock)
-      ? epoch.startBlock
-      : verificationBlock;
+    ? epoch.startBlock
+    : verificationBlock;
 
   if (!event.block.number.ge(eligibilityStartBlock)) {
     return;
   }
-
 
   const id = getDlpEpochUserId(dlpId, epochId, userId);
   let dlpEpochUser = PerformanceDlpEpochUser.load(id);
@@ -160,15 +114,16 @@ function updateDlpEpochUser(
     dlpEpochUser.save();
   }
 
-  const dlpEpochTotals = getOrCreateTotalsForDlpEpochPerformance(dlpId, epochId);
-  dlpEpochTotals.totalFileContributions = dlpEpochTotals.totalFileContributions.plus(
-      GraphBigInt.fromI32(1),
+  const dlpEpochTotals = getOrCreateTotalsForDlpEpochPerformance(
+    dlpId,
+    epochId,
   );
+  dlpEpochTotals.totalFileContributions =
+    dlpEpochTotals.totalFileContributions.plus(ONE);
 
   if (firstContributionInEpoch) {
-    dlpEpochTotals.uniqueFileContributors = dlpEpochTotals.uniqueFileContributors.plus(
-        GraphBigInt.fromI32(1),
-    );
+    dlpEpochTotals.uniqueFileContributors =
+      dlpEpochTotals.uniqueFileContributors.plus(ONE);
   }
 
   dlpEpochTotals.save();

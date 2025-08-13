@@ -1,4 +1,4 @@
-import { BigInt, log } from "@graphprotocol/graph-ts";
+import { log } from "@graphprotocol/graph-ts";
 import {
   EpochCreated,
   EpochDlpRewardAdded,
@@ -6,12 +6,9 @@ import {
   EpochRewardAmountUpdated,
   EpochSizeUpdated,
 } from "../../../../generated/VanaEpochImplementationV5/VanaEpochImplementationV5";
-import { Epoch, EpochReference } from "../../../../generated/schema";
+import { Epoch } from "../../../../generated/schema";
 import { getOrCreateCurrentParams } from "../../entity/params";
-import {
-  EPOCH_REFERENCE_ID_CURRENT,
-  saveCurrentEpochReference,
-} from "../../entity/epoch";
+import { saveCurrentEpochReference } from "../../entity/epoch";
 
 export function handleEpochCreatedV5(event: EpochCreated): void {
   log.info("handleEpochCreatedV5: {}", [event.transaction.hash.toHexString()]);

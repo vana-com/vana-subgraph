@@ -22,7 +22,7 @@ import {
   createNewUser,
 } from "../utils";
 import { EPOCH_REFERENCE_ID_CURRENT } from "../../../../src/lib/entity/epoch";
-import { createNewFileOwner } from "../utils/file-owner";
+import { createNewFile } from "../utils/file-owner";
 import { createNewUserTotals } from "../utils/user-totals";
 import {
   getTotalsDlpId,
@@ -128,7 +128,7 @@ describe("handleDataRegistryProofAddedV3", () => {
     createNewEpoch("1");
     createNewEpochReference(EPOCH_REFERENCE_ID_CURRENT, "1");
     createNewDlp("1", user.id, "dlp-1");
-    createNewFileOwner("1", "0x334e8bbf9c7822fc3f66b11cb0d8ef84c5a4b5ce");
+    createNewFile("1", "0x334e8bbf9c7822fc3f66b11cb0d8ef84c5a4b5ce", "ipfs://test");
 
     const globalTotals = createNewTotals(TOTALS_ID_GLOBAL);
     globalTotals.totalFileContributions = GraphBigInt.fromString("5");

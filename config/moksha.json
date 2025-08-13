@@ -19,7 +19,13 @@
       "vanaEpoch": true,
       "dlpPerformance": true,
       "queryEngine": true,
-      "dataRefinerRegistry": true
+      "dataRefinerRegistry": true,
+      "dataPermission": false
+    },
+    "v6": {
+      "dataPortabilityGrantees": true,
+      "dataPortabilityPermissions": true,
+      "dataPortabilityServers": true
     },
     "uniswap": {
       "v3": true
