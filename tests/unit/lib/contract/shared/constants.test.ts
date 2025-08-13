@@ -1,16 +1,12 @@
-import {
-  assert,
-  describe,
-  test,
-} from "matchstick-as/assembly/index";
+import { assert, describe, test } from "matchstick-as/assembly/index";
 import { BigInt as GraphBigInt } from "@graphprotocol/graph-ts";
-import { 
+import {
   ONE,
   ZERO,
   ERROR_NO_EPOCH,
   ERROR_DLP_NOT_FOUND,
   ERROR_NO_FILE_OWNER,
-  DEFAULT_SCHEMA_ID
+  DEFAULT_SCHEMA_ID,
 } from "../../../../../src/lib/contract/shared/constants";
 
 describe("Shared Constants", () => {
@@ -25,7 +21,10 @@ describe("Shared Constants", () => {
     // ASSERT
     assert.stringEquals(ERROR_NO_EPOCH, "No epoch found for block");
     assert.stringEquals(ERROR_DLP_NOT_FOUND, "DLP not found for proof");
-    assert.stringEquals(ERROR_NO_FILE_OWNER, "Cannot update totals: file not found or has no owner");
+    assert.stringEquals(
+      ERROR_NO_FILE_OWNER,
+      "Cannot update totals: file not found or has no owner",
+    );
   });
 
   test("Constants are usable in computations", () => {

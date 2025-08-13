@@ -1,6 +1,4 @@
-export {
-  handleGranteeRegistered,
-} from "./data-portability-grantees";
+export { handleGranteeRegistered } from "./data-portability-grantees";
 
 export {
   handlePermissionAdded,
@@ -13,3 +11,8 @@ export {
   handleServerTrusted,
   handleServerUntrusted,
 } from "./data-portability-servers";
+
+export {
+  handleSchemaAdded,
+  handleRefinerAdded,
+} from "./data-refiner-registry";

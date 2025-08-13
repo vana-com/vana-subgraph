@@ -1,7 +1,4 @@
-import {
-  log,
-  store,
-} from "@graphprotocol/graph-ts";
+import { log, store } from "@graphprotocol/graph-ts";
 import {
   ServerRegistered,
   ServerUpdated,
@@ -12,23 +9,26 @@ import { Server, UserServer } from "../../../../generated/schema";
 import { getOrCreateUser } from "../shared";
 
 export function handleServerRegistered(event: ServerRegistered): void {
-  log.info("Handling ServerRegistered with serverId: {}, owner: {}, serverAddress: {}, and url: {}", [
-    event.params.serverId.toString(),
-    event.params.owner.toHexString(),
-    event.params.serverAddress.toHexString(),
-    event.params.url,
-  ]);
+  log.info(
+    "Handling ServerRegistered with serverId: {}, owner: {}, serverAddress: {}, and url: {}",
+    [
+      event.params.serverId.toString(),
+      event.params.owner.toHexString(),
+      event.params.serverAddress.toHexString(),
+      event.params.url,
+    ],
+  );
 
   const serverId = event.params.serverId.toString();
   let server = Server.load(serverId);
-  
+
   if (server == null) {
     server = new Server(serverId);
   }
 
   // Get or create the owner user
   const owner = getOrCreateUser(event.params.owner.toHex());
-  
+
   server.owner = owner.id;
   server.serverAddress = event.params.serverAddress;
   server.publicKey = event.params.publicKey;
@@ -53,7 +53,10 @@ export function handleServerUpdated(event: ServerUpdated): void {
     server.url = event.params.url;
     server.save();
   } else {
-    log.warning("Received update event for a server not found in subgraph: {}", [serverId]);
+    log.warning(
+      "Received update event for a server not found in subgraph: {}",
+      [serverId],
+    );
   }
 }
 
@@ -68,7 +71,7 @@ export function handleServerTrusted(event: ServerTrusted): void {
   const compositeId = `${user.id}-${serverId}`;
 
   // Ensure server exists
-  let server = Server.load(serverId);
+  const server = Server.load(serverId);
   if (server == null) {
     log.error("Server with id {} not found for trust relationship", [serverId]);
     return;
@@ -103,8 +106,9 @@ export function handleServerUntrusted(event: ServerUntrusted): void {
     userServer.untrustedAtBlock = event.block.number;
     userServer.save();
   } else {
-    log.warning("Attempted to untrust a server relationship that was not found: {}", [
-      compositeId,
-    ]);
+    log.warning(
+      "Attempted to untrust a server relationship that was not found: {}",
+      [compositeId],
+    );
   }
 }

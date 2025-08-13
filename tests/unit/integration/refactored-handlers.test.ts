@@ -6,17 +6,17 @@ import {
   test,
 } from "matchstick-as/assembly/index";
 import { BigInt as GraphBigInt } from "@graphprotocol/graph-ts";
-import { 
+import {
   handleFileAddedV1,
-  handleDataRegistryProofAddedV1
+  handleDataRegistryProofAddedV1,
 } from "../../../src/lib/contract/v1/data-registry";
-import { 
+import {
   handleFileAddedV2,
-  handleDataRegistryProofAddedV2
+  handleDataRegistryProofAddedV2,
 } from "../../../src/lib/contract/v2/data-registry";
-import { 
+import {
   handleFileAddedV3,
-  handleDataRegistryProofAddedV3
+  handleDataRegistryProofAddedV3,
 } from "../../../src/lib/contract/v3/data-registry";
 import { createFileAddedEvent } from "../contract/v1/utils/data-registry-events";
 import { createProofAddedEvent } from "../contract/v1/utils/data-registry-events";
@@ -24,11 +24,11 @@ import { createFileAddedEvent as createFileAddedEventV2 } from "../contract/v2/u
 import { createProofAddedEvent as createProofAddedEventV2 } from "../contract/v2/utils/data-registry-events";
 import { createFileAddedEvent as createFileAddedEventV3 } from "../contract/v3/utils/data-registry-events";
 import { createProofAddedEvent as createProofAddedEventV3 } from "../contract/v3/utils/data-registry-events";
-import { 
-  createNewEpoch, 
+import {
+  createNewEpoch,
   createNewEpochReference,
   createNewDlp,
-  createNewUser 
+  createNewUser,
 } from "../contract/utils";
 import { EPOCH_REFERENCE_ID_CURRENT } from "../../../src/lib/entity/epoch";
 
@@ -99,15 +99,27 @@ describe("Integration Tests for Refactored Handlers", () => {
     const fileEventV1 = createFileAddedEvent(fileId1, ownerAddress, url);
     const fileEventV2 = createFileAddedEventV2(fileId2, ownerAddress, url);
     const fileEventV3 = createFileAddedEventV3(fileId3, ownerAddress, url);
-    
+
     handleFileAddedV1(fileEventV1);
     handleFileAddedV2(fileEventV2);
     handleFileAddedV3(fileEventV3);
 
     // Create proof events
     const proofEventV1 = createProofAddedEvent(fileId1, proofIndex);
-    const proofEventV2 = createProofAddedEventV2(fileId2, proofIndex, parseInt(dlpId), 100);
-    const proofEventV3 = createProofAddedEventV3(fileId3, ownerAddress, parseInt(dlpId), proofIndex, 100, "test");
+    const proofEventV2 = createProofAddedEventV2(
+      fileId2,
+      proofIndex,
+      Number.parseInt(dlpId),
+      100,
+    );
+    const proofEventV3 = createProofAddedEventV3(
+      fileId3,
+      ownerAddress,
+      Number.parseInt(dlpId),
+      proofIndex,
+      100,
+      "test",
+    );
 
     // ACT - Handle proof events
     handleDataRegistryProofAddedV1(proofEventV1);
@@ -120,7 +132,12 @@ describe("Integration Tests for Refactored Handlers", () => {
     // V1 proof should not have user or DLP
     const proofIdV1 = proofEventV1.transaction.hash.toHexString();
     assert.fieldEquals("DataRegistryProof", proofIdV1, "epoch", "1");
-    assert.fieldEquals("DataRegistryProof", proofIdV1, "fileId", fileId1.toString());
+    assert.fieldEquals(
+      "DataRegistryProof",
+      proofIdV1,
+      "fileId",
+      fileId1.toString(),
+    );
 
     // V2 proof should have DLP but not user
     const proofIdV2 = proofEventV2.transaction.hash.toHexString();
@@ -154,15 +171,27 @@ describe("Integration Tests for Refactored Handlers", () => {
     const fileEventV1 = createFileAddedEvent(fileId1, ownerAddress, url);
     const fileEventV2 = createFileAddedEventV2(fileId2, ownerAddress, url);
     const fileEventV3 = createFileAddedEventV3(fileId3, ownerAddress, url);
-    
+
     handleFileAddedV1(fileEventV1);
     handleFileAddedV2(fileEventV2);
     handleFileAddedV3(fileEventV3);
 
     // Create proof events
     const proofEventV1 = createProofAddedEvent(fileId1, proofIndex);
-    const proofEventV2 = createProofAddedEventV2(fileId2, proofIndex, parseInt(dlpId), 100);
-    const proofEventV3 = createProofAddedEventV3(fileId3, ownerAddress, parseInt(dlpId), proofIndex, 100, "test");
+    const proofEventV2 = createProofAddedEventV2(
+      fileId2,
+      proofIndex,
+      Number.parseInt(dlpId),
+      100,
+    );
+    const proofEventV3 = createProofAddedEventV3(
+      fileId3,
+      ownerAddress,
+      Number.parseInt(dlpId),
+      proofIndex,
+      100,
+      "test",
+    );
 
     // ACT - Handle proof events
     handleDataRegistryProofAddedV1(proofEventV1);
@@ -181,10 +210,20 @@ describe("Integration Tests for Refactored Handlers", () => {
 
     // Check user totals
     const userTotalsId = `user-${ownerAddress}`;
-    assert.fieldEquals("UserTotals", userTotalsId, "fileContributionsCount", "3");
+    assert.fieldEquals(
+      "UserTotals",
+      userTotalsId,
+      "fileContributionsCount",
+      "3",
+    );
 
     // Check DLP user totals
     const dlpUserTotalsId = `user-${ownerAddress}-dlp-${dlpId}`;
-    assert.fieldEquals("UserTotals", dlpUserTotalsId, "fileContributionsCount", "2");
+    assert.fieldEquals(
+      "UserTotals",
+      dlpUserTotalsId,
+      "fileContributionsCount",
+      "2",
+    );
   });
 });

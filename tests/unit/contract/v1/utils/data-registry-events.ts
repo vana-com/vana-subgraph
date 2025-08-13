@@ -1,8 +1,8 @@
 import { Address, ethereum } from "@graphprotocol/graph-ts";
 import { newMockEvent } from "matchstick-as/assembly/index";
-import { 
+import {
   FileAdded as FileAddedEvent,
-  ProofAdded as ProofAddedEvent 
+  ProofAdded as ProofAddedEvent,
 } from "../../../../../generated/DataRegistryImplementationV1/DataRegistryImplementationV1";
 
 export function createFileAddedEvent(

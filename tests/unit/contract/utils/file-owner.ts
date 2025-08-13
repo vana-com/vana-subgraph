@@ -1,7 +1,11 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts";
 import { File } from "../../../../generated/schema";
 
-export function fileDefaults(id: string, ownerAddress: string, url: string): File {
+export function fileDefaults(
+  id: string,
+  ownerAddress: string,
+  url: string,
+): File {
   const file = new File(id);
   file.owner = ownerAddress;
   file.url = url;

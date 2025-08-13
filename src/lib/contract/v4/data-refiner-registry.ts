@@ -3,7 +3,7 @@ import { Refiner } from "../../../../generated/schema";
 import { RefinerAdded } from "../../../../generated/DataRefinerRegistryImplementation/DataRefinerRegistryImplementation";
 import { getOrCreateUser } from "../shared";
 
-export function handleRefinerAdded(event: RefinerAdded): void {
+export function handleRefinerAddedV4(event: RefinerAdded): void {
   log.info("Handling RefinerAdded with transaction hash: {}", [
     event.transaction.hash.toHexString(),
   ]);

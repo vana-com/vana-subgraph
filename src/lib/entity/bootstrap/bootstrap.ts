@@ -1,6 +1,6 @@
 import { BigInt, ethereum } from "@graphprotocol/graph-ts";
-import {dlps} from "../../../mapping";
-import {getOrCreateDlp} from "../../contract/shared";
+import { dlps } from "../../../mapping";
+import { getOrCreateDlp } from "../../contract/shared";
 
 export function handleBootstrap(block: ethereum.Block): void {
   for (let i = 0; i < dlps.length; i++) {
@@ -9,6 +9,6 @@ export function handleBootstrap(block: ethereum.Block): void {
       dlps[i].verificationBlockNumber,
     );
 
-        dlp.save();
-    }
+    dlp.save();
+  }
 }

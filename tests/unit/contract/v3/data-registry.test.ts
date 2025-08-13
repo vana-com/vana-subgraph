@@ -128,7 +128,11 @@ describe("handleDataRegistryProofAddedV3", () => {
     createNewEpoch("1");
     createNewEpochReference(EPOCH_REFERENCE_ID_CURRENT, "1");
     createNewDlp("1", user.id, "dlp-1");
-    createNewFile("1", "0x334e8bbf9c7822fc3f66b11cb0d8ef84c5a4b5ce", "ipfs://test");
+    createNewFile(
+      "1",
+      "0x334e8bbf9c7822fc3f66b11cb0d8ef84c5a4b5ce",
+      "ipfs://test",
+    );
 
     const globalTotals = createNewTotals(TOTALS_ID_GLOBAL);
     globalTotals.totalFileContributions = GraphBigInt.fromString("5");

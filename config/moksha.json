@@ -23,6 +23,7 @@
       "dataPermission": false
     },
     "v6": {
+      "dataRefinerRegistry": true,
       "dataPortabilityGrantees": true,
       "dataPortabilityPermissions": true,
       "dataPortabilityServers": true

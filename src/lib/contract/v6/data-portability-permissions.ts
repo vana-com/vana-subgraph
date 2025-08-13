@@ -9,24 +9,35 @@ import {
   PermissionRevoked,
   DataPortabilityPermissionsImplementation,
 } from "../../../../generated/DataPortabilityPermissionsImplementation/DataPortabilityPermissionsImplementation";
-import { Permission, Grantee, PermissionFile, File } from "../../../../generated/schema";
+import {
+  Permission,
+  Grantee,
+  PermissionFile,
+  File,
+} from "../../../../generated/schema";
 import { getOrCreateUser } from "../shared";
 
 export function handlePermissionAdded(event: PermissionAdded): void {
-  log.info("Handling PermissionAdded with permissionId: {} for user: {} and granteeId: {}", [
-    event.params.permissionId.toString(),
-    event.params.user.toHexString(),
-    event.params.granteeId.toString(),
-  ]);
+  log.info(
+    "Handling PermissionAdded with permissionId: {} for user: {} and granteeId: {}",
+    [
+      event.params.permissionId.toString(),
+      event.params.user.toHexString(),
+      event.params.granteeId.toString(),
+    ],
+  );
 
   const grantor = getOrCreateUser(event.params.user.toHex());
   const permissionId = event.params.permissionId.toString();
   const granteeId = event.params.granteeId.toString();
 
   // Ensure grantee exists
-  let grantee = Grantee.load(granteeId);
+  const grantee = Grantee.load(granteeId);
   if (grantee == null) {
-    log.error("Grantee with id {} not found for permission {}", [granteeId, permissionId]);
+    log.error("Grantee with id {} not found for permission {}", [
+      granteeId,
+      permissionId,
+    ]);
     return;
   }
 
@@ -66,12 +77,12 @@ export function handlePermissionAdded(event: PermissionAdded): void {
   for (let i = 0; i < fileIds.length; i++) {
     const fileId = fileIds[i];
     const permissionFileId = `${permissionId}-${fileId.toString()}`;
-    
+
     let permissionFile = PermissionFile.load(permissionFileId);
     if (permissionFile == null) {
       permissionFile = new PermissionFile(permissionFileId);
       permissionFile.permission = permission.id;
-      
+
       // Load or create the file
       let file = File.load(fileId.toString());
       if (file == null) {
@@ -84,7 +95,7 @@ export function handlePermissionAdded(event: PermissionAdded): void {
         file.transactionHash = event.transaction.hash;
         file.save();
       }
-      
+
       permissionFile.file = file.id;
       permissionFile.save();
     }

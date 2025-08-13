@@ -6,9 +6,9 @@ import {
   test,
 } from "matchstick-as/assembly/index";
 import { BigInt as GraphBigInt } from "@graphprotocol/graph-ts";
-import { 
+import {
   handleFileAddedV1,
-  handleDataRegistryProofAddedV1
+  handleDataRegistryProofAddedV1,
 } from "../../../../src/lib/contract/v1/data-registry";
 import { createFileAddedEvent } from "./utils/data-registry-events";
 import { createProofAddedEvent } from "./utils/data-registry-events";
@@ -39,9 +39,24 @@ describe("V1 Data Registry Refactored Handlers", () => {
     assert.fieldEquals("File", fileId.toString(), "owner", ownerAddress);
     assert.fieldEquals("File", fileId.toString(), "url", url);
     assert.fieldEquals("File", fileId.toString(), "schemaId", "0"); // V1 should use default schema ID
-    assert.fieldEquals("File", fileId.toString(), "addedAtBlock", fileAddedEvent.block.number.toString());
-    assert.fieldEquals("File", fileId.toString(), "addedAtTimestamp", fileAddedEvent.block.timestamp.toString());
-    assert.fieldEquals("File", fileId.toString(), "transactionHash", fileAddedEvent.transaction.hash.toHexString());
+    assert.fieldEquals(
+      "File",
+      fileId.toString(),
+      "addedAtBlock",
+      fileAddedEvent.block.number.toString(),
+    );
+    assert.fieldEquals(
+      "File",
+      fileId.toString(),
+      "addedAtTimestamp",
+      fileAddedEvent.block.timestamp.toString(),
+    );
+    assert.fieldEquals(
+      "File",
+      fileId.toString(),
+      "transactionHash",
+      fileAddedEvent.transaction.hash.toHexString(),
+    );
 
     // Check that User entity was created
     assert.entityCount("User", 1);
@@ -74,11 +89,36 @@ describe("V1 Data Registry Refactored Handlers", () => {
     const proofId = proofEvent.transaction.hash.toHexString();
     assert.fieldEquals("DataRegistryProof", proofId, "id", proofId);
     assert.fieldEquals("DataRegistryProof", proofId, "epoch", "1");
-    assert.fieldEquals("DataRegistryProof", proofId, "fileId", fileId.toString());
-    assert.fieldEquals("DataRegistryProof", proofId, "proofIndex", proofIndex.toString());
-    assert.fieldEquals("DataRegistryProof", proofId, "createdAt", proofEvent.block.timestamp.toString());
-    assert.fieldEquals("DataRegistryProof", proofId, "createdAtBlock", proofEvent.block.number.toString());
-    assert.fieldEquals("DataRegistryProof", proofId, "createdTxHash", proofEvent.transaction.hash.toHexString());
+    assert.fieldEquals(
+      "DataRegistryProof",
+      proofId,
+      "fileId",
+      fileId.toString(),
+    );
+    assert.fieldEquals(
+      "DataRegistryProof",
+      proofId,
+      "proofIndex",
+      proofIndex.toString(),
+    );
+    assert.fieldEquals(
+      "DataRegistryProof",
+      proofId,
+      "createdAt",
+      proofEvent.block.timestamp.toString(),
+    );
+    assert.fieldEquals(
+      "DataRegistryProof",
+      proofId,
+      "createdAtBlock",
+      proofEvent.block.number.toString(),
+    );
+    assert.fieldEquals(
+      "DataRegistryProof",
+      proofId,
+      "createdTxHash",
+      proofEvent.transaction.hash.toHexString(),
+    );
 
     // Check that totals were updated (V1 only has global totals)
     assert.entityCount("Totals", 1);
@@ -88,7 +128,12 @@ describe("V1 Data Registry Refactored Handlers", () => {
     // Check that UserTotals was created
     assert.entityCount("UserTotals", 1);
     const userTotalsId = `user-${ownerAddress}`;
-    assert.fieldEquals("UserTotals", userTotalsId, "fileContributionsCount", "1");
+    assert.fieldEquals(
+      "UserTotals",
+      userTotalsId,
+      "fileContributionsCount",
+      "1",
+    );
   });
 
   test("handleDataRegistryProofAddedV1 handles missing epoch gracefully", () => {

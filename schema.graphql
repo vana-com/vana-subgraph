@@ -97,12 +97,24 @@ type DlpReward @entity(immutable: false) {
   amount: BigInt
 }
 
+type Schema @entity(immutable: false) {
+  id: ID!
+  name: String!
+  dialect: String!
+  definitionUrl: String!
+  refiners: [Refiner!]! @derivedFrom(field: "schema")
+  createdAt: BigInt!
+  createdAtBlock: BigInt!
+  createdTxHash: Bytes!
+}
+
 type Refiner @entity(immutable: false) {
   id: ID!
   dlp: Dlp!
   owner: Bytes!
   name: String!
-  schemaDefinitionUrl: String!
+  schema: Schema # v6: Reference to schema
+  schemaDefinitionUrl: String! # v4/v5: Direct URL
   refinementInstructionUrl: String!
   payments: [PaymentReceived!]! @derivedFrom(field: "refiner")
 }
