@@ -108,6 +108,8 @@ dataSources:
       eventHandlers:
         - event: FileAdded(indexed uint256,indexed address,string)
           handler: handleFileAddedV3
+        - event: FileAddedV2(indexed uint256,indexed address,string,uint256)
+          handler: handleFileAddedV2V3
         - event: ProofAdded(indexed uint256,indexed address,uint256,indexed uint256,uint256,string)
           handler: handleDataRegistryProofAddedV3
       file: ./src/mapping.ts

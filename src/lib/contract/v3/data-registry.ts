@@ -4,6 +4,7 @@ import { Epoch, PerformanceDlpEpochUser } from "../../../../generated/schema";
 
 import {
   FileAdded as FileAddedEvent,
+  FileAddedV2 as FileAddedV2Event,
   ProofAdded as FileProofAdded,
 } from "../../../../generated/DataRegistryImplementationV3/DataRegistryImplementationV3";
 import { getOrCreateTotalsForDlpEpochPerformance } from "../../entity/totals";
@@ -33,6 +34,22 @@ export function handleFileAddedV3(event: FileAddedEvent): void {
     event.block,
     event.transaction,
     DEFAULT_SCHEMA_ID,
+  );
+}
+
+// Handler for the new FileAddedV2 event that includes schemaId
+// This event was added to support schema association with files
+export function handleFileAddedV2V3(event: FileAddedV2Event): void {
+  logDataRegistryEvent("FileAddedV2", event.transaction.hash.toHex());
+
+  // Create file entity using shared utility with the schemaId from the event
+  createFileFromEvent(
+    event.params.fileId.toString(),
+    event.params.ownerAddress.toHex(),
+    event.params.url,
+    event.block,
+    event.transaction,
+    event.params.schemaId,
   );
 }
 
