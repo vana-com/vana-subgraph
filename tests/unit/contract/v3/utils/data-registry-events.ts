@@ -1,7 +1,8 @@
-import { Address, ethereum } from "@graphprotocol/graph-ts";
+import { Address, ethereum, BigInt as GraphBigInt } from "@graphprotocol/graph-ts";
 import { newMockEvent } from "matchstick-as/assembly/index";
 import {
   FileAdded as FileAddedEvent,
+  FileAddedV2 as FileAddedV2Event,
   ProofAdded as FileProofAdded,
 } from "../../../../../generated/DataRegistryImplementationV3/DataRegistryImplementationV3";
 
@@ -26,6 +27,33 @@ export function createFileAddedEvent(
     new ethereum.EventParam("url", ethereum.Value.fromString(url)),
   );
   return fileAddedEvent;
+}
+
+export function createFileAddedV2Event(
+  fileId: number,
+  ownerAddress: string,
+  url: string,
+  schemaId: number,
+): FileAddedV2Event {
+  const normalizedAddr = ownerAddress.toLowerCase();
+  const fileAddedV2Event = changetype<FileAddedV2Event>(newMockEvent());
+  fileAddedV2Event.parameters = new Array();
+  fileAddedV2Event.parameters.push(
+    new ethereum.EventParam("fileId", ethereum.Value.fromI32(<i32>fileId)),
+  );
+  fileAddedV2Event.parameters.push(
+    new ethereum.EventParam(
+      "ownerAddress",
+      ethereum.Value.fromAddress(Address.fromString(normalizedAddr)),
+    ),
+  );
+  fileAddedV2Event.parameters.push(
+    new ethereum.EventParam("url", ethereum.Value.fromString(url)),
+  );
+  fileAddedV2Event.parameters.push(
+    new ethereum.EventParam("schemaId", ethereum.Value.fromUnsignedBigInt(GraphBigInt.fromI32(<i32>schemaId))),
+  );
+  return fileAddedV2Event;
 }
 
 export function createProofAddedEvent(
