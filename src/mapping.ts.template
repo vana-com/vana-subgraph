@@ -70,6 +70,9 @@ export * from "./lib/contract/v4/data-refiner-registry";
 {{/includes.v4.dataRefinerRegistry}}
 
 // V5
+{{#includes.v5.dlpRegistry}}
+export * from "./lib/contract/v5/dlp-registry";
+{{/includes.v5.dlpRegistry}}
 {{#includes.v5.vanaEpoch}}
 export * from "./lib/contract/v5/vana-epoch";
 {{/includes.v5.vanaEpoch}}
