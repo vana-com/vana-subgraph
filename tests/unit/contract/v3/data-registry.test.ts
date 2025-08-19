@@ -9,9 +9,11 @@ import {
 import {
   handleDataRegistryProofAddedV3,
   handleFileAddedV3,
+  handleFileAddedV2V3,
 } from "../../../../src/lib/contract/v3/data-registry";
 import {
   createFileAddedEvent,
+  createFileAddedV2Event,
   createProofAddedEvent,
 } from "./utils/data-registry-events";
 import {
@@ -272,7 +274,7 @@ describe("handleDataRegistryProofAddedV3", () => {
 });
 
 describe("handleFileAddedV3", () => {
-  test("creates file owner entity", () => {
+  test("creates file entity with default schema", () => {
     const fileAddedEvent = createFileAddedEvent(
       1,
       "0x334e8bbf9c7822fc3f66b11cb0d8ef84c5a4b5ce",
@@ -281,15 +283,63 @@ describe("handleFileAddedV3", () => {
 
     handleFileAddedV3(fileAddedEvent);
 
-    // FileOwner
-    assert.entityCount("FileOwner", 1);
+    // File entity
+    assert.entityCount("File", 1);
 
-    const fileOwnerId = "1";
+    const fileId = "1";
     assert.fieldEquals(
-      "FileOwner",
-      fileOwnerId,
-      "ownerAddress",
+      "File",
+      fileId,
+      "owner",
       "0x334e8bbf9c7822fc3f66b11cb0d8ef84c5a4b5ce",
+    );
+    assert.fieldEquals(
+      "File",
+      fileId,
+      "url",
+      "https://www.some.com/storage/url",
+    );
+    assert.fieldEquals(
+      "File",
+      fileId,
+      "schemaId",
+      "0",
+    );
+  });
+});
+
+describe("handleFileAddedV2V3", () => {
+  test("creates file entity with specified schema", () => {
+    const fileAddedV2Event = createFileAddedV2Event(
+      2,
+      "0x334e8bbf9c7822fc3f66b11cb0d8ef84c5a4b5ce",
+      "https://www.example.com/data",
+      42, // schemaId
+    );
+
+    handleFileAddedV2V3(fileAddedV2Event);
+
+    // File entity
+    assert.entityCount("File", 1);
+
+    const fileId = "2";
+    assert.fieldEquals(
+      "File",
+      fileId,
+      "owner",
+      "0x334e8bbf9c7822fc3f66b11cb0d8ef84c5a4b5ce",
+    );
+    assert.fieldEquals(
+      "File",
+      fileId,
+      "url",
+      "https://www.example.com/data",
+    );
+    assert.fieldEquals(
+      "File",
+      fileId,
+      "schemaId",
+      "42",
     );
   });
 });

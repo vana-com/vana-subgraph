@@ -108,6 +108,8 @@ dataSources:
       eventHandlers:
         - event: FileAdded(indexed uint256,indexed address,string)
           handler: handleFileAddedV3
+        - event: FileAddedV2(indexed uint256,indexed address,string,uint256)
+          handler: handleFileAddedV2V3
         - event: ProofAdded(indexed uint256,indexed address,uint256,indexed uint256,uint256,string)
           handler: handleDataRegistryProofAddedV3
       file: ./src/mapping.ts
@@ -317,30 +319,6 @@ dataSources:
           handler: handleServerTrusted
         - event: ServerUntrusted(indexed address,indexed uint256)
           handler: handleServerUntrusted
-      file: ./src/mapping.ts
-
-  - kind: ethereum/contract
-    name: DataRegistryImplementationV5
-    network: vana-moksha
-    source:
-      address: "0x8C8788f98385F6ba1adD4234e551ABba0f82Cb7C"
-      abi: DataRegistryImplementationV5
-      startBlock: 3425120
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.6
-      language: wasm/assemblyscript
-      entities:
-        - EpochReference
-        - DataRegistryProof
-      abis:
-        - name: DataRegistryImplementationV5
-          file: ./abis/v5/DataRegistryImplementation.json
-      eventHandlers:
-        - event: FileAdded(indexed uint256,indexed address,string)
-          handler: handleFileAddedV3
-        - event: ProofAdded(indexed uint256,indexed address,uint256,indexed uint256,uint256,string)
-          handler: handleDataRegistryProofAddedV3
       file: ./src/mapping.ts
 
   - kind: ethereum/contract

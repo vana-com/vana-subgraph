@@ -69,12 +69,38 @@
     },
     {
         "inputs": [],
+        "name": "FileNotFound",
+        "type": "error"
+    },
+    {
+        "inputs": [],
         "name": "FileUrlAlreadyUsed",
         "type": "error"
     },
     {
         "inputs": [],
         "name": "InvalidInitialization",
+        "type": "error"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "schemaId",
+                "type": "uint256"
+            }
+        ],
+        "name": "InvalidSchemaId",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "InvalidUrl",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "NoPermission",
         "type": "error"
     },
     {
@@ -126,6 +152,37 @@
             }
         ],
         "name": "FileAdded",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "fileId",
+                "type": "uint256"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "ownerAddress",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "url",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "schemaId",
+                "type": "uint256"
+            }
+        ],
+        "name": "FileAddedV2",
         "type": "event"
     },
     {
@@ -214,6 +271,56 @@
             }
         ],
         "name": "ProofAdded",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "fileId",
+                "type": "uint256"
+            },
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "refinerId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "url",
+                "type": "string"
+            }
+        ],
+        "name": "RefinementAdded",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "fileId",
+                "type": "uint256"
+            },
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "refinerId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "url",
+                "type": "string"
+            }
+        ],
+        "name": "RefinementUpdated",
         "type": "event"
     },
     {
@@ -345,6 +452,19 @@
     },
     {
         "inputs": [],
+        "name": "REFINEMENT_SERVICE_ROLE",
+        "outputs": [
+            {
+                "internalType": "bytes32",
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
         "name": "UPGRADE_INTERFACE_VERSION",
         "outputs": [
             {
@@ -442,6 +562,76 @@
     {
         "inputs": [
             {
+                "internalType": "string",
+                "name": "url",
+                "type": "string"
+            },
+            {
+                "internalType": "address",
+                "name": "ownerAddress",
+                "type": "address"
+            },
+            {
+                "components": [
+                    {
+                        "internalType": "address",
+                        "name": "account",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "key",
+                        "type": "string"
+                    }
+                ],
+                "internalType": "struct IDataRegistry.Permission[]",
+                "name": "permissions",
+                "type": "tuple[]"
+            },
+            {
+                "internalType": "uint256",
+                "name": "schemaId",
+                "type": "uint256"
+            }
+        ],
+        "name": "addFileWithPermissionsAndSchema",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "url",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "schemaId",
+                "type": "uint256"
+            }
+        ],
+        "name": "addFileWithSchema",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "internalType": "uint256",
                 "name": "fileId",
                 "type": "uint256"
@@ -494,6 +684,65 @@
         "name": "addProof",
         "outputs": [],
         "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "fileId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "refinerId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "url",
+                "type": "string"
+            },
+            {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            },
+            {
+                "internalType": "string",
+                "name": "key",
+                "type": "string"
+            }
+        ],
+        "name": "addRefinementWithPermission",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "dataRefinerRegistry",
+        "outputs": [
+            {
+                "internalType": "contract IDataRefinerRegistry",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "emitLegacyEvents",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -608,6 +857,30 @@
                 "internalType": "uint256",
                 "name": "fileId",
                 "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "refinerId",
+                "type": "uint256"
+            }
+        ],
+        "name": "fileRefinements",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "fileId",
+                "type": "uint256"
             }
         ],
         "name": "files",
@@ -628,6 +901,11 @@
                         "internalType": "string",
                         "name": "url",
                         "type": "string"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "schemaId",
+                        "type": "uint256"
                     },
                     {
                         "internalType": "uint256",
@@ -845,6 +1123,24 @@
     {
         "inputs": [
             {
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "adminRole",
+                "type": "bytes32"
+            }
+        ],
+        "name": "setRoleAdmin",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "internalType": "bytes4",
                 "name": "interfaceId",
                 "type": "bytes4"
@@ -877,6 +1173,32 @@
     {
         "inputs": [],
         "name": "unpause",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "contract IDataRefinerRegistry",
+                "name": "newDataRefinerRegistry",
+                "type": "address"
+            }
+        ],
+        "name": "updateDataRefinerRegistry",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bool",
+                "name": "newEmitLegacyEvents",
+                "type": "bool"
+            }
+        ],
+        "name": "updateEmitLegacyEvents",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"

@@ -6,12 +6,11 @@ schema:
   file: ./schema.graphql
 
 # Stub for grafting on existing subgraphs
-#
-#features:
-#  - grafting
-#graft:
-#  base:
-#  block:
+features:
+  - grafting
+graft:
+  base: QmUKB4EiXUJRKVnR1pGHsULHw9WTGGmbzuCZ5EsvQQmsWe
+  block: 3980000
 
 dataSources:
   - kind: ethereum/contract
@@ -108,6 +107,8 @@ dataSources:
       eventHandlers:
         - event: FileAdded(indexed uint256,indexed address,string)
           handler: handleFileAddedV3
+        - event: FileAddedV2(indexed uint256,indexed address,string,uint256)
+          handler: handleFileAddedV2V3
         - event: ProofAdded(indexed uint256,indexed address,uint256,indexed uint256,uint256,string)
           handler: handleDataRegistryProofAddedV3
       file: ./src/mapping.ts
