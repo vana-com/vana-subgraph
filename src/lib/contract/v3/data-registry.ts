@@ -17,6 +17,8 @@ import {
   logDataRegistryEvent,
   createDataRegistryProof,
   updateAllTotals,
+  isFirstProofForFile,
+  updateDlpSchemaTotalsForFile,
   ERROR_NO_EPOCH,
   DEFAULT_SCHEMA_ID,
   ONE,
@@ -66,10 +68,12 @@ export function handleDataRegistryProofAddedV3(event: FileProofAdded): void {
   const dlp = getOrCreateDlp(dlpId);
   getOrCreateUser(userId);
 
+  // Check if this is the first proof for the file in this DLP
+  const isFirstProof = isFirstProofForFile(event.params.fileId, dlpId);
+
   // Create proof using shared utility
   // V3 has both user and DLP associations in the proof
   createDataRegistryProof(
-    event.transaction.hash.toHex(),
     epochId,
     event.params.fileId,
     event.params.proofIndex,
@@ -79,11 +83,16 @@ export function handleDataRegistryProofAddedV3(event: FileProofAdded): void {
     dlp.id,
   );
 
-  // Update totals using shared utility
-  updateAllTotals(userId, dlpId);
+  // Update totals only if this is the first proof for the file in this DLP
+  if (isFirstProof) {
+    updateAllTotals(userId, dlpId);
 
-  // Update DLP epoch user (V3 specific functionality)
-  updateDlpEpochUser(event, epochId, userId, dlpId);
+    // Update DLP schema totals for files with schema (only on first proof for file-DLP)
+    updateDlpSchemaTotalsForFile(event.params.fileId.toString(), dlpId);
+
+    // Update DLP epoch user (V3 specific functionality) only for first proof
+    updateDlpEpochUser(event, epochId, userId, dlpId);
+  }
 }
 
 // Removed: now using shared createDataRegistryProof function

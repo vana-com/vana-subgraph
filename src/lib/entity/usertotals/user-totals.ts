@@ -1,6 +1,6 @@
 import { BigInt as GraphBigInt } from "@graphprotocol/graph-ts";
 import { UserTotals } from "../../../../generated/schema";
-import { getUserTotalsId, getUserTotalsIdDlp } from "./constants";
+import { getUserTotalsId, getUserTotalsIdDlp, getUserTotalsIdSchema, getUserTotalsIdGlobalSchema } from "./constants";
 
 export function getOrCreateUserTotalsForUser(userId: string): UserTotals {
   const userTotalsId = getUserTotalsId(userId);
@@ -12,6 +12,19 @@ export function getOrCreateUserTotalsForDlp(
   dlpId: string,
 ): UserTotals {
   const userTotalsId = getUserTotalsIdDlp(userId, dlpId);
+  return getOrCreateUserTotals(userTotalsId);
+}
+
+export function getOrCreateUserTotalsForSchema(
+  userId: string,
+  schemaId: string,
+): UserTotals {
+  const userTotalsId = getUserTotalsIdSchema(userId, schemaId);
+  return getOrCreateUserTotals(userTotalsId);
+}
+
+export function getOrCreateUserTotalsForGlobalSchema(userId: string): UserTotals {
+  const userTotalsId = getUserTotalsIdGlobalSchema(userId);
   return getOrCreateUserTotals(userTotalsId);
 }
 

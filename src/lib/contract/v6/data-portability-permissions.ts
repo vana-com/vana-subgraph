@@ -90,6 +90,7 @@ export function handlePermissionAdded(event: PermissionAdded): void {
         file = new File(fileId.toString());
         file.owner = grantor.id;
         file.url = "";
+        file.schemaId = GraphBigInt.zero();
         file.addedAtBlock = event.block.number;
         file.addedAtTimestamp = event.block.timestamp;
         file.transactionHash = event.transaction.hash;

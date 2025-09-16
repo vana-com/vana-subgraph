@@ -12,7 +12,11 @@ import {
   Bytes,
 } from "@graphprotocol/graph-ts";
 import { newMockEvent } from "matchstick-as/assembly/index";
-import { createDataRegistryProof } from "../../../../../src/lib/contract/shared/proof-handlers";
+import {
+  createDataRegistryProof,
+  isFirstProofForFile,
+  getProofId
+} from "../../../../../src/lib/contract/shared/proof-handlers";
 
 // Hook to clear the store before each test
 beforeEach(() => {
@@ -33,7 +37,6 @@ describe("createDataRegistryProof", () => {
 
     // ACT
     const proof = createDataRegistryProof(
-      transactionHash,
       epochId,
       fileId,
       proofIndex,
@@ -42,41 +45,42 @@ describe("createDataRegistryProof", () => {
     );
 
     // ASSERT
+    const expectedProofId = getProofId(fileId, proofIndex);
     assert.entityCount("DataRegistryProof", 1);
     assert.fieldEquals(
       "DataRegistryProof",
-      transactionHash,
+      expectedProofId,
       "id",
-      transactionHash,
+      expectedProofId,
     );
-    assert.fieldEquals("DataRegistryProof", transactionHash, "epoch", epochId);
+    assert.fieldEquals("DataRegistryProof", expectedProofId, "epoch", epochId);
     assert.fieldEquals(
       "DataRegistryProof",
-      transactionHash,
-      "fileId",
+      expectedProofId,
+      "file",
       fileId.toString(),
     );
     assert.fieldEquals(
       "DataRegistryProof",
-      transactionHash,
+      expectedProofId,
       "proofIndex",
       proofIndex.toString(),
     );
     assert.fieldEquals(
       "DataRegistryProof",
-      transactionHash,
+      expectedProofId,
       "createdAt",
       mockBlock.timestamp.toString(),
     );
     assert.fieldEquals(
       "DataRegistryProof",
-      transactionHash,
+      expectedProofId,
       "createdAtBlock",
       mockBlock.number.toString(),
     );
     assert.fieldEquals(
       "DataRegistryProof",
-      transactionHash,
+      expectedProofId,
       "createdTxHash",
       mockTransaction.hash.toHexString(),
     );
@@ -97,7 +101,6 @@ describe("createDataRegistryProof", () => {
 
     // ACT
     const proof = createDataRegistryProof(
-      transactionHash,
       epochId,
       fileId,
       proofIndex,
@@ -108,9 +111,10 @@ describe("createDataRegistryProof", () => {
     );
 
     // ASSERT
+    const expectedProofId = getProofId(fileId, proofIndex);
     assert.entityCount("DataRegistryProof", 1);
-    assert.fieldEquals("DataRegistryProof", transactionHash, "user", userId);
-    assert.fieldEquals("DataRegistryProof", transactionHash, "dlp", dlpId);
+    assert.fieldEquals("DataRegistryProof", expectedProofId, "user", userId);
+    assert.fieldEquals("DataRegistryProof", expectedProofId, "dlp", dlpId);
   });
 
   test("creates a DataRegistryProof entity with null optional fields", () => {
@@ -126,7 +130,6 @@ describe("createDataRegistryProof", () => {
 
     // ACT
     const proof = createDataRegistryProof(
-      transactionHash,
       epochId,
       fileId,
       proofIndex,
@@ -137,13 +140,79 @@ describe("createDataRegistryProof", () => {
     );
 
     // ASSERT
+    const expectedProofId = getProofId(fileId, proofIndex);
     assert.entityCount("DataRegistryProof", 1);
     assert.fieldEquals(
       "DataRegistryProof",
-      transactionHash,
+      expectedProofId,
       "id",
-      transactionHash,
+      expectedProofId,
     );
     // Optional fields should not be set when null is passed
+  });
+});
+
+describe("isFirstProofForFile", () => {
+  test("returns true when no proof exists for the file", () => {
+    // ARRANGE
+    const fileId = GraphBigInt.fromI32(123);
+
+    // ACT
+    const isFirst = isFirstProofForFile(fileId);
+
+    // ASSERT
+    assert.assertTrue(isFirst);
+  });
+
+  test("returns false when a proof with index 1 exists for the file", () => {
+    // ARRANGE
+    const fileId = GraphBigInt.fromI32(123);
+    const proofIndex = GraphBigInt.fromI32(1);
+    const epochId = "epoch-1";
+
+    const mockEvent = newMockEvent();
+    const mockBlock = mockEvent.block;
+    const mockTransaction = mockEvent.transaction;
+
+    // Create a proof with index 1
+    createDataRegistryProof(
+      epochId,
+      fileId,
+      proofIndex,
+      mockBlock,
+      mockTransaction,
+    );
+
+    // ACT
+    const isFirst = isFirstProofForFile(fileId);
+
+    // ASSERT
+    assert.assertFalse(isFirst);
+  });
+});
+
+describe("getProofId", () => {
+  test("generates correct composite proof ID", () => {
+    // ARRANGE
+    const fileId = GraphBigInt.fromI32(123);
+    const proofIndex = GraphBigInt.fromI32(456);
+
+    // ACT
+    const proofId = getProofId(fileId, proofIndex);
+
+    // ASSERT
+    assert.stringEquals(proofId, "file-123-proof-456");
+  });
+
+  test("generates correct proof ID for index 1", () => {
+    // ARRANGE
+    const fileId = GraphBigInt.fromI32(999);
+    const proofIndex = GraphBigInt.fromI32(1);
+
+    // ACT
+    const proofId = getProofId(fileId, proofIndex);
+
+    // ASSERT
+    assert.stringEquals(proofId, "file-999-proof-1");
   });
 });

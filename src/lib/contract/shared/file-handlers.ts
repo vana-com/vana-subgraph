@@ -1,6 +1,8 @@
 import { BigInt as GraphBigInt, log, ethereum } from "@graphprotocol/graph-ts";
-import { File } from "../../../../generated/schema";
+import { File, Schema } from "../../../../generated/schema";
 import { getOrCreateUser } from "../shared";
+import { getOrCreateUserTotalsForSchema } from "../../entity/usertotals";
+import {updateDlpSchemaTotals, updateGlobalSchemaTotals} from "./totals-updater";
 
 /**
  * Creates a new File entity from a FileAdded event
@@ -39,7 +41,76 @@ export function createFileFromEvent(
   file.schemaId = schemaId;
 
   file.save();
+
+  // Track schema contributions if schemaId is not 0
+  if (!schemaId.equals(GraphBigInt.zero())) {
+    trackSchemaContribution(ownerAddress, schemaId.toString());
+    // Update global schema totals
+    updateGlobalSchemaTotals(ownerAddress);
+  }
+
   return file;
+}
+
+/**
+ * Updates DLP schema totals for a file with schema
+ * @param fileId - The file ID
+ * @param dlpId - The DLP ID
+ */
+export function updateDlpSchemaTotalsForFile(fileId: string, dlpId: string): void {
+  const file = File.load(fileId);
+  if (!file) {
+    log.warning("Cannot update DLP schema totals: file {} not found", [fileId]);
+    return;
+  }
+
+  // Only update if file has a schema (schemaId != 0)
+  if (!file.schemaId.equals(GraphBigInt.zero()) && file.owner) {
+    updateDlpSchemaTotals(file.owner, dlpId);
+
+    log.info("Updated DLP {} schema totals for file {} with schema {}", [
+      dlpId,
+      fileId,
+      file.schemaId.toString()
+    ]);
+  }
+}
+
+/**
+ * Tracks schema contributions for a user and updates schema statistics
+ * @param userId - The user ID
+ * @param schemaId - The schema ID
+ */
+function trackSchemaContribution(userId: string, schemaId: string): void {
+  // Get or create user totals for this schema
+  const userSchemaTotal = getOrCreateUserTotalsForSchema(userId, schemaId);
+
+  // Check if this is the user's first contribution to this schema
+  const isFirstContribution = userSchemaTotal.fileContributionsCount.equals(GraphBigInt.zero());
+
+  // Increment user's contribution count for this schema
+  userSchemaTotal.fileContributionsCount = userSchemaTotal.fileContributionsCount.plus(GraphBigInt.fromI32(1));
+  userSchemaTotal.save();
+
+  // Update schema entity
+  let schema = Schema.load(schemaId);
+  if (schema != null) {
+    // Always increment contributionsCount
+    schema.contributionsCount = schema.contributionsCount.plus(GraphBigInt.fromI32(1));
+
+    // Increment uniqueContributorsCount if this is user's first contribution to this schema
+    if (isFirstContribution) {
+      schema.uniqueContributorsCount = schema.uniqueContributorsCount.plus(GraphBigInt.fromI32(1));
+    }
+
+    schema.save();
+
+    log.info("Updated schema {} contributions: total={}, unique={}", [
+      schemaId,
+      schema.contributionsCount.toString(),
+      schema.uniqueContributorsCount.toString()
+    ]);
+  }
 }
 
 /**

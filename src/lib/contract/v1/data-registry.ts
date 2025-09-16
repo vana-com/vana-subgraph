@@ -10,9 +10,11 @@ import {
   logDataRegistryEvent,
   createDataRegistryProof,
   updateTotalsFromFile,
+  isFirstProofForFile,
   ERROR_NO_EPOCH,
-  DEFAULT_SCHEMA_ID,
+  DEFAULT_SCHEMA_ID, updateAllTotals,
 } from "../shared/index";
+import {File} from "../../../../generated/schema";
 
 export function handleFileAddedV1(event: FileAddedEvent): void {
   logDataRegistryEvent("FileAdded", event.transaction.hash.toHex());
@@ -39,10 +41,12 @@ export function handleDataRegistryProofAddedV1(event: FileProofAdded): void {
     return;
   }
 
+  // Check if this is the first proof for the file
+  const isFirstProof = isFirstProofForFile(event.params.fileId);
+
   // Create proof using shared utility
   // V1 doesn't have user or DLP associations in the proof
   createDataRegistryProof(
-    event.transaction.hash.toHex(),
     epochId,
     event.params.fileId,
     event.params.proofIndex,
@@ -50,7 +54,9 @@ export function handleDataRegistryProofAddedV1(event: FileProofAdded): void {
     event.transaction,
   );
 
-  // Update totals using shared utility
+  // Update totals only if this is the first proof for the file
   // V1 only has global totals, no DLP-specific totals
-  updateTotalsFromFile(event.params.fileId.toString());
+  if (isFirstProof) {
+    updateTotalsFromFile(event.params.fileId.toString());
+  }
 }

@@ -22,6 +22,8 @@ export function getOrCreateTotals(id: string): Totals {
     totals = new Totals(id);
     totals.totalFileContributions = GraphBigInt.zero();
     totals.uniqueFileContributors = GraphBigInt.zero();
+    totals.totalFilesWithSchema = GraphBigInt.zero();
+    totals.uniqueFileContributorsWithSchema = GraphBigInt.zero();
     totals.dataAccessFees = GraphBigDecimal.zero();
     totals.save();
   }

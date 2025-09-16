@@ -1,4 +1,4 @@
-import { log } from "@graphprotocol/graph-ts";
+import { BigInt as GraphBigInt, log } from "@graphprotocol/graph-ts";
 import { Refiner, Schema } from "../../../../generated/schema";
 import {
   RefinerAdded,
@@ -17,6 +17,8 @@ export function handleSchemaAdded(event: SchemaAdded): void {
   schema.name = event.params.name;
   schema.dialect = event.params.dialect;
   schema.definitionUrl = event.params.definitionUrl;
+  schema.contributionsCount = GraphBigInt.zero();
+  schema.uniqueContributorsCount = GraphBigInt.zero();
   schema.createdAt = event.block.timestamp;
   schema.createdAtBlock = event.block.number;
   schema.createdTxHash = event.transaction.hash;

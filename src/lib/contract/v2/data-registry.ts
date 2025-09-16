@@ -12,9 +12,11 @@ import {
   logDataRegistryEvent,
   createDataRegistryProof,
   updateAllTotals,
+  isFirstProofForFile,
+  updateDlpSchemaTotalsForFile,
   ERROR_NO_EPOCH,
   ERROR_DLP_NOT_FOUND,
-  DEFAULT_SCHEMA_ID,
+  DEFAULT_SCHEMA_ID, updateTotalsFromFile,
 } from "../shared/index";
 
 export function handleFileAddedV2(event: FileAddedEvent): void {
@@ -50,10 +52,12 @@ export function handleDataRegistryProofAddedV2(event: FileProofAdded): void {
     return;
   }
 
+  // Check if this is the first proof for the file in this DLP
+  const isFirstProof = isFirstProofForFile(event.params.fileId, event.params.dlpId.toString());
+
   // Create proof using shared utility
   // V2 has DLP association but no user association in the proof
   createDataRegistryProof(
-    event.transaction.hash.toHex(),
     epochId,
     event.params.fileId,
     event.params.proofIndex,
@@ -63,12 +67,11 @@ export function handleDataRegistryProofAddedV2(event: FileProofAdded): void {
     dlp.id,
   );
 
-  // Update totals using shared utility
+  // Update totals only if this is the first proof for the file in this DLP
   // V2 has both global and DLP totals
-  const file = File.load(event.params.fileId.toString());
-  if (!file || !file.owner) {
-    return;
-  }
+  if (isFirstProof) {
+    updateTotalsFromFile(event.params.fileId.toString(), event.params.dlpId.toString());
 
-  updateAllTotals(file.owner, event.params.dlpId.toString());
+    updateDlpSchemaTotalsForFile(event.params.fileId.toString(), dlp.id);
+  }
 }

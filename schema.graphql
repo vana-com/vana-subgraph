@@ -15,6 +15,15 @@ type UserTotals @entity(immutable: false) {
   fileContributionsCount: BigInt!
 }
 
+type Counter @entity(immutable: false) {
+  "Composite ID identifying what is being counted"
+  id: ID!
+  "The type of counter (e.g., 'file-dlp-proofs', 'user-dlp-files', etc.)"
+  type: String!
+  "The current count value"
+  count: BigInt!
+}
+
 type Dlp @entity(immutable: false) {
   id: ID!
   creator: Bytes
@@ -61,7 +70,7 @@ type DataRegistryProof @entity(immutable: false) {
   user: User # Optional for v1
   dlp: Dlp # Optional for v1
   epoch: Epoch!
-  fileId: BigInt!
+  file: File!
   proofIndex: BigInt!
   createdAt: BigInt!
   createdTxHash: Bytes!
@@ -72,8 +81,10 @@ type DataRegistryProof @entity(immutable: false) {
 type Totals @entity(immutable: false) {
   id: ID!
 
-  totalFileContributions: BigInt!
+  totalFileContributions: BigInt! #files that have at least one proof
   uniqueFileContributors: BigInt!
+  totalFilesWithSchema: BigInt! #files that have a schema assigned
+  uniqueFileContributorsWithSchema: BigInt! #unique users that have contributed file with a schema assigned
 
   dataAccessFees: BigDecimal!
 }
@@ -102,6 +113,8 @@ type Schema @entity(immutable: false) {
   name: String!
   dialect: String!
   definitionUrl: String!
+  contributionsCount: BigInt! #files that have this schema
+  uniqueContributorsCount: BigInt! #unique users that have contributed file with this schema
   refiners: [Refiner!]! @derivedFrom(field: "schema")
   createdAt: BigInt!
   createdAtBlock: BigInt!
