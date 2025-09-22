@@ -12,11 +12,40 @@ import {
   Bytes,
 } from "@graphprotocol/graph-ts";
 import { newMockEvent } from "matchstick-as/assembly/index";
-import { createDataRegistryProof } from "../../../../../src/lib/contract/shared/proof-handlers";
+import {
+  createDataRegistryProof,
+  getProofId,
+} from "../../../../../src/lib/contract/shared/proof-handlers";
 
 // Hook to clear the store before each test
 beforeEach(() => {
   clearStore();
+});
+
+describe("getProofId", () => {
+  test("generates correct composite proof ID", () => {
+    // ARRANGE
+    const fileId = GraphBigInt.fromI32(123);
+    const proofIndex = GraphBigInt.fromI32(456);
+
+    // ACT
+    const proofId = getProofId(fileId, proofIndex);
+
+    // ASSERT
+    assert.stringEquals(proofId, "file-123-proof-456");
+  });
+
+  test("handles large numbers correctly", () => {
+    // ARRANGE
+    const fileId = GraphBigInt.fromString("999999999999");
+    const proofIndex = GraphBigInt.fromString("888888888888");
+
+    // ACT
+    const proofId = getProofId(fileId, proofIndex);
+
+    // ASSERT
+    assert.stringEquals(proofId, "file-999999999999-proof-888888888888");
+  });
 });
 
 describe("createDataRegistryProof", () => {
@@ -26,6 +55,7 @@ describe("createDataRegistryProof", () => {
     const epochId = "epoch-1";
     const fileId = GraphBigInt.fromI32(123);
     const proofIndex = GraphBigInt.fromI32(456);
+    const expectedProofId = getProofId(fileId, proofIndex);
 
     const mockEvent = newMockEvent();
     const mockBlock = mockEvent.block;
@@ -45,38 +75,38 @@ describe("createDataRegistryProof", () => {
     assert.entityCount("DataRegistryProof", 1);
     assert.fieldEquals(
       "DataRegistryProof",
-      transactionHash,
+      expectedProofId,
       "id",
-      transactionHash,
+      expectedProofId,
     );
-    assert.fieldEquals("DataRegistryProof", transactionHash, "epoch", epochId);
+    assert.fieldEquals("DataRegistryProof", expectedProofId, "epoch", epochId);
     assert.fieldEquals(
       "DataRegistryProof",
-      transactionHash,
+      expectedProofId,
       "fileId",
       fileId.toString(),
     );
     assert.fieldEquals(
       "DataRegistryProof",
-      transactionHash,
+      expectedProofId,
       "proofIndex",
       proofIndex.toString(),
     );
     assert.fieldEquals(
       "DataRegistryProof",
-      transactionHash,
+      expectedProofId,
       "createdAt",
       mockBlock.timestamp.toString(),
     );
     assert.fieldEquals(
       "DataRegistryProof",
-      transactionHash,
+      expectedProofId,
       "createdAtBlock",
       mockBlock.number.toString(),
     );
     assert.fieldEquals(
       "DataRegistryProof",
-      transactionHash,
+      expectedProofId,
       "createdTxHash",
       mockTransaction.hash.toHexString(),
     );
@@ -90,6 +120,7 @@ describe("createDataRegistryProof", () => {
     const proofIndex = GraphBigInt.fromI32(101);
     const userId = "0x1234567890123456789012345678901234567890";
     const dlpId = "dlp-123";
+    const expectedProofId = getProofId(fileId, proofIndex);
 
     const mockEvent = newMockEvent();
     const mockBlock = mockEvent.block;
@@ -109,8 +140,8 @@ describe("createDataRegistryProof", () => {
 
     // ASSERT
     assert.entityCount("DataRegistryProof", 1);
-    assert.fieldEquals("DataRegistryProof", transactionHash, "user", userId);
-    assert.fieldEquals("DataRegistryProof", transactionHash, "dlp", dlpId);
+    assert.fieldEquals("DataRegistryProof", expectedProofId, "user", userId);
+    assert.fieldEquals("DataRegistryProof", expectedProofId, "dlp", dlpId);
   });
 
   test("creates a DataRegistryProof entity with null optional fields", () => {
@@ -119,6 +150,7 @@ describe("createDataRegistryProof", () => {
     const epochId = "epoch-3";
     const fileId = GraphBigInt.fromI32(999);
     const proofIndex = GraphBigInt.fromI32(888);
+    const expectedProofId = getProofId(fileId, proofIndex);
 
     const mockEvent = newMockEvent();
     const mockBlock = mockEvent.block;
@@ -140,9 +172,9 @@ describe("createDataRegistryProof", () => {
     assert.entityCount("DataRegistryProof", 1);
     assert.fieldEquals(
       "DataRegistryProof",
-      transactionHash,
+      expectedProofId,
       "id",
-      transactionHash,
+      expectedProofId,
     );
     // Optional fields should not be set when null is passed
   });

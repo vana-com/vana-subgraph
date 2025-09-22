@@ -102,6 +102,8 @@ type Schema @entity(immutable: false) {
   name: String!
   dialect: String!
   definitionUrl: String!
+  independentContributionsCount: BigInt! #number of files that have this schema and are not part of any DLP
+  independentUniqueContributorsCount: BigInt! #number of unique users that have contributed file with this schema and are not part of any DLP
   refiners: [Refiner!]! @derivedFrom(field: "schema")
   createdAt: BigInt!
   createdAtBlock: BigInt!

@@ -4,7 +4,21 @@ import {
   ethereum,
   Bytes,
 } from "@graphprotocol/graph-ts";
-import { DataRegistryProof } from "../../../../generated/schema";
+import { DataRegistryProof, File } from "../../../../generated/schema";
+import { decrementSchemaIndependentCounts } from "./schema-updater";
+
+/**
+ * Generates a composite proof ID
+ * @param fileId - The file ID
+ * @param proofIndex - The proof index
+ * @returns The composite proof ID in format: file-{fileId}-proof-{proofIndex}
+ */
+export function getProofId(
+  fileId: GraphBigInt,
+  proofIndex: GraphBigInt,
+): string {
+  return "file-" + fileId.toString() + "-proof-" + proofIndex.toString();
+}
 
 /**
  * Creates a DataRegistryProof entity with common fields
@@ -34,7 +48,8 @@ export function createDataRegistryProof(
     transactionHash,
   ]);
 
-  const proof = new DataRegistryProof(transactionHash);
+  const proofId = getProofId(fileId, proofIndex);
+  const proof = new DataRegistryProof(proofId);
 
   // Set common fields
   proof.epoch = epochId;
@@ -56,5 +71,14 @@ export function createDataRegistryProof(
   }
 
   proof.save();
+
+  // If this is the first proof for this file (proof index 1), decrement schema independent counts
+  if (proofIndex.equals(GraphBigInt.fromI32(1)) && userId) {
+    const file = File.load(fileId.toString());
+    if (file && !file.schemaId.isZero()) {
+      decrementSchemaIndependentCounts(userId, file.schemaId.toString());
+    }
+  }
+
   return proof;
 }

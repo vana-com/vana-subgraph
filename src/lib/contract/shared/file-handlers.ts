@@ -1,6 +1,7 @@
 import { BigInt as GraphBigInt, log, ethereum } from "@graphprotocol/graph-ts";
 import { File } from "../../../../generated/schema";
 import { getOrCreateUser } from "../shared";
+import { updateSchemaIndependentCounts } from "./schema-updater";
 
 /**
  * Creates a new File entity from a FileAdded event
@@ -39,6 +40,12 @@ export function createFileFromEvent(
   file.schemaId = schemaId;
 
   file.save();
+
+  // Update schema independent counts if schema is provided (not default 0)
+  if (!schemaId.isZero()) {
+    updateSchemaIndependentCounts(ownerAddress, schemaId.toString(), fileId);
+  }
+
   return file;
 }
 

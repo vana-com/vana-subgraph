@@ -1,4 +1,8 @@
-import { Address, ethereum, BigInt as GraphBigInt } from "@graphprotocol/graph-ts";
+import {
+  Address,
+  ethereum,
+  BigInt as GraphBigInt,
+} from "@graphprotocol/graph-ts";
 import { newMockEvent } from "matchstick-as/assembly/index";
 import {
   FileAdded as FileAddedEvent,
@@ -51,7 +55,10 @@ export function createFileAddedV2Event(
     new ethereum.EventParam("url", ethereum.Value.fromString(url)),
   );
   fileAddedV2Event.parameters.push(
-    new ethereum.EventParam("schemaId", ethereum.Value.fromUnsignedBigInt(GraphBigInt.fromI32(<i32>schemaId))),
+    new ethereum.EventParam(
+      "schemaId",
+      ethereum.Value.fromUnsignedBigInt(GraphBigInt.fromI32(<i32>schemaId)),
+    ),
   );
   return fileAddedV2Event;
 }

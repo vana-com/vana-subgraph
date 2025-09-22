@@ -299,12 +299,7 @@ describe("handleFileAddedV3", () => {
       "url",
       "https://www.some.com/storage/url",
     );
-    assert.fieldEquals(
-      "File",
-      fileId,
-      "schemaId",
-      "0",
-    );
+    assert.fieldEquals("File", fileId, "schemaId", "0");
   });
 });
 
@@ -329,17 +324,7 @@ describe("handleFileAddedV2V3", () => {
       "owner",
       "0x334e8bbf9c7822fc3f66b11cb0d8ef84c5a4b5ce",
     );
-    assert.fieldEquals(
-      "File",
-      fileId,
-      "url",
-      "https://www.example.com/data",
-    );
-    assert.fieldEquals(
-      "File",
-      fileId,
-      "schemaId",
-      "42",
-    );
+    assert.fieldEquals("File", fileId, "url", "https://www.example.com/data");
+    assert.fieldEquals("File", fileId, "schemaId", "42");
   });
 });

@@ -46,6 +46,13 @@ describe("handleSchemaAdded", () => {
     assert.fieldEquals("Schema", "1", "name", name);
     assert.fieldEquals("Schema", "1", "dialect", dialect);
     assert.fieldEquals("Schema", "1", "definitionUrl", definitionUrl);
+    assert.fieldEquals("Schema", "1", "independentContributionsCount", "0");
+    assert.fieldEquals(
+      "Schema",
+      "1",
+      "independentUniqueContributorsCount",
+      "0",
+    );
     assert.fieldEquals(
       "Schema",
       "1",
@@ -91,10 +98,24 @@ describe("handleSchemaAdded", () => {
     // Check first schema
     assert.fieldEquals("Schema", "1", "name", "Schema 1");
     assert.fieldEquals("Schema", "1", "dialect", "JSON");
+    assert.fieldEquals("Schema", "1", "independentContributionsCount", "0");
+    assert.fieldEquals(
+      "Schema",
+      "1",
+      "independentUniqueContributorsCount",
+      "0",
+    );
 
     // Check second schema
     assert.fieldEquals("Schema", "2", "name", "Schema 2");
     assert.fieldEquals("Schema", "2", "dialect", "XML");
+    assert.fieldEquals("Schema", "2", "independentContributionsCount", "0");
+    assert.fieldEquals(
+      "Schema",
+      "2",
+      "independentUniqueContributorsCount",
+      "0",
+    );
   });
 });
 
