@@ -4,7 +4,7 @@ import {
   RefinerAdded,
   SchemaAdded,
 } from "../../../../generated/DataRefinerRegistryImplementationV6/DataRefinerRegistryImplementationV6";
-import { getOrCreateUser } from "../shared";
+import { getOrCreateUser, getOrCreateRefiner } from "../shared";
 
 export function handleSchemaAdded(event: SchemaAdded): void {
   log.info("Handling SchemaAdded with transaction hash: {} and schemaId: {}", [
@@ -36,8 +36,8 @@ export function handleRefinerAddedV6(event: RefinerAdded): void {
   const ownerAddress = event.transaction.from;
   getOrCreateUser(ownerAddress.toHex());
 
-  // Create new Refiner entity
-  const refiner = new Refiner(event.params.refinerId.toString());
+  // Get or create Refiner entity (may already exist if PaymentReceived was processed first)
+  const refiner = getOrCreateRefiner(event.params.refinerId.toString());
   refiner.dlp = event.params.dlpId.toString();
   refiner.owner = ownerAddress;
   refiner.name = event.params.name;
