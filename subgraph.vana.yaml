@@ -5,12 +5,12 @@ repository: "https://github.com/vana-com/vana-subgraph"
 schema:
   file: ./schema.graphql
 
-# Stub for grafting on existing subgraphs
-features:
-  - grafting
-graft:
-  base: QmXerEfZuoYS7KaogbEacn4Ff996R2PSS8xdPwQpeRbtpD
-  block: 4450000
+## Stub for grafting on existing subgraphs
+#features:
+#  - grafting
+#graft:
+#  base: QmXerEfZuoYS7KaogbEacn4Ff996R2PSS8xdPwQpeRbtpD
+#  block: 4450000
 
 dataSources:
   - kind: ethereum/contract
