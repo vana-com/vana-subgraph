@@ -11,5 +11,6 @@ export * from "./entity-factory";
 export {
   getOrCreateUser,
   getOrCreateDlp,
+  getOrCreateGrantee,
   getTokenAmountInVana,
 } from "../shared";

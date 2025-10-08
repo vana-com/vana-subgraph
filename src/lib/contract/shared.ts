@@ -1,6 +1,6 @@
 import { Address, BigDecimal, BigInt, Bytes } from "@graphprotocol/graph-ts";
 import { REFERENCE_TOKEN } from "../../uniswap/common/chain";
-import { Dlp, User, Token } from "../../../generated/schema";
+import { Dlp, User, Token, Grantee } from "../../../generated/schema";
 import { getOrCreateTotals, getTotalsDlpId } from "../entity/totals";
 
 export function getOrCreateUser(userId: string): User {
@@ -25,6 +25,26 @@ export function getOrCreateDlp(dlpId: string): Dlp {
     dlp.save();
   }
   return dlp;
+}
+
+export function getOrCreateGrantee(granteeId: string): Grantee {
+  let grantee = Grantee.load(granteeId);
+  if (grantee == null) {
+    // Create a placeholder grantee that will be populated by GranteeRegistered event
+    grantee = new Grantee(granteeId);
+
+    // Initialize with placeholder values
+    // These will be overwritten when the actual GranteeRegistered event is processed
+    grantee.owner = "";
+    grantee.address = Bytes.empty();
+    grantee.publicKey = "";
+    grantee.registeredAtBlock = BigInt.zero();
+    grantee.registeredAtTimestamp = BigInt.zero();
+    grantee.transactionHash = Bytes.empty();
+
+    grantee.save();
+  }
+  return grantee;
 }
 
 export function getTokenAmountInVana(

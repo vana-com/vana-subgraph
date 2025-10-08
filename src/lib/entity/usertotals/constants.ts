@@ -12,3 +12,10 @@ export function getUserTotalsIdSchemaIndependent(
 ): string {
   return `user-${userId}-schema-${schemaId}-independent`;
 }
+
+
+export function getUserTotalsIdSchemaGlobalIndependent(
+    userId: string,
+): string {
+  return `user-${userId}-schema-global-independent`;
+}

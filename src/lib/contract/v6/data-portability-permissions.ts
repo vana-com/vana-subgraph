@@ -15,7 +15,7 @@ import {
   PermissionFile,
   File,
 } from "../../../../generated/schema";
-import { getOrCreateUser } from "../shared";
+import { getOrCreateUser, getOrCreateGrantee } from "../shared";
 
 export function handlePermissionAdded(event: PermissionAdded): void {
   log.info(
@@ -31,15 +31,8 @@ export function handlePermissionAdded(event: PermissionAdded): void {
   const permissionId = event.params.permissionId.toString();
   const granteeId = event.params.granteeId.toString();
 
-  // Ensure grantee exists
-  const grantee = Grantee.load(granteeId);
-  if (grantee == null) {
-    log.error("Grantee with id {} not found for permission {}", [
-      granteeId,
-      permissionId,
-    ]);
-    return;
-  }
+  // Ensure grantee exists (create placeholder if needed)
+  const grantee = getOrCreateGrantee(granteeId);
 
   // Create permission
   const permission = new Permission(permissionId);
