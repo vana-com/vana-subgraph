@@ -40,7 +40,7 @@ export function handleRefinerAddedV6(event: RefinerAdded): void {
   const refiner = getOrCreateRefiner(event.params.refinerId.toString());
   refiner.dlp = event.params.dlpId.toString();
   refiner.owner = ownerAddress;
-  refiner.name = "";
+  refiner.name = event.params.name;
   refiner.schema = event.params.schemaId.toString(); // Link to Schema entity
   refiner.schemaDefinitionUrl = event.params.schemaDefinitionUrl; // Keep for backwards compatibility
   refiner.refinementInstructionUrl = event.params.refinementInstructionUrl;
