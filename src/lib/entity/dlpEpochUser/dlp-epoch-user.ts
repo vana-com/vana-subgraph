@@ -12,6 +12,7 @@ export function getOrCreateDlpEpochUser(
   if (dlpEpochUser == null) {
     dlpEpochUser = new PerformanceDlpEpochUser(id);
     dlpEpochUser.save();
+    dlpEpochUser.save();
   }
   return dlpEpochUser;
 }
