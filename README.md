@@ -62,6 +62,134 @@ yarn untag:moksha 2.0.0 stag
 yarn delete:moksha 2.0.0
 ```
 
+## Git Tag Management & Version Tracking
+
+This subgraph uses **automatic git tagging** to ensure every deployment is tracked in version control. Git tags match Goldsky deployment names exactly, making it easy to compare versions and understand what code was deployed.
+
+### Automatic Git Tags
+
+When deploying locally via `yarn deploy:<network> <version>`, the script automatically:
+
+1. ✅ Checks for uncommitted changes (fails if found)
+2. ✅ Checks for unpushed commits (fails if found)
+3. ✅ Creates a git tag matching the deployment: `<network>/<version>`
+4. ✅ Pushes the tag to remote
+5. ✅ Deploys to Goldsky
+6. ✅ Rolls back the tag if deployment fails
+
+**Tag Format:** `moksha/7.0.14`, `vana/7.0.14` (matches Goldsky exactly)
+
+### Deployment Methods
+
+#### Method 1: Local Deployment (Quick)
+
+Best for development and testing on testnet:
+
+```bash
+# 1. Commit all your changes first
+git add .
+git commit -m "Add new event handler"
+git push
+
+# 2. Deploy (creates git tag automatically)
+yarn prepare:moksha
+yarn codegen
+yarn build
+yarn deploy:moksha 7.0.15
+
+# Git tag moksha/7.0.15 is created and pushed automatically ✅
+```
+
+**Requirements:**
+- No uncommitted changes
+- All commits must be pushed to remote
+- Tag must not already exist
+
+**What happens on failure:**
+- If deployment fails, the git tag is automatically rolled back (deleted locally and remotely)
+
+#### Method 2: CI/CD Deployment (Recommended for Production)
+
+Best for production deployments with full validation:
+
+1. Go to GitHub Actions → "Deploy Subgraph"
+2. Click "Run workflow"
+3. Select:
+   - Network (moksha/vana)
+   - Version (e.g., 7.0.15)
+   - Environment tag (optional: stag/prod)
+4. Click "Run workflow"
+
+**What it does:**
+- ✅ Runs all tests
+- ✅ Runs linter
+- ✅ Creates git tag
+- ✅ Pushes tag to remote
+- ✅ Deploys to Goldsky
+- ✅ Creates GitHub Release with changelog
+- ✅ Tags environment (if specified)
+
+**Benefits:**
+- Full test suite validation before deployment
+- Automatic release notes
+- Audit trail in GitHub Actions
+- No need to worry about uncommitted changes
+
+### Comparing Versions
+
+With git tags in place, you can easily compare what changed between deployments:
+
+```bash
+# List all deployments for a network
+git tag -l "moksha/*"
+git tag -l "vana/*"
+
+# Compare two versions on the same network
+git diff moksha/7.0.14 moksha/7.0.15
+
+# Compare the same version across networks
+git diff moksha/7.0.14 vana/7.0.14
+
+# View commit that was deployed
+git show moksha/7.0.15
+```
+
+### Troubleshooting
+
+**Error: "You have uncommitted changes"**
+```bash
+# Solution: Commit your changes first
+git add .
+git commit -m "Your message"
+git push
+```
+
+**Error: "You have unpushed commits"**
+```bash
+# Solution: Push to remote first
+git push origin <your-branch>
+```
+
+**Error: "Tag already exists"**
+```bash
+# Solution 1: Use a new version number (recommended)
+yarn deploy:moksha 7.0.16
+
+# Solution 2: Delete the existing tag (use with caution!)
+git tag -d moksha/7.0.15
+git push origin :refs/tags/moksha/7.0.15
+```
+
+**Rollback a deployment**
+```bash
+# Delete the deployment from Goldsky
+yarn delete:moksha 7.0.15
+
+# Delete the git tag
+git tag -d moksha/7.0.15
+git push origin :refs/tags/moksha/7.0.15
+```
+
 **Development vs Staging vs Production**
 
 When testing new changes, we simply tag the new subgraph version with our `stag` tag.
@@ -147,7 +275,7 @@ Subgraph version numbers should adhere to semver's `x.z.y` to distinguish betwee
 
 Environments are denoted by subgraph tags (`prod`, `stag`, ...).
 
-**Note:** Remember to tag git code versions to match the subgraph versions for new releases!
+**Note:** Git tags are automatically created and pushed during deployment to ensure version tracking!
 
 ## Deployments
 
