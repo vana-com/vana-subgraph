@@ -13,6 +13,8 @@ if (!network || !version) {
 // Check if running in CI environment
 const isCI = process.env.CI === "true" || process.env.GITHUB_ACTIONS === "true";
 
+// Main deployment function
+(async () => {
 console.log(`\n🚀 Starting deployment for ${network} v${version}\n`);
 
 // Skip git checks in CI (GitHub Actions will handle it)
@@ -22,14 +24,56 @@ if (!isCI) {
   try {
     const status = execSync("git status --porcelain").toString();
     if (status) {
-      console.error("❌ You have uncommitted changes! Commit them first:");
+      console.error("❌ You have uncommitted changes:");
       console.log(status);
-      console.error("\nPlease run:");
-      console.error("  git add .");
-      console.error('  git commit -m "Your commit message"');
-      process.exit(1);
+      console.error("\nOptions:");
+      console.error(`  1. Auto-commit with message: "${version}"`);
+      console.error("  2. Cancel and commit manually");
+
+      // Prompt user for choice
+      process.stdout.write("\nChoose option (1 or 2): ");
+
+      const readline = require("readline");
+      const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+      });
+
+      const choice = await new Promise((resolve) => {
+        rl.question("", (answer) => {
+          rl.close();
+          resolve(answer.trim());
+        });
+      });
+
+      if (choice === "1") {
+        console.log(`\n📝 Auto-committing with message: "${version}"`);
+        try {
+          execSync("git add .", { stdio: "inherit" });
+          execSync(`git commit -m "${version}"`, { stdio: "inherit" });
+          console.log("✅ Changes committed successfully");
+
+          // Also push the commit
+          const currentBranch = execSync("git branch --show-current").toString().trim();
+          console.log(`📤 Pushing commit to remote...`);
+          execSync(`git push origin ${currentBranch}`, { stdio: "inherit" });
+          console.log("✅ Commit pushed successfully\n");
+        } catch (commitError) {
+          console.error("❌ Failed to commit/push changes:", commitError.message);
+          process.exit(1);
+        }
+      } else if (choice === "2") {
+        console.error("\n❌ Deployment cancelled. Please commit manually:");
+        console.error("  git add .");
+        console.error('  git commit -m "Your commit message"');
+        process.exit(1);
+      } else {
+        console.error("\n❌ Invalid choice. Deployment cancelled.");
+        process.exit(1);
+      }
+    } else {
+      console.log("✅ No uncommitted changes\n");
     }
-    console.log("✅ No uncommitted changes\n");
   } catch (error) {
     console.error("❌ Git check failed:", error.message);
     process.exit(1);
@@ -169,3 +213,7 @@ if (!isCI) {
   const deployCommand = `goldsky subgraph deploy ${network}/${version} --path .`;
   execSync(deployCommand, { stdio: "inherit" });
 }
+})().catch((error) => {
+  console.error("❌ Unexpected error:", error.message);
+  process.exit(1);
+});
