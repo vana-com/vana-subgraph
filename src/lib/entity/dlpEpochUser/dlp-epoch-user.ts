@@ -9,10 +9,7 @@ export function getOrCreateDlpEpochUser(
 ): PerformanceDlpEpochUser {
   const id = getDlpEpochUserId(dlpId, epochId, userId);
   let dlpEpochUser = PerformanceDlpEpochUser.load(id);
-  if (dlpEpochUser == null) {
     dlpEpochUser = new PerformanceDlpEpochUser(id);
     dlpEpochUser.save();
-    dlpEpochUser.save();
-  }
   return dlpEpochUser;
 }
