@@ -1,4 +1,5 @@
 const { execSync } = require("child_process");
+const readline = require("readline");
 
 const network = process.argv[2];
 const version = process.argv[3];
@@ -12,6 +13,39 @@ if (!network || !version) {
 
 // Check if running in CI environment
 const isCI = process.env.CI === "true" || process.env.GITHUB_ACTIONS === "true";
+
+// Helper function for single-key input (no Enter needed)
+async function promptSingleKey(options) {
+  return new Promise((resolve) => {
+    readline.emitKeypressEvents(process.stdin);
+    if (process.stdin.isTTY) {
+      process.stdin.setRawMode(true);
+    }
+
+    const onKeypress = (str, key) => {
+      if (key && key.ctrl && key.name === 'c') {
+        cleanup();
+        process.exit(0);
+      }
+
+      if (options.includes(str)) {
+        cleanup();
+        resolve(str);
+      }
+    };
+
+    const cleanup = () => {
+      process.stdin.removeListener('keypress', onKeypress);
+      if (process.stdin.isTTY) {
+        process.stdin.setRawMode(false);
+      }
+      process.stdin.pause();
+    };
+
+    process.stdin.on('keypress', onKeypress);
+    process.stdin.resume();
+  });
+}
 
 // Main deployment function
 (async () => {
@@ -29,22 +63,10 @@ if (!isCI) {
       console.error("\nOptions:");
       console.error(`  1. Auto-commit with message: "${version}"`);
       console.error("  2. Cancel and commit manually");
+      console.error("\nPress 1 or 2: ");
 
-      // Prompt user for choice
-      process.stdout.write("\nChoose option (1 or 2): ");
-
-      const readline = require("readline");
-      const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-      });
-
-      const choice = await new Promise((resolve) => {
-        rl.question("", (answer) => {
-          rl.close();
-          resolve(answer.trim());
-        });
-      });
+      const choice = await promptSingleKey(['1', '2']);
+      console.log(choice); // Echo the choice
 
       if (choice === "1") {
         console.log(`\n📝 Auto-committing with message: "${version}"`);
@@ -66,9 +88,6 @@ if (!isCI) {
         console.error("\n❌ Deployment cancelled. Please commit manually:");
         console.error("  git add .");
         console.error('  git commit -m "Your commit message"');
-        process.exit(1);
-      } else {
-        console.error("\n❌ Invalid choice. Deployment cancelled.");
         process.exit(1);
       }
     } else {
@@ -128,15 +147,43 @@ if (!isCI) {
 
   try {
     // Check if tag already exists
+    let tagExists = false;
     try {
       execSync(`git rev-parse ${tagName}`, { stdio: 'pipe' });
-      console.error(`❌ Tag ${tagName} already exists!`);
-      console.error(`\nIf you want to redeploy, either:`);
-      console.error(`  1. Use a new version number`);
-      console.error(`  2. Delete the existing tag: git tag -d ${tagName} && git push origin :refs/tags/${tagName}`);
-      process.exit(1);
+      tagExists = true;
     } catch {
-      // Tag doesn't exist, proceed
+      // Tag doesn't exist, proceed normally
+    }
+
+    if (tagExists) {
+      console.error(`❌ Tag ${tagName} already exists!`);
+      console.error(`\nOptions:`);
+      console.error(`  1. Auto-delete existing tag and create new one`);
+      console.error(`  2. Cancel deployment`);
+      console.error("\nPress 1 or 2: ");
+
+      const choice = await promptSingleKey(['1', '2']);
+      console.log(choice); // Echo the choice
+
+      if (choice === "1") {
+        console.log(`\n🗑️  Deleting existing tag ${tagName}...`);
+        try {
+          // Delete local tag
+          execSync(`git tag -d ${tagName}`, { stdio: "inherit" });
+          // Delete remote tag
+          execSync(`git push origin :refs/tags/${tagName}`, { stdio: "inherit" });
+          console.log(`✅ Existing tag deleted\n`);
+        } catch (deleteError) {
+          console.error("❌ Failed to delete existing tag:", deleteError.message);
+          process.exit(1);
+        }
+      } else if (choice === "2") {
+        console.error("\n❌ Deployment cancelled.");
+        console.error(`\nTo deploy this version, either:`);
+        console.error(`  • Use a new version number`);
+        console.error(`  • Manually delete the tag: git tag -d ${tagName} && git push origin :refs/tags/${tagName}`);
+        process.exit(1);
+      }
     }
 
     execSync(
