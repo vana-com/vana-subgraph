@@ -12,5 +12,8 @@ export {
   getOrCreateUser,
   getOrCreateDlp,
   getOrCreateGrantee,
+  getOrCreateServer,
+  getOrCreateEpoch,
+  getOrCreateRefiner,
   getTokenAmountInVana,
 } from "../shared";

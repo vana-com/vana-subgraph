@@ -6,22 +6,15 @@ import {
   getOrCreateTotalsGlobal,
   getTotalsDlpId,
 } from "../../entity/totals";
-import { getTokenAmountInVana } from "../shared";
+import { getTokenAmountInVana, getOrCreateRefiner } from "../shared";
 
 export function handlePaymentReceived(event: PaymentReceivedEvent): void {
   // Create unique ID from transaction hash and log index
   const id = `${event.transaction.hash.toHexString()}-${event.logIndex.toString()}`;
 
-  // Check if refiner exists
+  // Get or create refiner (handles race condition when events are processed out of order)
   const refinerId = event.params.refinerId.toString();
-  const refiner = Refiner.load(refinerId);
-  if (!refiner) {
-    log.error(
-      "Payment received for unknown refiner: {}. TX: {}. This payment will not be tracked!",
-      [refinerId, event.transaction.hash.toHexString()],
-    );
-    return;
-  }
+  const refiner = getOrCreateRefiner(refinerId);
 
   // Create new PaymentReceived entity
   const payment = new PaymentReceived(id);

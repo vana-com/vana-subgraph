@@ -1,7 +1,7 @@
 import { log } from "@graphprotocol/graph-ts";
 import { Refiner } from "../../../../generated/schema";
 import { RefinerAdded } from "../../../../generated/DataRefinerRegistryImplementation/DataRefinerRegistryImplementation";
-import { getOrCreateUser } from "../shared";
+import { getOrCreateUser, getOrCreateRefiner } from "../shared";
 
 export function handleRefinerAddedV4(event: RefinerAdded): void {
   log.info("Handling RefinerAdded with transaction hash: {}", [
@@ -11,8 +11,8 @@ export function handleRefinerAddedV4(event: RefinerAdded): void {
   const ownerAddress = event.transaction.from;
   getOrCreateUser(ownerAddress.toHex());
 
-  // Create new Refiner entity
-  const refiner = new Refiner(event.params.refinerId.toString());
+  // Get or create Refiner entity (may already exist if PaymentReceived was processed first)
+  const refiner = getOrCreateRefiner(event.params.refinerId.toString());
   refiner.dlp = event.params.dlpId.toString();
   refiner.owner = ownerAddress;
   refiner.name = event.params.name;

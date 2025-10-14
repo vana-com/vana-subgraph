@@ -13,6 +13,7 @@ import { getDlpEpochUserId } from "../../entity/dlpEpochUser";
 import {
   getOrCreateDlp,
   getOrCreateUser,
+  getOrCreateEpoch,
   createFileFromEvent,
   logDataRegistryEvent,
   createDataRegistryProof,
@@ -96,12 +97,9 @@ function updateDlpEpochUser(
   userId: string,
   dlpId: string,
 ): void {
-  const epoch = Epoch.load(epochId);
+  // Get or create epoch and dlp (handles race condition when events are processed out of order)
+  const epoch = getOrCreateEpoch(epochId);
   const dlp = getOrCreateDlp(dlpId);
-  if (!epoch) {
-    log.error("No epoch found for ID {}", [epochId]);
-    return;
-  }
 
   if (!dlp.verificationBlockNumber) {
     return;

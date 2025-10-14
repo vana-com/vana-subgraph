@@ -6,7 +6,7 @@ import {
   ServerUntrusted,
 } from "../../../../generated/DataPortabilityServersImplementation/DataPortabilityServersImplementation";
 import { Server, UserServer } from "../../../../generated/schema";
-import { getOrCreateUser } from "../shared";
+import { getOrCreateUser, getOrCreateServer } from "../shared";
 
 export function handleServerRegistered(event: ServerRegistered): void {
   log.info(
@@ -20,11 +20,9 @@ export function handleServerRegistered(event: ServerRegistered): void {
   );
 
   const serverId = event.params.serverId.toString();
-  let server = Server.load(serverId);
 
-  if (server == null) {
-    server = new Server(serverId);
-  }
+  // Get or create server (may already exist if ServerTrusted/ServerUpdated was processed first)
+  const server = getOrCreateServer(serverId);
 
   // Get or create the owner user
   const owner = getOrCreateUser(event.params.owner.toHex());
@@ -47,17 +45,12 @@ export function handleServerUpdated(event: ServerUpdated): void {
   ]);
 
   const serverId = event.params.serverId.toString();
-  const server = Server.load(serverId);
 
-  if (server) {
-    server.url = event.params.url;
-    server.save();
-  } else {
-    log.warning(
-      "Received update event for a server not found in subgraph: {}",
-      [serverId],
-    );
-  }
+  // Get or create server (handles race condition when ServerUpdated is processed before ServerRegistered)
+  const server = getOrCreateServer(serverId);
+
+  server.url = event.params.url;
+  server.save();
 }
 
 export function handleServerTrusted(event: ServerTrusted): void {
@@ -70,12 +63,8 @@ export function handleServerTrusted(event: ServerTrusted): void {
   const serverId = event.params.serverId.toString();
   const compositeId = `${user.id}-${serverId}`;
 
-  // Ensure server exists
-  const server = Server.load(serverId);
-  if (server == null) {
-    log.error("Server with id {} not found for trust relationship", [serverId]);
-    return;
-  }
+  // Get or create server (handles race condition when ServerTrusted is processed before ServerRegistered)
+  const server = getOrCreateServer(serverId);
 
   let userServer = UserServer.load(compositeId);
   if (userServer == null) {

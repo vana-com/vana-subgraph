@@ -2,6 +2,7 @@ import { BigInt as GraphBigInt, log } from "@graphprotocol/graph-ts";
 import { EpochDlpPerformancesSaved as EpochDlpPerformancesSavedEvent } from "../../../../generated/DLPPerformanceImplementationV5/DLPPerformanceImplementationV5";
 
 import { Dlp, Epoch, DlpPerformance } from "../../../../generated/schema";
+import { getOrCreateDlp, getOrCreateEpoch } from "../shared";
 
 export function handleEpochDlpPerformancesSavedV5(
   event: EpochDlpPerformancesSavedEvent,
@@ -13,19 +14,9 @@ export function handleEpochDlpPerformancesSavedV5(
   const epochId = event.params.epochId.toString();
   const dlpId = event.params.dlpId.toString();
 
-  // Load the epoch and dlp
-  const epoch = Epoch.load(epochId);
-  const dlp = Dlp.load(dlpId);
-
-  if (epoch == null) {
-    log.error("Epoch not found for performance metrics: {}", [epochId]);
-    return;
-  }
-
-  if (dlp == null) {
-    log.error("DLP not found for performance metrics: {}", [dlpId]);
-    return;
-  }
+  // Get or create epoch and dlp (handles race condition when events are processed out of order)
+  const epoch = getOrCreateEpoch(epochId);
+  const dlp = getOrCreateDlp(dlpId);
 
   // Create unique performance ID
   const performanceId = `${epochId}-${dlpId}`;
