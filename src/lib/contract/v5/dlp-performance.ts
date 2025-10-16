@@ -28,6 +28,7 @@ export function handleEpochDlpPerformancesSavedV5(
   }
   dlpPerformance.dlp = dlp.id;
   dlpPerformance.epoch = epoch.id;
+  dlpPerformance.totalScore = GraphBigInt.fromI32(0);
   dlpPerformance.tradingVolume = event.params.tradingVolume;
   dlpPerformance.uniqueContributors = event.params.uniqueContributors;
   dlpPerformance.dataAccessFees = event.params.dataAccessFees;

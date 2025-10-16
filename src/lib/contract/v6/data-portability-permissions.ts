@@ -54,6 +54,7 @@ export function handlePermissionAdded(event: PermissionAdded): void {
     permission.nonce = permissionData.value.nonce;
     permission.startBlock = permissionData.value.startBlock;
     permission.endBlock = permissionData.value.endBlock;
+    permission.signature = new Bytes(0);
   } else {
     log.warning(
       "Could not get permission data for id {}. Nonce and signature will be zero.",
@@ -85,6 +86,7 @@ export function handlePermissionAdded(event: PermissionAdded): void {
         file = new File(fileId.toString());
         file.owner = grantor.id;
         file.url = "";
+        file.schemaId = GraphBigInt.zero();
         file.addedAtBlock = event.block.number;
         file.addedAtTimestamp = event.block.timestamp;
         file.transactionHash = event.transaction.hash;
