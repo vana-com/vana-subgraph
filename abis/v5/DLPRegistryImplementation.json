@@ -94,11 +94,6 @@
   },
   {
     "inputs": [],
-    "name": "InvalidDlpId",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "InvalidDlpStatus",
     "type": "error"
   },
@@ -125,6 +120,11 @@
   {
     "inputs": [],
     "name": "InvalidTokenAddress",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "LastEpochMustBeFinalized",
     "type": "error"
   },
   {

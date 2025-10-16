@@ -7,7 +7,7 @@
     "fetch-abis:moksha": "node ./scripts/fetch-abis.js moksha",
     "fetch-abis:vana": "node ./scripts/fetch-abis.js vana",
     "prepare:moksha:thegraph": "cp ./subgraph.vana-moksha.yaml ./subgraph.yaml && mustache config/moksha.json src/mapping.ts.template > src/mapping.ts",
-    "prepare:moksha": "cp ./subgraph.moksha.yaml ./subgraph.yaml && yarn manual-copy-moksha && yarn fetch-abis:moksha && mustache config/moksha.json src/mapping.ts.template > src/mapping.ts",
+    "prepare:moksha": "cp ./subgraph.moksha.yaml ./subgraph.yaml && yarn manual-copy-moksha && mustache config/moksha.json src/mapping.ts.template > src/mapping.ts",
     "deploy:moksha": "node ./scripts/deploy.js moksha",
     "delete:moksha": "node ./scripts/delete.js moksha",
     "tag:moksha": "node ./scripts/tag.js moksha",
