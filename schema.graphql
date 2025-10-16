@@ -219,6 +219,10 @@ type PermissionFile @entity(immutable: false) {
   permission: Permission!
   "The file."
   file: File!
+  "The block number when the file was added to the permission."
+  startBlock: BigInt!
+  "The block number when the file was removed from the permission (null if still active)."
+  endBlock: BigInt
 }
 
 type Server @entity(immutable: false) {

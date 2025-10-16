@@ -3,6 +3,9 @@ export { handleGranteeRegistered } from "./data-portability-grantees";
 export {
   handlePermissionAdded,
   handlePermissionRevoked,
+  handlePermissionCreated,
+  handleFileAddedToPermission,
+  handleFileRemovedFromPermission,
 } from "./data-portability-permissions";
 
 export {

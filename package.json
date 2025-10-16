@@ -12,7 +12,7 @@
     "delete:moksha": "node ./scripts/delete.js moksha",
     "tag:moksha": "node ./scripts/tag.js moksha",
     "untag:moksha": "node ./scripts/untag.js moksha",
-    "prepare:vana": "cp ./subgraph.vana.yaml ./subgraph.yaml && yarn manual-copy-vana && yarn fetch-abis:vana && mustache config/vana.json src/mapping.ts.template > src/mapping.ts",
+    "prepare:vana": "cp ./subgraph.vana.yaml ./subgraph.yaml && yarn manual-copy-vana && mustache config/vana.json src/mapping.ts.template > src/mapping.ts",
     "deploy:vana": "node ./scripts/deploy.js vana",
     "delete:vana": "node ./scripts/delete.js vana",
     "tag:vana": "node ./scripts/tag.js vana",

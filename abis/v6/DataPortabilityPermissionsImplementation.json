@@ -100,6 +100,22 @@
     "type": "error"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "permissionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "fileId",
+        "type": "uint256"
+      }
+    ],
+    "name": "FileNotInPermission",
+    "type": "error"
+  },
+  {
     "inputs": [],
     "name": "GranteeNotFound",
     "type": "error"
@@ -233,8 +249,83 @@
   },
   {
     "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "duplicatePermissionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "originalPermissionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "DuplicatePermissionGhosted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
     "inputs": [],
     "name": "EIP712DomainChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "permissionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "fileId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "startBlock",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "endBlock",
+        "type": "uint256"
+      }
+    ],
+    "name": "FileAddedToPermission",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "permissionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "fileId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "blockNumber",
+        "type": "uint256"
+      }
+    ],
+    "name": "FileRemovedFromPermission",
     "type": "event"
   },
   {
@@ -298,6 +389,43 @@
       }
     ],
     "name": "PermissionAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "permissionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "grantor",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "granteeId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "grant",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "blockNumber",
+        "type": "uint256"
+      }
+    ],
+    "name": "PermissionCreated",
     "type": "event"
   },
   {
@@ -668,6 +796,59 @@
     "inputs": [
       {
         "internalType": "uint256",
+        "name": "permissionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "fileId",
+        "type": "uint256"
+      }
+    ],
+    "name": "existingPermissionFileId",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "grantor",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "granteeId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "grant",
+        "type": "string"
+      }
+    ],
+    "name": "existingPermissionId",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
         "name": "fileId",
         "type": "uint256"
       }
@@ -818,19 +999,18 @@
   {
     "inputs": [
       {
-        "internalType": "bytes[]",
-        "name": "data",
-        "type": "bytes[]"
-      }
-    ],
-    "name": "multicall",
-    "outputs": [
+        "internalType": "uint256",
+        "name": "startPermissionId",
+        "type": "uint256"
+      },
       {
-        "internalType": "bytes[]",
-        "name": "results",
-        "type": "bytes[]"
+        "internalType": "uint256",
+        "name": "endPermissionId",
+        "type": "uint256"
       }
     ],
+    "name": "migratePermissionHashes",
+    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -868,6 +1048,42 @@
         "internalType": "uint256[]",
         "name": "",
         "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "permissionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "fileId",
+        "type": "uint256"
+      }
+    ],
+    "name": "permissionFiles",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "startBlock",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "endBlock",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IDataPortabilityPermissions.PermissionFile",
+        "name": "",
+        "type": "tuple"
       }
     ],
     "stateMutability": "view",
@@ -987,6 +1203,59 @@
       }
     ],
     "name": "revokePermission",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "permissionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "fileIds",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "revokePermissionFiles",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "nonce",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "permissionId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "fileIds",
+            "type": "uint256[]"
+          }
+        ],
+        "internalType": "struct IDataPortabilityPermissions.RevokePermissionFilesInput",
+        "name": "revokePermissionFilesInput",
+        "type": "tuple"
+      },
+      {
+        "internalType": "bytes",
+        "name": "signature",
+        "type": "bytes"
+      }
+    ],
+    "name": "revokePermissionFilesWithSignature",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
