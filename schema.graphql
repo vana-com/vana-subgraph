@@ -229,7 +229,7 @@ type Server @entity(immutable: false) {
   "The server's address."
   serverAddress: Bytes!
   "The public key of the server."
-  publicKey: Bytes!
+  publicKey: String!
   "The URL of the server."
   url: String!
   "User trust relationships for this server."

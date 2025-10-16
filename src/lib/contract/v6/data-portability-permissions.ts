@@ -45,11 +45,10 @@ export function handlePermissionAdded(event: PermissionAdded): void {
 
   // Get nonce and signature from contract
   const contract = DataPortabilityPermissionsImplementation.bind(event.address);
-  const permissionData = contract.try_permission(event.params.permissionId);
+  const permissionData = contract.try_permissions(event.params.permissionId);
 
   if (!permissionData.reverted) {
     permission.nonce = permissionData.value.nonce;
-    permission.signature = permissionData.value.signature;
     permission.startBlock = permissionData.value.startBlock;
     permission.endBlock = permissionData.value.endBlock;
   } else {

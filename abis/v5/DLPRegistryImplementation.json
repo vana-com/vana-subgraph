@@ -94,6 +94,11 @@
   },
   {
     "inputs": [],
+    "name": "InvalidDlpId",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "InvalidDlpStatus",
     "type": "error"
   },
@@ -120,11 +125,6 @@
   {
     "inputs": [],
     "name": "InvalidTokenAddress",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "LastEpochMustBeFinalized",
     "type": "error"
   },
   {
@@ -1014,6 +1014,25 @@
     "name": "initialize",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "dlpId",
+        "type": "uint256"
+      }
+    ],
+    "name": "isEligibleDlp",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
