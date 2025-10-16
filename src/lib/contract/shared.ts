@@ -57,7 +57,7 @@ export function getOrCreateServer(serverId: string): Server {
     // These will be overwritten when the actual ServerRegistered event is processed
     server.owner = "";
     server.serverAddress = Bytes.empty();
-    server.publicKey = Bytes.empty();
+    server.publicKey = "";
     server.url = "";
     server.registeredAtBlock = BigInt.zero();
     server.registeredAtTimestamp = BigInt.zero();

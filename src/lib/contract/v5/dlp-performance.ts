@@ -28,7 +28,6 @@ export function handleEpochDlpPerformancesSavedV5(
   }
   dlpPerformance.dlp = dlp.id;
   dlpPerformance.epoch = epoch.id;
-  dlpPerformance.totalScore = event.params.performanceRating;
   dlpPerformance.tradingVolume = event.params.tradingVolume;
   dlpPerformance.uniqueContributors = event.params.uniqueContributors;
   dlpPerformance.dataAccessFees = event.params.dataAccessFees;
@@ -38,8 +37,6 @@ export function handleEpochDlpPerformancesSavedV5(
 
   dlpPerformance.save();
 
-  // Update the DLP's current performance rating
-  dlp.performanceRating = event.params.performanceRating;
   dlp.save();
 
   // Update epoch's dlpIds array if this dlpId is not already included

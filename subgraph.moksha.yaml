@@ -209,7 +209,7 @@ dataSources:
       eventHandlers:
         - event: EpochCreated(uint256,uint256,uint256,uint256)
           handler: handleEpochCreatedV5
-        - event: EpochDlpRewardAdded(uint256,uint256,uint256)
+        - event: EpochDlpRewardAdded(uint256,uint256,uint256,uint256)
           handler: handleEpochDlpRewardAddedV5
         - event: EpochFinalized(uint256)
           handler: handleEpochFinalizedV5
@@ -238,7 +238,7 @@ dataSources:
         - name: DLPPerformanceImplementationV5
           file: ./abis/v5/DLPPerformanceImplementation.json
       eventHandlers:
-        - event: EpochDlpPerformancesSaved(indexed uint256,indexed uint256,uint256,uint256,uint256,uint256)
+        - event: EpochDlpPerformancesSaved(indexed uint256,indexed uint256,uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handleEpochDlpPerformancesSavedV5
       file: ./src/mapping.ts
 
@@ -308,7 +308,7 @@ dataSources:
         - name: DataPortabilityServersImplementation
           file: ./abis/v6/DataPortabilityServersImplementation.json
       eventHandlers:
-        - event: ServerRegistered(indexed uint256,indexed address,indexed address,bytes,string)
+        - event: ServerRegistered(indexed uint256,indexed address,indexed address,string,string)
           handler: handleServerRegistered
         - event: ServerUpdated(indexed uint256,string)
           handler: handleServerUpdated

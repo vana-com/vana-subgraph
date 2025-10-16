@@ -1,49 +1,172 @@
 [
-  { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
-  { "inputs": [], "name": "AccessControlBadConfirmation", "type": "error" },
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "AccessControlBadConfirmation",
+    "type": "error"
+  },
   {
     "inputs": [
-      { "internalType": "address", "name": "account", "type": "address" },
-      { "internalType": "bytes32", "name": "neededRole", "type": "bytes32" }
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "neededRole",
+        "type": "bytes32"
+      }
     ],
     "name": "AccessControlUnauthorizedAccount",
     "type": "error"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "target", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "target",
+        "type": "address"
+      }
     ],
     "name": "AddressEmptyCode",
     "type": "error"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "implementation", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "implementation",
+        "type": "address"
+      }
     ],
     "name": "ERC1967InvalidImplementation",
     "type": "error"
   },
-  { "inputs": [], "name": "ERC1967NonPayable", "type": "error" },
-  { "inputs": [], "name": "EnforcedPause", "type": "error" },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "dlpId", "type": "uint256" }
-    ],
-    "name": "EpochDlpRewardAlreadyAdded",
+    "inputs": [],
+    "name": "ERC1967NonPayable",
     "type": "error"
   },
-  { "inputs": [], "name": "EpochNotEnded", "type": "error" },
-  { "inputs": [], "name": "EpochRewardExceeded", "type": "error" },
-  { "inputs": [], "name": "EpochRewardNotDistributed", "type": "error" },
-  { "inputs": [], "name": "ExpectedPause", "type": "error" },
-  { "inputs": [], "name": "FailedInnerCall", "type": "error" },
-  { "inputs": [], "name": "InvalidInitialization", "type": "error" },
-  { "inputs": [], "name": "NotInitializing", "type": "error" },
-  { "inputs": [], "name": "ReentrancyGuardReentrantCall", "type": "error" },
-  { "inputs": [], "name": "UUPSUnauthorizedCallContext", "type": "error" },
+  {
+    "inputs": [],
+    "name": "EnforcedPause",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "EpochAlreadyFinalized",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "EpochNotEnded",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "EpochNotFinalized",
+    "type": "error"
+  },
   {
     "inputs": [
-      { "internalType": "bytes32", "name": "slot", "type": "bytes32" }
+      {
+        "internalType": "uint256",
+        "name": "totalRewardAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "epochRewardAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "EpochRewardExceeded",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "EpochRewardNotDistributed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ExpectedPause",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "FailedInnerCall",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidEpoch",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidInitialization",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "LastEpochAlreadySet",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "lastEpoch",
+        "type": "uint256"
+      }
+    ],
+    "name": "LastEpochExceeded",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotInitializing",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ReentrancyGuardReentrantCall",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "a",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "b",
+        "type": "uint256"
+      }
+    ],
+    "name": "Test",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "UUPSUnauthorizedCallContext",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "slot",
+        "type": "bytes32"
+      }
     ],
     "name": "UUPSUnsupportedProxiableUUID",
     "type": "error"
@@ -85,6 +208,50 @@
       {
         "indexed": false,
         "internalType": "uint256",
+        "name": "newDaySize",
+        "type": "uint256"
+      }
+    ],
+    "name": "EpochDayUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "epochId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "dlpId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "oldBonusAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newBonusAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "EpochDlpBonusUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
         "name": "epochId",
         "type": "uint256"
       },
@@ -99,9 +266,46 @@
         "internalType": "uint256",
         "name": "rewardAmount",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "penaltyAmount",
+        "type": "uint256"
       }
     ],
     "name": "EpochDlpRewardAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "epochId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "dlpId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "rewardAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "penaltyAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "EpochDlpRewardOverridden",
     "type": "event"
   },
   {
@@ -148,12 +352,56 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "uint256",
+        "name": "epochId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "startBlock",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "endBlock",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "rewardAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "EpochUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
         "internalType": "uint64",
         "name": "version",
         "type": "uint64"
       }
     ],
     "name": "Initialized",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "lastEpoch",
+        "type": "uint256"
+      }
+    ],
+    "name": "LastEpochSet",
     "type": "event"
   },
   {
@@ -273,29 +521,89 @@
   {
     "inputs": [],
     "name": "DEFAULT_ADMIN_ROLE",
-    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "DLP_PERFORMANCE_ROLE",
-    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "DLP_REWARD_DEPLOYER_ROLE",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "MAINTAINER_ROLE",
-    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "UPGRADE_INTERFACE_VERSION",
-    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "epochId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "dlpId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "addEpochDlpBonusAmount",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -307,7 +615,11 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "blockNumber", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "blockNumber",
+        "type": "uint256"
+      }
     ],
     "name": "createEpochsUntilBlockNumber",
     "outputs": [],
@@ -317,7 +629,13 @@
   {
     "inputs": [],
     "name": "daySize",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -338,32 +656,88 @@
     "inputs": [],
     "name": "dlpRegistry",
     "outputs": [
-      { "internalType": "contract IDLPRegistry", "name": "", "type": "address" }
+      {
+        "internalType": "contract IDLPRegistry",
+        "name": "",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "epochId", "type": "uint256" }
-    ],
-    "name": "epochDlps",
+    "inputs": [],
+    "name": "dlpRewardDeployer",
     "outputs": [
-      { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
+      {
+        "internalType": "contract IDLPRewardDeployer",
+        "name": "",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "epochId", "type": "uint256" },
-      { "internalType": "uint256", "name": "dlpId", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "epochId",
+        "type": "uint256"
+      }
+    ],
+    "name": "epochDlpIds",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "epochId",
+        "type": "uint256"
+      }
+    ],
+    "name": "epochDlpIdsWithBonus",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "epochId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "dlpId",
+        "type": "uint256"
+      }
     ],
     "name": "epochDlps",
     "outputs": [
       {
         "components": [
-          { "internalType": "bool", "name": "isTopDlp", "type": "bool" },
+          {
+            "internalType": "bool",
+            "name": "isTopDlp",
+            "type": "bool"
+          },
           {
             "internalType": "uint256",
             "name": "rewardAmount",
@@ -371,7 +745,22 @@
           },
           {
             "internalType": "uint256",
-            "name": "rewardClaimed",
+            "name": "penaltyAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "bonusAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "distributedAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "distributedPenaltyAmount",
             "type": "uint256"
           }
         ],
@@ -386,20 +775,36 @@
   {
     "inputs": [],
     "name": "epochRewardAmount",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "epochSize",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "epochId", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "epochId",
+        "type": "uint256"
+      }
     ],
     "name": "epochs",
     "outputs": [
@@ -410,13 +815,21 @@
             "name": "startBlock",
             "type": "uint256"
           },
-          { "internalType": "uint256", "name": "endBlock", "type": "uint256" },
+          {
+            "internalType": "uint256",
+            "name": "endBlock",
+            "type": "uint256"
+          },
           {
             "internalType": "uint256",
             "name": "rewardAmount",
             "type": "uint256"
           },
-          { "internalType": "bool", "name": "isFinalized", "type": "bool" }
+          {
+            "internalType": "bool",
+            "name": "isFinalized",
+            "type": "bool"
+          }
         ],
         "internalType": "struct IVanaEpoch.EpochInfo",
         "name": "",
@@ -429,13 +842,23 @@
   {
     "inputs": [],
     "name": "epochsCount",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "epochId", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "epochId",
+        "type": "uint256"
+      }
     ],
     "name": "forceFinalizedEpoch",
     "outputs": [],
@@ -444,17 +867,35 @@
   },
   {
     "inputs": [
-      { "internalType": "bytes32", "name": "role", "type": "bytes32" }
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      }
     ],
     "name": "getRoleAdmin",
-    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "bytes32", "name": "role", "type": "bytes32" },
-      { "internalType": "address", "name": "account", "type": "address" }
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
     ],
     "name": "grantRole",
     "outputs": [],
@@ -463,11 +904,25 @@
   },
   {
     "inputs": [
-      { "internalType": "bytes32", "name": "role", "type": "bytes32" },
-      { "internalType": "address", "name": "account", "type": "address" }
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
     ],
     "name": "hasRole",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -485,8 +940,16 @@
             "name": "dlpRegistryAddress",
             "type": "address"
           },
-          { "internalType": "uint256", "name": "daySize", "type": "uint256" },
-          { "internalType": "uint256", "name": "epochSize", "type": "uint256" },
+          {
+            "internalType": "uint256",
+            "name": "daySize",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "epochSize",
+            "type": "uint256"
+          },
           {
             "internalType": "uint256",
             "name": "epochRewardAmount",
@@ -504,27 +967,65 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "epochId", "type": "uint256" },
-      { "internalType": "uint256", "name": "startBlock", "type": "uint256" },
-      { "internalType": "uint256", "name": "endBlock", "type": "uint256" },
-      { "internalType": "uint256", "name": "rewardAmount", "type": "uint256" },
+    "inputs": [],
+    "name": "lastEpoch",
+    "outputs": [
       {
-        "components": [
-          { "internalType": "uint256", "name": "dlpId", "type": "uint256" },
-          {
-            "internalType": "uint256",
-            "name": "rewardAmount",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct IVanaEpoch.Rewards[]",
-        "name": "dlpRewards",
-        "type": "tuple[]"
-      },
-      { "internalType": "bool", "name": "isFinalized", "type": "bool" }
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    "name": "initializeEpoch",
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "epochId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "dlpId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "overrideEpochDlpBonusAmount",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "epochId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "dlpId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "rewardAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "penaltyAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "overrideEpochDlpReward",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -539,20 +1040,36 @@
   {
     "inputs": [],
     "name": "paused",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "proxiableUUID",
-    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "bytes32", "name": "role", "type": "bytes32" },
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
       {
         "internalType": "address",
         "name": "callerConfirmation",
@@ -566,8 +1083,16 @@
   },
   {
     "inputs": [
-      { "internalType": "bytes32", "name": "role", "type": "bytes32" },
-      { "internalType": "address", "name": "account", "type": "address" }
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
     ],
     "name": "revokeRole",
     "outputs": [],
@@ -576,21 +1101,33 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "epochId", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "epochId",
+        "type": "uint256"
+      },
       {
         "components": [
-          { "internalType": "uint256", "name": "dlpId", "type": "uint256" },
+          {
+            "internalType": "uint256",
+            "name": "dlpId",
+            "type": "uint256"
+          },
           {
             "internalType": "uint256",
             "name": "rewardAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "penaltyAmount",
             "type": "uint256"
           }
         ],
         "internalType": "struct IVanaEpoch.Rewards[]",
         "name": "dlpRewards",
         "type": "tuple[]"
-      },
-      { "internalType": "bool", "name": "finalScores", "type": "bool" }
+      }
     ],
     "name": "saveEpochDlpRewards",
     "outputs": [],
@@ -599,10 +1136,33 @@
   },
   {
     "inputs": [
-      { "internalType": "bytes4", "name": "interfaceId", "type": "bytes4" }
+      {
+        "internalType": "uint256",
+        "name": "_lastEpoch",
+        "type": "uint256"
+      }
+    ],
+    "name": "setLastEpoch",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes4",
+        "name": "interfaceId",
+        "type": "bytes4"
+      }
     ],
     "name": "supportsInterface",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -615,7 +1175,11 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "newDaySize", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "newDaySize",
+        "type": "uint256"
+      }
     ],
     "name": "updateDaySize",
     "outputs": [],
@@ -651,6 +1215,74 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "dlpRewardDeployerAddress",
+        "type": "address"
+      }
+    ],
+    "name": "updateDlpRewardDeployer",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "epochId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "startBlock",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "endBlock",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "rewardAmount",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "dlpId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "rewardAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "penaltyAmount",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IVanaEpoch.Rewards[]",
+        "name": "dlpRewards",
+        "type": "tuple[]"
+      },
+      {
+        "internalType": "bool",
+        "name": "isFinalized",
+        "type": "bool"
+      }
+    ],
+    "name": "updateEpoch",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "newEpochRewardAmount",
         "type": "uint256"
@@ -677,11 +1309,28 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "newEpochsCount",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateEpochsCount",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "newImplementation",
         "type": "address"
       },
-      { "internalType": "bytes", "name": "data", "type": "bytes" }
+      {
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
+      }
     ],
     "name": "upgradeToAndCall",
     "outputs": [],
@@ -691,7 +1340,13 @@
   {
     "inputs": [],
     "name": "version",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "pure",
     "type": "function"
   }
