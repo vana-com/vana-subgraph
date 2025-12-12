@@ -59,6 +59,11 @@
   },
   {
     "inputs": [],
+    "name": "EntityNameAlreadyExists",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "ExpectedPause",
     "type": "error"
   },
@@ -69,12 +74,17 @@
   },
   {
     "inputs": [],
-    "name": "FileNotFound",
+    "name": "InvalidAddress",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "FileUrlAlreadyUsed",
+    "name": "InvalidEntityId",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidEntityStatus",
     "type": "error"
   },
   {
@@ -83,34 +93,53 @@
     "type": "error"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "schemaId",
-        "type": "uint256"
-      }
-    ],
-    "name": "InvalidSchemaId",
+    "inputs": [],
+    "name": "InvalidName",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "InvalidUrl",
+    "name": "InvalidParam",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "NoPermission",
+    "name": "InvalidRegistrationStake",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "NotFileOwner",
+    "name": "NameTooShort",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotAuthorized",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotEntityOwner",
     "type": "error"
   },
   {
     "inputs": [],
     "name": "NotInitializing",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ReentrancyGuardReentrantCall",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "StakersStillPresent",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TransferFailed",
     "type": "error"
   },
   {
@@ -135,11 +164,11 @@
       {
         "indexed": true,
         "internalType": "uint256",
-        "name": "fileId",
+        "name": "entityId",
         "type": "uint256"
       },
       {
-        "indexed": true,
+        "indexed": false,
         "internalType": "address",
         "name": "ownerAddress",
         "type": "address"
@@ -147,11 +176,17 @@
       {
         "indexed": false,
         "internalType": "string",
-        "name": "url",
+        "name": "name",
         "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "maxAPY",
+        "type": "uint256"
       }
     ],
-    "name": "FileAdded",
+    "name": "EntityCreated",
     "type": "event"
   },
   {
@@ -160,11 +195,49 @@
       {
         "indexed": true,
         "internalType": "uint256",
-        "name": "fileId",
+        "name": "entityId",
         "type": "uint256"
       },
       {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newMaxAPY",
+        "type": "uint256"
+      }
+    ],
+    "name": "EntityMaxAPYUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": true,
+        "internalType": "uint256",
+        "name": "entityId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum IVanaPoolEntity.EntityStatus",
+        "name": "newStatus",
+        "type": "uint8"
+      }
+    ],
+    "name": "EntityStatusUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "entityId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
         "internalType": "address",
         "name": "ownerAddress",
         "type": "address"
@@ -172,17 +245,30 @@
       {
         "indexed": false,
         "internalType": "string",
-        "name": "url",
+        "name": "name",
         "type": "string"
+      }
+    ],
+    "name": "EntityUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "entityId",
+        "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "schemaId",
+        "name": "amount",
         "type": "uint256"
       }
     ],
-    "name": "FileAddedV2",
+    "name": "ForfeitedRewardsReturned",
     "type": "event"
   },
   {
@@ -217,17 +303,17 @@
       {
         "indexed": true,
         "internalType": "uint256",
-        "name": "fileId",
+        "name": "entityId",
         "type": "uint256"
       },
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
       }
     ],
-    "name": "PermissionGranted",
+    "name": "RewardsAdded",
     "type": "event"
   },
   {
@@ -236,91 +322,17 @@
       {
         "indexed": true,
         "internalType": "uint256",
-        "name": "fileId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "ownerAddress",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "proofIndex",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "dlpId",
+        "name": "entityId",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "score",
+        "name": "distributedAmount",
         "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "proofUrl",
-        "type": "string"
       }
     ],
-    "name": "ProofAdded",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "fileId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "refinerId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "url",
-        "type": "string"
-      }
-    ],
-    "name": "RefinementAdded",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "fileId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "refinerId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "url",
-        "type": "string"
-      }
-    ],
-    "name": "RefinementUpdated",
+    "name": "RewardsProcessed",
     "type": "event"
   },
   {
@@ -426,19 +438,6 @@
   },
   {
     "inputs": [],
-    "name": "DATA_PORTABILITY_ROLE",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "DEFAULT_ADMIN_ROLE",
     "outputs": [
       {
@@ -465,19 +464,6 @@
   },
   {
     "inputs": [],
-    "name": "REFINEMENT_SERVICE_ROLE",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "UPGRADE_INTERFACE_VERSION",
     "outputs": [
       {
@@ -490,291 +476,13 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "url",
-        "type": "string"
-      }
-    ],
-    "name": "addFile",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "fileId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      },
-      {
-        "internalType": "string",
-        "name": "key",
-        "type": "string"
-      }
-    ],
-    "name": "addFilePermission",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "fileId",
-        "type": "uint256"
-      },
-      {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "account",
-            "type": "address"
-          },
-          {
-            "internalType": "string",
-            "name": "key",
-            "type": "string"
-          }
-        ],
-        "internalType": "struct IDataRegistry.Permission[]",
-        "name": "permissions",
-        "type": "tuple[]"
-      },
-      {
-        "internalType": "uint256",
-        "name": "schemaId",
-        "type": "uint256"
-      }
-    ],
-    "name": "addFilePermissionsAndSchema",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "url",
-        "type": "string"
-      },
-      {
-        "internalType": "address",
-        "name": "ownerAddress",
-        "type": "address"
-      },
-      {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "account",
-            "type": "address"
-          },
-          {
-            "internalType": "string",
-            "name": "key",
-            "type": "string"
-          }
-        ],
-        "internalType": "struct IDataRegistry.Permission[]",
-        "name": "permissions",
-        "type": "tuple[]"
-      }
-    ],
-    "name": "addFileWithPermissions",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "url",
-        "type": "string"
-      },
-      {
-        "internalType": "address",
-        "name": "ownerAddress",
-        "type": "address"
-      },
-      {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "account",
-            "type": "address"
-          },
-          {
-            "internalType": "string",
-            "name": "key",
-            "type": "string"
-          }
-        ],
-        "internalType": "struct IDataRegistry.Permission[]",
-        "name": "permissions",
-        "type": "tuple[]"
-      },
-      {
-        "internalType": "uint256",
-        "name": "schemaId",
-        "type": "uint256"
-      }
-    ],
-    "name": "addFileWithPermissionsAndSchema",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "url",
-        "type": "string"
-      },
-      {
-        "internalType": "uint256",
-        "name": "schemaId",
-        "type": "uint256"
-      }
-    ],
-    "name": "addFileWithSchema",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "fileId",
-        "type": "uint256"
-      },
-      {
-        "components": [
-          {
-            "internalType": "bytes",
-            "name": "signature",
-            "type": "bytes"
-          },
-          {
-            "components": [
-              {
-                "internalType": "uint256",
-                "name": "score",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "dlpId",
-                "type": "uint256"
-              },
-              {
-                "internalType": "string",
-                "name": "metadata",
-                "type": "string"
-              },
-              {
-                "internalType": "string",
-                "name": "proofUrl",
-                "type": "string"
-              },
-              {
-                "internalType": "string",
-                "name": "instruction",
-                "type": "string"
-              }
-            ],
-            "internalType": "struct IDataRegistry.ProofData",
-            "name": "data",
-            "type": "tuple"
-          }
-        ],
-        "internalType": "struct IDataRegistry.Proof",
-        "name": "proof",
-        "type": "tuple"
-      }
-    ],
-    "name": "addProof",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "fileId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "refinerId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "url",
-        "type": "string"
-      },
-      {
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      },
-      {
-        "internalType": "string",
-        "name": "key",
-        "type": "string"
-      }
-    ],
-    "name": "addRefinementWithPermission",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [],
-    "name": "dataRefinerRegistry",
+    "name": "VANA_POOL_ROLE",
     "outputs": [
       {
-        "internalType": "contract IDataRefinerRegistry",
+        "internalType": "bytes32",
         "name": "",
-        "type": "address"
+        "type": "bytes32"
       }
     ],
     "stateMutability": "view",
@@ -782,12 +490,12 @@
   },
   {
     "inputs": [],
-    "name": "emitLegacyEvents",
+    "name": "activeEntitiesValues",
     "outputs": [
       {
-        "internalType": "bool",
+        "internalType": "uint256[]",
         "name": "",
-        "type": "bool"
+        "type": "uint256[]"
       }
     ],
     "stateMutability": "view",
@@ -796,12 +504,25 @@
   {
     "inputs": [
       {
-        "internalType": "string",
-        "name": "url",
-        "type": "string"
+        "internalType": "uint256",
+        "name": "entityId",
+        "type": "uint256"
       }
     ],
-    "name": "fileIdByUrl",
+    "name": "addRewards",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "entityId",
+        "type": "uint256"
+      }
+    ],
+    "name": "calculateContinuousAPYByEntity",
     "outputs": [
       {
         "internalType": "uint256",
@@ -816,128 +537,90 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "fileId",
+        "name": "exponent",
+        "type": "uint256"
+      }
+    ],
+    "name": "calculateExponential",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "r",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "principal",
         "type": "uint256"
       },
       {
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      }
-    ],
-    "name": "filePermissions",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "uint256",
-        "name": "fileId",
+        "name": "apy",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "index",
+        "name": "time",
         "type": "uint256"
       }
     ],
-    "name": "fileProofs",
+    "name": "calculateYield",
     "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {
         "components": [
           {
-            "internalType": "bytes",
-            "name": "signature",
-            "type": "bytes"
+            "internalType": "address",
+            "name": "ownerAddress",
+            "type": "address"
           },
           {
-            "components": [
-              {
-                "internalType": "uint256",
-                "name": "score",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "dlpId",
-                "type": "uint256"
-              },
-              {
-                "internalType": "string",
-                "name": "metadata",
-                "type": "string"
-              },
-              {
-                "internalType": "string",
-                "name": "proofUrl",
-                "type": "string"
-              },
-              {
-                "internalType": "string",
-                "name": "instruction",
-                "type": "string"
-              }
-            ],
-            "internalType": "struct IDataRegistry.ProofData",
-            "name": "data",
-            "type": "tuple"
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
           }
         ],
-        "internalType": "struct IDataRegistry.Proof",
-        "name": "",
+        "internalType": "struct IVanaPoolEntity.EntityRegistrationInfo",
+        "name": "entityRegistrationInfo",
         "type": "tuple"
       }
     ],
-    "stateMutability": "view",
+    "name": "createEntity",
+    "outputs": [],
+    "stateMutability": "payable",
     "type": "function"
   },
   {
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "fileId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "refinerId",
+        "name": "entityId",
         "type": "uint256"
       }
     ],
-    "name": "fileRefinements",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "fileId",
-        "type": "uint256"
-      }
-    ],
-    "name": "files",
+    "name": "entities",
     "outputs": [
       {
         "components": [
           {
             "internalType": "uint256",
-            "name": "id",
+            "name": "entityId",
             "type": "uint256"
           },
           {
@@ -946,22 +629,42 @@
             "type": "address"
           },
           {
+            "internalType": "enum IVanaPoolEntity.EntityStatus",
+            "name": "status",
+            "type": "uint8"
+          },
+          {
             "internalType": "string",
-            "name": "url",
+            "name": "name",
             "type": "string"
           },
           {
             "internalType": "uint256",
-            "name": "schemaId",
+            "name": "maxAPY",
             "type": "uint256"
           },
           {
             "internalType": "uint256",
-            "name": "addedAtBlock",
+            "name": "lockedRewardPool",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "activeRewardPool",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalShares",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastUpdateTimestamp",
             "type": "uint256"
           }
         ],
-        "internalType": "struct IDataRegistry.FileResponse",
+        "internalType": "struct IVanaPoolEntity.EntityInfo",
         "name": "",
         "type": "tuple"
       }
@@ -971,7 +674,111 @@
   },
   {
     "inputs": [],
-    "name": "filesCount",
+    "name": "entitiesCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "entityName",
+        "type": "string"
+      }
+    ],
+    "name": "entityByName",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "entityId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "ownerAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "enum IVanaPoolEntity.EntityStatus",
+            "name": "status",
+            "type": "uint8"
+          },
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxAPY",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lockedRewardPool",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "activeRewardPool",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalShares",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastUpdateTimestamp",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IVanaPoolEntity.EntityInfo",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "entityName",
+        "type": "string"
+      }
+    ],
+    "name": "entityNameToId",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "entityId",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "entityId",
+        "type": "uint256"
+      }
+    ],
+    "name": "entityShareToVana",
     "outputs": [
       {
         "internalType": "uint256",
@@ -1047,13 +854,23 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "trustedForwarderAddress",
+        "name": "ownerAddress",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "ownerAddress",
+        "name": "vanaPoolStakingAddress",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "initialMinRegistrationStake",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "initialMaxAPYDefault",
+        "type": "uint256"
       }
     ],
     "name": "initialize",
@@ -1062,19 +879,26 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "forwarder",
-        "type": "address"
-      }
-    ],
-    "name": "isTrustedForwarder",
+    "inputs": [],
+    "name": "maxAPYDefault",
     "outputs": [
       {
-        "internalType": "bool",
+        "internalType": "uint256",
         "name": "",
-        "type": "bool"
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "minRegistrationStake",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -1098,6 +922,19 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "entityId",
+        "type": "uint256"
+      }
+    ],
+    "name": "processRewards",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -1134,17 +971,17 @@
   {
     "inputs": [
       {
-        "internalType": "bytes32",
-        "name": "role",
-        "type": "bytes32"
+        "internalType": "uint256",
+        "name": "entityId",
+        "type": "uint256"
       },
       {
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
       }
     ],
-    "name": "revokeRole",
+    "name": "returnForfeitedRewards",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1157,12 +994,12 @@
         "type": "bytes32"
       },
       {
-        "internalType": "bytes32",
-        "name": "adminRole",
-        "type": "bytes32"
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
       }
     ],
-    "name": "setRoleAdmin",
+    "name": "revokeRole",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1188,19 +1025,6 @@
   },
   {
     "inputs": [],
-    "name": "trustedForwarder",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "unpause",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -1209,12 +1033,29 @@
   {
     "inputs": [
       {
-        "internalType": "contract IDataRefinerRegistry",
-        "name": "newDataRefinerRegistry",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "entityId",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "ownerAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct IVanaPoolEntity.EntityRegistrationInfo",
+        "name": "entityRegistrationInfo",
+        "type": "tuple"
       }
     ],
-    "name": "updateDataRefinerRegistry",
+    "name": "updateEntity",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1222,12 +1063,58 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "entityId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "newMaxAPY",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateEntityMaxAPY",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "entityId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "shares",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
         "internalType": "bool",
-        "name": "newEmitLegacyEvents",
+        "name": "isStake",
         "type": "bool"
       }
     ],
-    "name": "updateEmitLegacyEvents",
+    "name": "updateEntityPool",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "newMinRegistrationStake",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateMinRegistrationStake",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1236,11 +1123,11 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "trustedForwarderAddress",
+        "name": "newVanaPoolStakingAddress",
         "type": "address"
       }
     ],
-    "name": "updateTrustedForwarder",
+    "name": "updateVanaPool",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1261,6 +1148,38 @@
     "name": "upgradeToAndCall",
     "outputs": [],
     "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "vanaPoolStaking",
+    "outputs": [
+      {
+        "internalType": "contract IVanaPoolStaking",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "entityId",
+        "type": "uint256"
+      }
+    ],
+    "name": "vanaToEntityShare",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {

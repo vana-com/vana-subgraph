@@ -166,6 +166,109 @@ type File @entity(immutable: false) {
   transactionHash: Bytes!
 }
 
+# ==================== Staking Entities ====================
+
+type StakingEntity @entity(immutable: false) {
+  "The unique ID of the staking entity, equivalent to the on-chain entityId."
+  id: ID!
+  "The owner address of this entity."
+  owner: Bytes!
+  "The name of this entity."
+  name: String!
+  "Entity status: 0=None, 1=Active, 2=Removed"
+  status: BigInt!
+  "Maximum APY for this entity (in basis points, 1% = 100)"
+  maxAPY: BigInt!
+  "Locked rewards for this entity awaiting distribution"
+  lockedRewardPool: BigInt!
+  "Active rewards available for distribution"
+  activeRewardPool: BigInt!
+  "Total shares for this entity"
+  totalShares: BigInt!
+  "Timestamp when rewards were last processed"
+  lastUpdate: BigInt!
+  "All stakes in this entity"
+  stakes: [Stake!]! @derivedFrom(field: "entity")
+  "All stake events for this entity"
+  stakeEvents: [StakeEvent!]! @derivedFrom(field: "entity")
+  "All reward events for this entity"
+  rewardEvents: [RewardEvent!]! @derivedFrom(field: "entity")
+  "The block number when the entity was created."
+  createdAtBlock: BigInt!
+  "The timestamp when the entity was created."
+  createdAt: BigInt!
+  "The transaction hash of the entity creation."
+  createdTxHash: Bytes!
+}
+
+type Stake @entity(immutable: false) {
+  "Composite ID: staker address - entityId"
+  id: ID!
+  "The address of the staker."
+  staker: Bytes!
+  "The staking entity."
+  entity: StakingEntity!
+  "Current shares owned by staker in this entity."
+  shares: BigInt!
+  "Cumulative VANA staked by this staker in this entity."
+  totalStaked: BigInt!
+  "Cumulative VANA unstaked by this staker from this entity."
+  totalUnstaked: BigInt!
+  "The block number when the stake was first created."
+  createdAtBlock: BigInt!
+  "The timestamp when the stake was first created."
+  createdAt: BigInt!
+  "The timestamp when the stake was last updated."
+  updatedAt: BigInt!
+}
+
+type StakeEvent @entity(immutable: true) {
+  "Composite ID: txHash-logIndex"
+  id: ID!
+  "Event type: 'stake' or 'unstake'"
+  eventType: String!
+  "The address of the staker."
+  staker: Bytes!
+  "The staking entity."
+  entity: StakingEntity!
+  "VANA amount staked or unstaked."
+  amount: BigInt!
+  "Shares issued or burned."
+  shares: BigInt!
+  "The block number of the event."
+  blockNumber: BigInt!
+  "The timestamp of the event."
+  timestamp: BigInt!
+  "The transaction hash of the event."
+  txHash: Bytes!
+}
+
+type RewardEvent @entity(immutable: true) {
+  "Composite ID: txHash-logIndex"
+  id: ID!
+  "Event type: 'added' (RewardsAdded), 'processed' (RewardsProcessed), or 'forfeited' (ForfeitedRewardsReturned)"
+  eventType: String!
+  "The staking entity."
+  entity: StakingEntity!
+  "Amount of rewards added or distributed."
+  amount: BigInt!
+  "The block number of the event."
+  blockNumber: BigInt!
+  "The timestamp of the event."
+  timestamp: BigInt!
+  "The transaction hash of the event."
+  txHash: Bytes!
+}
+
+type StakingParams @entity(immutable: false) {
+  "Singleton ID: 'staking-params'"
+  id: ID!
+  "Minimum stake amount in wei."
+  minStakeAmount: BigInt!
+  "Bonding period in seconds."
+  bondingPeriod: BigInt!
+}
+
 type Grantee @entity(immutable: false) {
   "The unique ID of the grantee, equivalent to the on-chain granteeId."
   id: ID!

@@ -97,6 +97,14 @@ export * from "./lib/contract/v6/data-portability-permissions";
 export * from "./lib/contract/v6/data-portability-servers";
 {{/includes.v6.dataPortabilityServers}}
 
+// Staking
+{{#includes.staking.vanaPoolStaking}}
+export * from "./lib/contract/v7/vana-pool-staking";
+{{/includes.staking.vanaPoolStaking}}
+{{#includes.staking.vanaPoolEntity}}
+export * from "./lib/contract/v7/vana-pool-entity";
+{{/includes.staking.vanaPoolEntity}}
+
 //uniswap
 {{#includes.uniswap.v3}}
 export * from "./uniswap/v3/mappings/factory";

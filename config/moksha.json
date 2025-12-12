@@ -28,6 +28,10 @@
       "dataPortabilityPermissions": true,
       "dataPortabilityServers": true
     },
+    "staking": {
+      "vanaPoolStaking": true,
+      "vanaPoolEntity": true
+    },
     "uniswap": {
       "v3": true
     }
