@@ -136,7 +136,7 @@ type DlpPerformance @entity(immutable: false) {
   id: ID!
   dlp: Dlp!
   epoch: Epoch!
-  totalScore: BigInt!
+  totalScore: BigInt
   tradingVolume: BigInt!
   uniqueContributors: BigInt!
   dataAccessFees: BigInt!

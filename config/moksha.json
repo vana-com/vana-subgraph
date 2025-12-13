@@ -28,7 +28,7 @@
       "dataPortabilityPermissions": true,
       "dataPortabilityServers": true
     },
-    "staking": {
+    "v7": {
       "vanaPoolStaking": true,
       "vanaPoolEntity": true
     },
