@@ -299,8 +299,6 @@ type Permission @entity(immutable: false) {
   grant: String!
   "The nonce used for this permission grant."
   nonce: BigInt!
-  "The signature provided by the user."
-  signature: Bytes!
   "The block number when the permission starts."
   startBlock: BigInt!
   "The block number when the permission ends (null if no end)."
