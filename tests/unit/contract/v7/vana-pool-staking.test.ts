@@ -75,6 +75,7 @@ describe("VanaPoolEntity - handleEntityCreated", () => {
     assert.bigIntEquals(entity!.status, GraphBigInt.fromI32(1)); // ACTIVE
     assert.bigIntEquals(entity!.lockedRewardPool, GraphBigInt.zero());
     assert.bigIntEquals(entity!.activeRewardPool, GraphBigInt.zero());
+    assert.bigIntEquals(entity!.totalDistributedRewards, GraphBigInt.zero());
     assert.bigIntEquals(entity!.totalShares, GraphBigInt.zero());
   });
 });
@@ -150,7 +151,7 @@ describe("VanaPoolEntity - handleRewardsAdded", () => {
 });
 
 describe("VanaPoolEntity - handleRewardsProcessed", () => {
-  test("moves rewards from locked to active pool", () => {
+  test("moves rewards from locked to active pool and updates totalDistributedRewards", () => {
     createTestStakingEntity(1);
 
     // First add some rewards to locked pool
@@ -170,11 +171,37 @@ describe("VanaPoolEntity - handleRewardsProcessed", () => {
       lockedAmount.minus(processedAmount)
     );
     assert.bigIntEquals(entity!.activeRewardPool, processedAmount);
+    assert.bigIntEquals(entity!.totalDistributedRewards, processedAmount);
+  });
+
+  test("accumulates totalDistributedRewards across multiple process events", () => {
+    createTestStakingEntity(1);
+
+    // Add rewards to locked pool
+    const lockedAmount = GraphBigInt.fromString("1000000000000000000");
+    const addEvent = createRewardsAddedEvent(1, lockedAmount);
+    handleRewardsAdded(addEvent);
+
+    // Process rewards in two batches
+    const firstProcessed = GraphBigInt.fromString("300000000000000000");
+    const processEvent1 = createRewardsProcessedEvent(1, firstProcessed);
+    handleRewardsProcessed(processEvent1);
+
+    const secondProcessed = GraphBigInt.fromString("400000000000000000");
+    const processEvent2 = createRewardsProcessedEvent(1, secondProcessed);
+    handleRewardsProcessed(processEvent2);
+
+    const entity = StakingEntity.load("1");
+    assert.assertNotNull(entity);
+    assert.bigIntEquals(
+      entity!.totalDistributedRewards,
+      firstProcessed.plus(secondProcessed)
+    );
   });
 });
 
 describe("VanaPoolEntity - handleForfeitedRewardsReturned", () => {
-  test("moves forfeited rewards from active to locked pool", () => {
+  test("moves forfeited rewards from active to locked pool and decrements totalDistributedRewards", () => {
     createTestStakingEntity(1);
 
     // Setup: Add rewards and process them to active pool
@@ -185,10 +212,11 @@ describe("VanaPoolEntity - handleForfeitedRewardsReturned", () => {
     const processEvent = createRewardsProcessedEvent(1, initialAmount);
     handleRewardsProcessed(processEvent);
 
-    // Verify active pool has the rewards
+    // Verify active pool has the rewards and totalDistributedRewards is set
     let entity = StakingEntity.load("1");
     assert.bigIntEquals(entity!.activeRewardPool, initialAmount);
     assert.bigIntEquals(entity!.lockedRewardPool, GraphBigInt.zero());
+    assert.bigIntEquals(entity!.totalDistributedRewards, initialAmount);
 
     // Now handle forfeited rewards
     const forfeitedAmount = GraphBigInt.fromString("200000000000000000");
@@ -202,6 +230,11 @@ describe("VanaPoolEntity - handleForfeitedRewardsReturned", () => {
       initialAmount.minus(forfeitedAmount)
     );
     assert.bigIntEquals(entity!.lockedRewardPool, forfeitedAmount);
+    // totalDistributedRewards should be decremented by forfeited amount
+    assert.bigIntEquals(
+      entity!.totalDistributedRewards,
+      initialAmount.minus(forfeitedAmount)
+    );
   });
 });
 
@@ -339,6 +372,10 @@ describe("Integration - Staking with Forfeited Rewards", () => {
     const processEvent = createRewardsProcessedEvent(1, rewardAmount);
     handleRewardsProcessed(processEvent);
 
+    // Verify totalDistributedRewards after processing
+    let entity = StakingEntity.load("1");
+    assert.bigIntEquals(entity!.totalDistributedRewards, rewardAmount);
+
     // 2. User stakes
     const stakeAmount = GraphBigInt.fromString("500000000000000000");
     const stakeShares = GraphBigInt.fromString("500000000000000000");
@@ -346,7 +383,7 @@ describe("Integration - Staking with Forfeited Rewards", () => {
     handleStaked(stakeEvent);
 
     // Entity should have: activeRewardPool = 1000 + 500 = 1500
-    let entity = StakingEntity.load("1");
+    entity = StakingEntity.load("1");
     assert.bigIntEquals(
       entity!.activeRewardPool,
       rewardAmount.plus(stakeAmount)
@@ -378,5 +415,11 @@ describe("Integration - Staking with Forfeited Rewards", () => {
 
     // totalShares = 0
     assert.bigIntEquals(entity!.totalShares, GraphBigInt.zero());
+
+    // totalDistributedRewards = 1000 (processed) - 100 (forfeited) = 900
+    assert.bigIntEquals(
+      entity!.totalDistributedRewards,
+      rewardAmount.minus(forfeitedAmount)
+    );
   });
 });
