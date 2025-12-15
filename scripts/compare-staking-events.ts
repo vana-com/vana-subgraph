@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 
 const SUBGRAPH_URL =
-  "https://api.goldsky.com/api/public/project_cm168cz887zva010j39il7a6p/subgraphs/moksha/staking/gn";
+  "https://api.goldsky.com/api/public/project_cm168cz887zva010j39il7a6p/subgraphs/moksha/staking-only/gn";
 const RPC_URL =
   "https://falling-tame-liquid.vana-moksha.quiknode.pro/522e4e45df28df82a4d7729726e68cdc7d630011";
 const STAKING_CONTRACT = "0x641C18E2F286c86f96CE95C8ec1EB9fC0415Ca0e";
