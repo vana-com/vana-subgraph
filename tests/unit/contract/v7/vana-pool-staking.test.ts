@@ -423,3 +423,121 @@ describe("Integration - Staking with Forfeited Rewards", () => {
     );
   });
 });
+
+describe("Out-of-Order Event Processing - Staked before EntityCreated", () => {
+  test("handleStaked creates placeholder entity when EntityCreated not yet processed", () => {
+    // Simulate Staked event being processed BEFORE EntityCreated
+    // This happens when both events are in the same transaction but from different contracts
+    const entityId = 1;
+    const staker = "0x3333333333333333333333333333333333333333";
+    const amount = GraphBigInt.fromString("1000000000000000000");
+    const sharesIssued = GraphBigInt.fromString("1000000000000000000");
+
+    // Process Staked event first (without EntityCreated)
+    const stakeEvent = createStakedEvent(entityId, staker, amount, sharesIssued);
+    handleStaked(stakeEvent);
+
+    // Verify placeholder entity was created
+    const entity = StakingEntity.load(entityId.toString());
+    assert.assertNotNull(entity);
+    // Placeholder has zero address for owner and empty name
+    assert.bytesEquals(
+      entity!.owner,
+      Address.fromString("0x0000000000000000000000000000000000000000")
+    );
+    assert.stringEquals(entity!.name, "");
+    // But totalShares and activeRewardPool should be updated
+    assert.bigIntEquals(entity!.totalShares, sharesIssued);
+    assert.bigIntEquals(entity!.activeRewardPool, amount);
+  });
+
+  test("handleEntityCreated merges with existing placeholder entity", () => {
+    const entityId = 1;
+    const staker = "0x3333333333333333333333333333333333333333";
+    const ownerAddress = "0x1111111111111111111111111111111111111111";
+    const entityName = "Test DLP";
+    const maxAPY = GraphBigInt.fromI32(5000);
+    const stakeAmount = GraphBigInt.fromString("1000000000000000000");
+    const sharesIssued = GraphBigInt.fromString("1000000000000000000");
+
+    // Step 1: Process Staked event first (simulating out-of-order processing)
+    const stakeEvent = createStakedEvent(entityId, staker, stakeAmount, sharesIssued);
+    handleStaked(stakeEvent);
+
+    // Verify placeholder was created with stake data
+    let entity = StakingEntity.load(entityId.toString());
+    assert.assertNotNull(entity);
+    assert.bigIntEquals(entity!.totalShares, sharesIssued);
+    assert.bigIntEquals(entity!.activeRewardPool, stakeAmount);
+
+    // Step 2: Process EntityCreated event (should merge, not overwrite)
+    const entityCreatedEvent = createEntityCreatedEvent(
+      entityId,
+      ownerAddress,
+      entityName,
+      maxAPY
+    );
+    handleEntityCreated(entityCreatedEvent);
+
+    // Verify entity has proper owner and name from EntityCreated
+    entity = StakingEntity.load(entityId.toString());
+    assert.assertNotNull(entity);
+    assert.bytesEquals(entity!.owner, Address.fromString(ownerAddress));
+    assert.stringEquals(entity!.name, entityName);
+    assert.bigIntEquals(entity!.maxAPY, maxAPY);
+
+    // CRITICAL: Verify that totalShares and activeRewardPool were PRESERVED
+    assert.bigIntEquals(entity!.totalShares, sharesIssued);
+    assert.bigIntEquals(entity!.activeRewardPool, stakeAmount);
+  });
+
+  test("multiple Staked events before EntityCreated accumulate correctly", () => {
+    const entityId = 1;
+    const staker1 = "0x3333333333333333333333333333333333333333";
+    const staker2 = "0x4444444444444444444444444444444444444444";
+    const ownerAddress = "0x1111111111111111111111111111111111111111";
+
+    const amount1 = GraphBigInt.fromString("1000000000000000000");
+    const shares1 = GraphBigInt.fromString("1000000000000000000");
+    const amount2 = GraphBigInt.fromString("500000000000000000");
+    const shares2 = GraphBigInt.fromString("500000000000000000");
+
+    // Process multiple Staked events before EntityCreated
+    const stakeEvent1 = createStakedEvent(entityId, staker1, amount1, shares1);
+    handleStaked(stakeEvent1);
+
+    const stakeEvent2 = createStakedEvent(entityId, staker2, amount2, shares2);
+    handleStaked(stakeEvent2);
+
+    // Verify accumulated values
+    let entity = StakingEntity.load(entityId.toString());
+    assert.bigIntEquals(entity!.totalShares, shares1.plus(shares2));
+    assert.bigIntEquals(entity!.activeRewardPool, amount1.plus(amount2));
+
+    // Now process EntityCreated
+    const entityCreatedEvent = createEntityCreatedEvent(
+      entityId,
+      ownerAddress,
+      "Test DLP",
+      GraphBigInt.fromI32(5000)
+    );
+    handleEntityCreated(entityCreatedEvent);
+
+    // Verify accumulated values were preserved
+    entity = StakingEntity.load(entityId.toString());
+    assert.bytesEquals(entity!.owner, Address.fromString(ownerAddress));
+    assert.bigIntEquals(entity!.totalShares, shares1.plus(shares2));
+    assert.bigIntEquals(entity!.activeRewardPool, amount1.plus(amount2));
+
+    // Verify individual stakes were created correctly
+    const stake1Id = staker1.toLowerCase() + "-1";
+    const stake1 = Stake.load(stake1Id);
+    assert.assertNotNull(stake1);
+    assert.bigIntEquals(stake1!.shares, shares1);
+
+    const stake2Id = staker2.toLowerCase() + "-1";
+    const stake2 = Stake.load(stake2Id);
+    assert.assertNotNull(stake2);
+    assert.bigIntEquals(stake2!.shares, shares2);
+  });
+});

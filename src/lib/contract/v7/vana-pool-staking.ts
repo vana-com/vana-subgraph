@@ -14,6 +14,54 @@ import {
 
 const STAKING_PARAMS_ID = "staking-params";
 
+// Mirrored from IVanaPoolEntity.EntityStatus
+enum EntityStatus {
+  NONE = 0,
+  ACTIVE = 1,
+  REMOVED = 2,
+}
+
+/**
+ * Get or create a StakingEntity. This handles the case where Staked events
+ * from VanaPoolStakingImplementation are processed before EntityCreated events
+ * from VanaPoolEntityImplementation within the same transaction (e.g., during createEntity).
+ *
+ * The placeholder entity will have default values that will be properly populated
+ * when handleEntityCreated processes the EntityCreated event.
+ */
+export function getOrCreateStakingEntity(
+  entityId: string,
+  timestamp: GraphBigInt,
+  blockNumber: GraphBigInt,
+  txHash: Bytes,
+): StakingEntity {
+  let stakingEntity = StakingEntity.load(entityId);
+  if (stakingEntity == null) {
+    log.warning(
+      "Creating placeholder StakingEntity {} - EntityCreated event not yet processed",
+      [entityId],
+    );
+    stakingEntity = new StakingEntity(entityId);
+    // Set placeholder values - these will be updated by handleEntityCreated
+    stakingEntity.owner = Bytes.fromHexString(
+      "0x0000000000000000000000000000000000000000",
+    );
+    stakingEntity.name = "";
+    stakingEntity.status = GraphBigInt.fromI32(EntityStatus.ACTIVE);
+    stakingEntity.maxAPY = GraphBigInt.zero();
+    stakingEntity.lockedRewardPool = GraphBigInt.zero();
+    stakingEntity.activeRewardPool = GraphBigInt.zero();
+    stakingEntity.totalDistributedRewards = GraphBigInt.zero();
+    stakingEntity.totalShares = GraphBigInt.zero();
+    stakingEntity.lastUpdate = timestamp;
+    stakingEntity.createdAt = timestamp;
+    stakingEntity.createdAtBlock = blockNumber;
+    stakingEntity.createdTxHash = txHash;
+    stakingEntity.save();
+  }
+  return stakingEntity;
+}
+
 function getOrCreateStakingParams(): StakingParams {
   let params = StakingParams.load(STAKING_PARAMS_ID);
   if (params == null) {
@@ -58,12 +106,13 @@ export function handleStaked(event: Staked): void {
   const amount = event.params.amount;
   const sharesIssued = event.params.sharesIssued;
 
-  // Update StakingEntity
-  const stakingEntity = StakingEntity.load(entityId);
-  if (stakingEntity == null) {
-    log.error("StakingEntity not found for Staked event: {}", [entityId]);
-    return;
-  }
+  // Get or create StakingEntity - handles case where Staked is processed before EntityCreated
+  const stakingEntity = getOrCreateStakingEntity(
+    entityId,
+    event.block.timestamp,
+    event.block.number,
+    event.transaction.hash,
+  );
 
   stakingEntity.totalShares = stakingEntity.totalShares.plus(sharesIssued);
   stakingEntity.activeRewardPool = stakingEntity.activeRewardPool.plus(amount);

@@ -24,15 +24,31 @@ export function handleEntityCreated(event: EntityCreated): void {
 
   const entityId = event.params.entityId.toString();
 
-  const stakingEntity = new StakingEntity(entityId);
+  // Check if entity already exists (created as placeholder by handleStaked)
+  let stakingEntity = StakingEntity.load(entityId);
+  if (stakingEntity == null) {
+    stakingEntity = new StakingEntity(entityId);
+    stakingEntity.lockedRewardPool = GraphBigInt.zero();
+    stakingEntity.activeRewardPool = GraphBigInt.zero();
+    stakingEntity.totalDistributedRewards = GraphBigInt.zero();
+    stakingEntity.totalShares = GraphBigInt.zero();
+  } else {
+    // Entity exists as placeholder - preserve accumulated values from Staked events
+    log.info(
+      "EntityCreated: Merging with existing placeholder entity {}. Current totalShares: {}, activeRewardPool: {}",
+      [
+        entityId,
+        stakingEntity.totalShares.toString(),
+        stakingEntity.activeRewardPool.toString(),
+      ],
+    );
+  }
+
+  // Update with actual entity data from the event
   stakingEntity.owner = event.params.ownerAddress;
   stakingEntity.name = event.params.name;
   stakingEntity.status = GraphBigInt.fromI32(EntityStatus.ACTIVE);
   stakingEntity.maxAPY = event.params.maxAPY;
-  stakingEntity.lockedRewardPool = GraphBigInt.zero();
-  stakingEntity.activeRewardPool = GraphBigInt.zero();
-  stakingEntity.totalDistributedRewards = GraphBigInt.zero();
-  stakingEntity.totalShares = GraphBigInt.zero();
   stakingEntity.lastUpdate = event.block.timestamp;
   stakingEntity.createdAt = event.block.timestamp;
   stakingEntity.createdAtBlock = event.block.number;
