@@ -1,0 +1,46 @@
+{
+  "network": "moksha",
+  "includes": {
+    "v1": {
+      "dataRegistry": false
+    },
+    "v2": {
+      "dataRegistry": false
+    },
+    "v3": {
+      "dataRegistry": false
+    },
+    "v4": {
+      "queryEngine": false,
+      "dataRefinerRegistry": false
+    },
+    "v5": {
+      "dlpRegistry": false,
+      "vanaEpoch": false,
+      "dlpPerformance": false,
+      "queryEngine": false,
+      "dataRefinerRegistry": false,
+      "dataPermission": false
+    },
+    "v6": {
+      "dataRefinerRegistry": false,
+      "dataPortabilityGrantees": false,
+      "dataPortabilityPermissions": false,
+      "dataPortabilityServers": false
+    },
+    "v7": {
+      "vanaPoolStaking": true,
+      "vanaPoolEntity": true
+    },
+    "uniswap": {
+      "v3": false
+    }
+  },
+  "initParams": {
+    "daySize": "600",
+    "epochSize": "91",
+    "epochRewardAmount": "10000000000000000000"
+  },
+  "epochRanges": [],
+  "dlps": []
+}
