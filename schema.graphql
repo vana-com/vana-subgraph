@@ -183,6 +183,8 @@ type StakingEntity @entity(immutable: false) {
   lockedRewardPool: BigInt!
   "Active rewards available for distribution"
   activeRewardPool: BigInt!
+  "Total rewards distributed to stakers (cumulative sum of all RewardsProcessed events)"
+  totalDistributedRewards: BigInt!
   "Total shares for this entity"
   totalShares: BigInt!
   "Timestamp when rewards were last processed"

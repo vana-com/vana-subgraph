@@ -31,6 +31,7 @@ export function handleEntityCreated(event: EntityCreated): void {
   stakingEntity.maxAPY = event.params.maxAPY;
   stakingEntity.lockedRewardPool = GraphBigInt.zero();
   stakingEntity.activeRewardPool = GraphBigInt.zero();
+  stakingEntity.totalDistributedRewards = GraphBigInt.zero();
   stakingEntity.totalShares = GraphBigInt.zero();
   stakingEntity.lastUpdate = event.block.timestamp;
   stakingEntity.createdAt = event.block.timestamp;
@@ -148,6 +149,9 @@ export function handleRewardsProcessed(event: RewardsProcessed): void {
     stakingEntity.lockedRewardPool.minus(distributedAmount);
   stakingEntity.activeRewardPool =
     stakingEntity.activeRewardPool.plus(distributedAmount);
+  // Track cumulative distributed rewards
+  stakingEntity.totalDistributedRewards =
+    stakingEntity.totalDistributedRewards.plus(distributedAmount);
   stakingEntity.lastUpdate = event.block.timestamp;
   stakingEntity.save();
 
@@ -191,6 +195,9 @@ export function handleForfeitedRewardsReturned(
   // Here we deduct the remaining forfeitedRewards from activeRewardPool and add to lockedRewardPool.
   stakingEntity.activeRewardPool = stakingEntity.activeRewardPool.minus(amount);
   stakingEntity.lockedRewardPool = stakingEntity.lockedRewardPool.plus(amount);
+  // Forfeited rewards were previously counted as distributed, so subtract them
+  stakingEntity.totalDistributedRewards =
+    stakingEntity.totalDistributedRewards.minus(amount);
   stakingEntity.save();
 
   // Create RewardEvent
