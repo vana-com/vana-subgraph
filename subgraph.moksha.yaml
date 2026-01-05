@@ -342,8 +342,72 @@ dataSources:
           handler: handleSchemaAdded
       file: ./src/mapping.ts
 
+# Staking
+  - kind: ethereum/contract
+    name: VanaPoolStakingImplementation
+    network: moksha
+    source:
+      address: "0x641C18E2F286c86f96CE95C8ec1EB9fC0415Ca0e"
+      abi: VanaPoolStakingImplementation
+      startBlock: 2101757
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - StakingEntity
+        - Stake
+        - StakeEvent
+        - StakingParams
+      abis:
+        - name: VanaPoolStakingImplementation
+          file: ./abis/v7/VanaPoolStakingImplementation.json
+      eventHandlers:
+        - event: Staked(indexed uint256,indexed address,uint256,uint256)
+          handler: handleStaked
+        - event: Unstaked(indexed uint256,indexed address,uint256,uint256)
+          handler: handleUnstaked
+        - event: MinStakeUpdated(uint256)
+          handler: handleMinStakeUpdated
+        - event: EntityStakeRegistered(indexed uint256,indexed address)
+          handler: handleEntityStakeRegistered
+      file: ./src/mapping.ts
 
-# unuiswap
+  - kind: ethereum/contract
+    name: VanaPoolEntityImplementation
+    network: moksha
+    source:
+      address: "0x44f20490A82e1f1F1cC25Dd3BA8647034eDdce30"
+      abi: VanaPoolEntityImplementation
+      startBlock: 2101776
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - StakingEntity
+        - RewardEvent
+      abis:
+        - name: VanaPoolEntityImplementation
+          file: ./abis/v7/VanaPoolEntityImplementation.json
+      eventHandlers:
+        - event: EntityCreated(indexed uint256,address,string,uint256)
+          handler: handleEntityCreated
+        - event: EntityUpdated(indexed uint256,address,string)
+          handler: handleEntityUpdated
+        - event: EntityStatusUpdated(indexed uint256,uint8)
+          handler: handleEntityStatusUpdated
+        - event: EntityMaxAPYUpdated(indexed uint256,uint256)
+          handler: handleEntityMaxAPYUpdated
+        - event: RewardsAdded(indexed uint256,uint256)
+          handler: handleRewardsAdded
+        - event: RewardsProcessed(indexed uint256,uint256)
+          handler: handleRewardsProcessed
+        - event: ForfeitedRewardsReturned(indexed uint256,uint256)
+          handler: handleForfeitedRewardsReturned
+      file: ./src/mapping.ts
+
+# uniswap
   - kind: ethereum/contract
     name: Factory
     network: moksha

@@ -2,7 +2,6 @@ import {
   log,
   store,
   BigInt as GraphBigInt,
-  Bytes,
 } from "@graphprotocol/graph-ts";
 import {
   PermissionAdded,
@@ -53,11 +52,10 @@ export function handlePermissionAdded(event: PermissionAdded): void {
     permission.endBlock = permissionData.value.endBlock;
   } else {
     log.warning(
-      "Could not get permission data for id {}. Nonce and signature will be zero.",
+      "Could not get permission data for id {}. Nonce will be zero.",
       [permissionId],
     );
     permission.nonce = GraphBigInt.zero();
-    permission.signature = new Bytes(0);
     permission.startBlock = event.block.number;
     permission.endBlock = null;
   }
