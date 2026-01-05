@@ -104,6 +104,11 @@
   },
   {
     "inputs": [],
+    "name": "InvalidBondingPeriod",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "InvalidEntity",
     "type": "error"
   },
@@ -162,6 +167,19 @@
     ],
     "name": "UUPSUnsupportedProxiableUUID",
     "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newBondingPeriod",
+        "type": "uint256"
+      }
+    ],
+    "name": "BondingPeriodUpdated",
+    "type": "event"
   },
   {
     "anonymous": false,
@@ -405,6 +423,19 @@
         "internalType": "bytes32",
         "name": "",
         "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "MAX_BONDING_PERIOD",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
